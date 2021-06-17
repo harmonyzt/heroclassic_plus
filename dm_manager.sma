@@ -28,6 +28,7 @@ public plugin_init()
     dmgDealtHUD = CreateHudSyncObj();
 }
 
+// Triggers either first or second one depends on what team won.
 public t_won(){
 
 }
@@ -35,28 +36,30 @@ public ct_won(){
 
 }
 
-public damage_taken(id)     //TODO - Test this
+// Damager Visualisation.
+public damage_taken(id)
 {
     if (is_user_connected(id))
     {
         new damage, attacker;
         damage = read_data(2)
         attacker = get_user_attacker(id)
-        set_hudmessage(234, 75, 75, 0.54, 0.52, 0, 0.5, 0.30, 0.5, 0.5, -1)
+        set_hudmessage(15, 180, 90, 0.54, 0.52, 0, 0.5, 0.30, 0.5, 0.5, -1)
         ShowSyncHudMsg(id, dmgTakenHUD, "%d", damage)
         if ((attacker > 0) && (attacker < 33))
         {
-            set_hudmessage(15, 180, 90, 0.54, 0.45, 0, 0.5, 0.30, 0.5, 0.5, -1);
+            set_hudmessage(234, 75, 75, 0.54, 0.45, 0, 0.5, 0.30, 0.5, 0.5, -1);
             ShowSyncHudMsg(attacker, dmgDealtHUD, "%d", damage);
         }
     }
 }
 
-public player_death()  //TODO - Test this
+// Calls this whenever player dies.
+public player_death() 
 {
     static killer, victim, hshot;
     killer = read_data(1);
-    if (!is_user_connected(killer)) //Server crash fix
+    if (!is_user_connected(killer)) // Server crash fix or "Out of bounds" error
         return PLUGIN_HANDLED
 
     victim = read_data(2);

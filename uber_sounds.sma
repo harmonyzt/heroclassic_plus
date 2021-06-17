@@ -84,36 +84,36 @@ new stksounds[30][] = {
 
 //Exact Messages
 new stkmessages[30][] = {
-"%s: Multi-Kill!",
-"%s: Mega-Kill!",
-"%s: Rampage!",
-"%s: Monster-Kill!",
-"%s: Ultra-Kill!",
-"%s: Holy Shit!",
-"%s: Godlike!",
-"%s: Unstoppable!",
-"%s: Ludacriss-Kill!",
-"%s: Wicked Sick!",
-"%s: BlazeOfGlory!",
-"%s: Blood Bath!",
-"%s: Assasin!",
-"%s: Excellent!",
-"%s: Extermination!",
-"%s: Hat Trick!",
-"%s: Head Hunter!",
-"%s: Impressive!",
-"%s: Outstanding!",
-"%s: PayBack!",
-"%s: Retribution!",
-"%s: Vengeance!",
-"%s: Eagleeye!",
-"%s: Termination!",
-"%s: Unreal!",
-"%s: Topgun!",
-"%s: Killing Machine!",
-"%s: Maniac!",
-"%s: Mssacre!",
-"%s: Warpath!!!"}
+"%s IS ON MULTI KILL!",
+"%s IS ON MEGA KILL!",
+"%s IS ON RAMPAGE!",
+"%s MONSTER KILL!",
+"%s ULTRA KILL!",
+"%s SOMEONE STOP THIS MOTHERFUCKER!",
+"%s IS GODLIKE!",
+"%s IS UNSTOPPABLE!",
+"%s LUDACRISS KILL!",
+"%s IS WICKED SICK!",
+"%s BlazeOfGlory!",
+"%s MADE A BLOOD BATH!",
+"%s IS ASSASIN!",
+"%s IS A GOD OF THIS GAME",
+"%s MADE EXTERMINATION!",
+"%s HAT TRICK!",
+"%s IS HEAD HUNTER!",
+"%s IS IMPRESSIVE!",
+"%s OUTSTANDING!",
+"%s PAYBACK!",
+"%s RETRIBUTION!",
+"%s VENGEANCE!",
+"%s EAGLE EYE!",
+"%s TERMINATION!",
+"%s IS UNREAL, SOMEONE STOP HIM!",
+"%s TOPGUN!",
+"%s IS KILLING MACHINE!",
+"%s IS MANIAC!",
+"%s MADE A MASSACRE!",
+"%s WARPATH!!!"}
 
 
 new knifemessages[KNIFEMESSAGES][] = 
@@ -216,7 +216,7 @@ announce(killer, level)
     		new name[32];
 
    		get_user_name(killer, name, 32);
-		set_hudmessage(255, 255, 255, 0.30, 0.15, 2, 0.02, 6.0, 0.01, 0.1, 3);
+		set_hudmessage(255, 255, 255, 0.30, 0.5, 2, 0.02, 6.0, 0.01, 0.1, 3);
 		ShowSyncHudMsg(0, gmsgHudSync, stkmessages[level], name);
 	}
 
