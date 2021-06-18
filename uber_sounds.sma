@@ -85,7 +85,7 @@ new stksounds[30][] = {
 //Exact Messages
 new stkmessages[30][] = {
 "%s IS ON MULTI KILL!",
-"%s IS ON MEGA KILL!",
+"%s IS DOMINATING!",
 "%s IS ON RAMPAGE!",
 "%s MONSTER KILL!",
 "%s ULTRA KILL!",
@@ -216,7 +216,7 @@ announce(killer, level)
     		new name[32];
 
    		get_user_name(killer, name, 32);
-		set_hudmessage(255, 255, 255, 0.30, 0.5, 2, 0.02, 6.0, 0.01, 0.1, 3);
+		set_hudmessage(0, 100, random_num(1,255), 0.05, 0.65, 2, 0.02, 6.0, 0.01, 0.1, 2);
 		ShowSyncHudMsg(0, gmsgHudSync, stkmessages[level], name);
 	}
 
