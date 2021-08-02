@@ -13,7 +13,7 @@ enum _:InfoTable
     deaths,
     score
 }
-
+// This is a test message
 new info[128][InfoTable]
 new dmgTakenHUD, dmgDealtHUD
 
