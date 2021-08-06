@@ -5,7 +5,7 @@
 #define plug "Damage manager"
 #define ver "0.1"
 #define auth "Harmony & MuiX"
-
+// Basic Stuff
 enum _:InfoTable
 {
     kills,
@@ -13,7 +13,16 @@ enum _:InfoTable
     deaths,
     score
 }
-// This is a test message
+// Statistics
+enum _:StatTable
+{
+    stathealthstolen,
+    statheadshots,
+    statdeaths,
+    statkills,
+    statknifekills
+}
+new stat[128][StatTable]
 new info[128][InfoTable]
 new dmgTakenHUD, dmgDealtHUD
 
