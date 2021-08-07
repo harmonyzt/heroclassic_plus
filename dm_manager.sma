@@ -1,19 +1,21 @@
 #include <amxmodx>
 #include <fun>
 #include <dhudmessage>
+
 #pragma tabsize 0
-#define plug "Damage manager"
-#define ver "0.1"
-#define auth "Harmony & MuiX"
+#define plug "RPG UM [Utility Manager]"
+#define ver "0.2"
+#define auth "blurry & MuiX"
 
 enum _:InfoTable
 {
     kills,
     headshots,
     deaths,
-    score
+    score,
+    healed
 }
-// This is a test message
+
 new info[128][InfoTable]
 new dmgTakenHUD, dmgDealtHUD
 
@@ -51,10 +53,14 @@ public damage_taken(id)
             set_hudmessage(15, 180, 90, 0.54, 0.45, 0, 0.5, 0.30, 0.5, 0.5, -1);
             ShowSyncHudMsg(attacker, dmgDealtHUD, "%d", damage);
         }
+        //Calculating health we will give to player (attacker)
+        info[attacker][healed]= get_user_health(attacker) + 1;
+        set_user_health(attacker,info[attacker][healed]);
+        info[attacker][healed]= get_user_health(attacker)
     }
 }
 
-// Calls this whenever player dies.
+// Calling function on player death.
 public player_death() 
 {
     static killer, victim, hshot;
