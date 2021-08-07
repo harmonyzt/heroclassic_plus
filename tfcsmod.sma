@@ -22,12 +22,12 @@ new g_friend[32]
 
 public plugin_init() {
 	register_plugin(PLUGIN, VERSION, AUTHOR)
-	RegisterHam( Ham_TakeDamage, "player", "TakeDamage")	//пЕЦ оНКСВЕМХЪ СПНМЮ
-	register_logevent( "Start", 2, "1=Round_Start" );		//ЯРЮПР ПЮСМДЮ
+	RegisterHam( Ham_TakeDamage, "player", "TakeDamage")	
+	register_logevent( "Start", 2, "1=Round_Start" );		
 	iMaxPlayers=get_maxplayers()
 	register_dictionary("tf2.txt")
-	register_event("SendAudio", "tt", "a", "2&%!MRAD_terwin") 	//п÷п╬п╠п╣п╢п╟ я┌п╣я─п╬п╡
-	register_event("SendAudio", "ct", "a", "2&%!MRAD_ctwin")	//п÷п╬п╠п╣п╢п╟ п я┌
+	register_event("SendAudio", "tt", "a", "2&%!MRAD_terwin") 
+	register_event("SendAudio", "ct", "a", "2&%!MRAD_ctwin")	
 	register_event("StatusValue", "setTeam", "be", "1=1")
 }
 public Start(){
@@ -116,9 +116,9 @@ if(crit_chance>random_float(6.5,60.0) && crits[attacker] != true && mini_crits[a
 //MINI_CRIT SYSTEM
 if(get_user_weapon(attacker)==CSW_AK47 || get_user_weapon(attacker) == CSW_M4A1 || get_user_weapon(attacker) == CSW_DEAGLE || get_user_weapon(attacker) == CSW_AWP && mini_crits[attacker] != true && always_crit_win[attacker]!=true){		//mini crits to ak m4 deagle
 	
-	SetHamParamFloat(4,damage * random_float(1.2,1.4))//Mini damage crit
+	SetHamParamFloat(4,damage * random_float(1.2,1.4))	//Mini damage crit
 	
-	mini_crits[attacker]=true	//player gives mini_crit
+	mini_crits[attacker]=true	//player gets mini_crit
 	
 	set_task(0.2,"DeSet",attacker)	//delete mini-crit
 	
@@ -192,8 +192,7 @@ switch(randomm){
 }
 }
 
-
-//еякх анлас гюкнфхкх аеяй. йпхрш дн йнмжю пюсмдю
+// Turns critting always on when player wins the round
 if(always_crit_win[attacker]==true){
 	
 SetHamParamFloat(4,damage * 2.0)
@@ -218,21 +217,21 @@ switch(randomm){
 	}
 }
 }
-//опнбепъел опюбркэмн кх асдер пюанрюрэ гбсй оноюдюмхъ
+// Some checking
 if(always_crit_win[attacker]==true || crits[attacker]==true || mini_crits[attacker]==true && g_friend[victim]!=1)
 	return HAM_IGNORED
-
+// Usual hit sound
 client_cmd(attacker,"spk tfcs/hit")
 return HAM_IGNORED
 }
 
 //***************************
-//нопедекемхе дпсц щрн хкх мер
+//О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫
 //***************************
 public setTeam(id)
 g_friend[id] = read_data(2)
 //***************************
-//ялепрэ хцпнйю
+//О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫
 //***************************
 public client_death(killer,victim,wpindex,hitplace,TK){
 
@@ -259,7 +258,7 @@ kills[victim]=0
 new name[32];get_user_name(killer,name,31)
 
 //***************************
-//яреоемх сахиярб
+//О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫
 //***************************
 if(kills[killer]==5){
 	client_cmd(killer,"spk tfcs/kill_streak")
@@ -291,7 +290,7 @@ if(kills[killer]==25){
 }
 
 //****************************************************
-//еякх сахк я юбо хкх яйюсрю, рн опнхцпшбюел мюялеьйс
+//О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫, О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
 //****************************************************
 if(get_user_weapon(killer)==CSW_AWP || get_user_weapon(killer)==CSW_SCOUT){
 new chance=20
@@ -301,7 +300,7 @@ set_task(1.7,"Laugh_Sniper",killer)
 }
 
 //***************************
-//мюялеьйх ямюиоепю
+//О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
 //***************************
 public Laugh_Sniper(id){
 
@@ -320,7 +319,7 @@ switch(randomm){
 }
 }
 //***************************
-//деиярбхъ я анлани
+//О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫О©╫О©╫О©╫
 //***************************
 public bomb_planted(planter){
 new winners[32],num
@@ -338,7 +337,7 @@ always_crit_win[i]=false
 new winners[32],num,loosers[32],t_num
 get_players(winners,num,"ea","CT")
 get_players(winners,num,"ea","TERRORIST")
-//с ОПНХЦПЮБЬХУ РЕПНБ НРМХЛЮЧРЯЪ ЙПХРШ
+//О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫
 for (new i=0; i<t_num; i++){
 remove_task(loosers[i])
 always_crit_win[loosers[i]]=false
@@ -351,7 +350,7 @@ set_task(1.0,"sound_CRIT",winners[i])
 }
 }
 //***************************
-//бнгбпюыемхе гбсйнб йпхрю
+//О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫
 //***************************
 public sound_CRIT(id){
 client_cmd(id,"spk tfcs/crit_power2")
@@ -359,11 +358,11 @@ set_task(8.0,"sound_CRIT",id)
 }
 
 //**********************************
-//гюйнмвемн бнгбпюыемхе гбсйнб йпхрю
+//О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫
 //**********************************
 
 //***************************
-//жбермни вюр
+//О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫
 //***************************
 stock color_print(id, const text[], any:...) {
 	new message[128];
