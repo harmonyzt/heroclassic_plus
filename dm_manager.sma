@@ -6,6 +6,7 @@
 #define plug "RPG UM [Utility Manager]"
 #define ver "0.2"
 #define auth "blurry & MuiX"
+#define ADMIN_FLAG H
 
 enum _:InfoTable
 {
@@ -15,6 +16,15 @@ enum _:InfoTable
     score,
     healed
 }
+enum _:StatTable
+{
+    statheads,
+    statkills,
+    statdamage,
+    stathpstolen,
+    statdeaths
+}
+new stat[128][StatTable]
 
 new info[128][InfoTable]
 new dmgTakenHUD, dmgDealtHUD
@@ -54,12 +64,14 @@ public damage_taken(id)
             ShowSyncHudMsg(attacker, dmgDealtHUD, "%d", damage);
         }
         //Calculating health we will give to player (attacker)
+        if(get_user_flags == ADMIN_FLAG){
         info[attacker][healed]= get_user_health(attacker) + 1;
         set_user_health(attacker,info[attacker][healed]);
         info[attacker][healed]= get_user_health(attacker)
+        }
     }
 }
-idfhfe
+
 // Calling function on player death.
 public player_death() 
 {
