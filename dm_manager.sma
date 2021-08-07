@@ -59,7 +59,7 @@ public damage_taken(id)
         info[attacker][healed]= get_user_health(attacker)
     }
 }
-
+idfhfe
 // Calling function on player death.
 public player_death() 
 {
