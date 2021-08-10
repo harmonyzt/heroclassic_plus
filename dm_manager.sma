@@ -1,26 +1,27 @@
 #include <amxmodx>
 #include <fun>
 #include <dhudmessage>
+
 #pragma tabsize 0
-#define plug "Damage manager"
-#define ver "0.1"
-#define auth "Harmony & MuiX"
-// Basic Stuff
+#define plug "RPG UM [Utility Manager]"
+#define ver "0.2"
+#define auth "blurry & MuiX"
+#define ADMIN_FLAG H
+
 enum _:InfoTable
 {
     kills,
     headshots,
     deaths,
-    score
+    score,
 }
-// Statistics
 enum _:StatTable
 {
-    stathealthstolen,
-    statheadshots,
-    statdeaths,
+    statheads,
     statkills,
-    statknifekills
+    statdamage,
+    stathpstolen,
+    statdeaths
 }
 new stat[128][StatTable]
 new info[128][InfoTable]
@@ -60,10 +61,16 @@ public damage_taken(id)
             set_hudmessage(15, 180, 90, 0.54, 0.45, 0, 0.5, 0.30, 0.5, 0.5, -1);
             ShowSyncHudMsg(attacker, dmgDealtHUD, "%d", damage);
         }
+        //Calculating health we will give to player (attacker)
+        if(get_user_flags == ADMIN_FLAG){
+        info[attacker][healed]= get_user_health(attacker) + 1;
+        set_user_health(attacker,info[attacker][healed]);
+        info[attacker][healed]= get_user_health(attacker)
+        }
     }
 }
 
-// Calls this whenever player dies.
+// Calling function on player death.
 public player_death() 
 {
     static killer, victim, hshot;
