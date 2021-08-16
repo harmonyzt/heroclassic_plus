@@ -6,7 +6,7 @@
 #define plug "RPG UM [Utility Manager]"
 #define ver "0.2"
 #define auth "blurry & MuiX"
-#define ADMIN_FLAG H
+#define ADMIN_FLAG 'H'
 
 enum _:InfoTable
 {
@@ -14,6 +14,7 @@ enum _:InfoTable
     headshots,
     deaths,
     score,
+    healed
 }
 enum _:StatTable
 {
@@ -26,6 +27,7 @@ enum _:StatTable
 new stat[128][StatTable]
 new info[128][InfoTable]
 new dmgTakenHUD, dmgDealtHUD
+new isconnected[32]
 
 public plugin_init()
 {
@@ -38,6 +40,17 @@ public plugin_init()
     dmgDealtHUD = CreateHudSyncObj();
 }
 
+client_putinserver(id){
+    isconnected[32] = 1
+    set_task(2.5,"welcomepl",id,"",0,_,_)
+}
+client_disconnect(id){
+    isconnected[32] = 0
+}
+
+public welcomepl(id){
+    set_task(1.0,"record_demo",id,"",0,_,_)
+}
 // Triggers either first or second one depends on what team won.
 public t_won(){
 
@@ -62,7 +75,7 @@ public damage_taken(id)
             ShowSyncHudMsg(attacker, dmgDealtHUD, "%d", damage);
         }
         //Calculating health we will give to player (attacker)
-        if(get_user_flags == ADMIN_FLAG){
+        if(get_user_flags(attacker) & ADMIN_FLAG){
         info[attacker][healed]= get_user_health(attacker) + 1;
         set_user_health(attacker,info[attacker][healed]);
         info[attacker][healed]= get_user_health(attacker)
@@ -70,12 +83,12 @@ public damage_taken(id)
     }
 }
 
-// Calling function on player death.
+// Triggers on any player death.
 public player_death() 
 {
     static killer, victim, hshot;
     killer = read_data(1);
-    if (!is_user_connected(killer)) // Server crash fix or "Out of bounds" error
+    if (!is_user_connected(killer)) // Server crash fix "Out of bounds"
         return PLUGIN_HANDLED
 
     victim = read_data(2);
