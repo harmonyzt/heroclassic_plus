@@ -1,10 +1,11 @@
-#include <amxmodx>
-#include <fun>
-#include <dhudmessage>
+#include < amxmodx >
+#include < fun >
+#include < dhudmessage >
+#include < colorchat2 >
 
 #pragma tabsize 0
-#define plug "RPG UM [Utility Manager]"
-#define ver "0.2"
+#define plug "MSM"
+#define ver "0.3"
 #define auth "blurry & MuiX"
 #define ADMIN_FLAG 'H'
 
@@ -40,17 +41,27 @@ public plugin_init()
     dmgDealtHUD = CreateHudSyncObj();
 }
 
-client_putinserver(id){
+public client_putinserver(id){
     isconnected[32] = 1
-    set_task(2.5,"welcomepl",id,"",0,_,_)
+    set_task(2.5,"welcomepl",id)
 }
-client_disconnect(id){
+
+public client_disconnect(id){
     isconnected[32] = 0
 }
 
 public welcomepl(id){
-    set_task(1.0,"record_demo",id,"",0,_,_)
+    set_task(1.0,"record_demo", id)
+    client_cmd(id,"spk msm/welcome")
 }
+
+public record_demo(id){
+    new mapname[32]; new randomnrd = random_num(1,9999)
+    get_mapname(mapname,31)
+    ColorChat(id, TEAM_COLOR, "%L", LANG_PLAYER, "DEMO_RECORDING", mapname[32], randomnrd)
+    client_cmd(id,"record fireplay_%s%d", apname[32], randomnrd)
+}
+
 // Triggers either first or second one depends on what team won.
 public t_won(){
 

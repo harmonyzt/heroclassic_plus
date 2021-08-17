@@ -1,0 +1,2 @@
+[en]
+DEMO_RECORDING = Welcome to Fire Play. Right now we are recording a demo - fireplay_%s%d. Have fun!
