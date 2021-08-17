@@ -1,2 +1,10 @@
 [en]
-DEMO_RECORDING = Welcome to Fire Play. Right now we are recording a demo - fireplay_%s%d. Have fun!
+DEMO_RECORDING = Welcome to Fire Play. Right now we are recording a demo - fireplay_%s%d. GL&HF
+
+FIRST_BLOOD = %s SPLIT THE FIRST BLOOD!
+TRIPLE_KILL = %s JUST MADE TRIPLE KILL!
+MULTI_KILL = %s IS ON MULTI KILL!
+KILLING_SPREE = %s IS ON KILLING SPREE!
+UNSTOPPABLE = %s IS FUCKING UNSTOPPABLE!
+MANIAC = %s IS A MANIAC! SOMEONE STOP HIM!
+MASSACRE = %s JUST MADE MASSACRE! NO ONE CAN STOP HIM!

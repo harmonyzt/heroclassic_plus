@@ -3,7 +3,7 @@
 
 #define PLUGIN "megakill main plugin"
 #define VERSION "1.0"
-#define AUTHOR "andrey"
+#define AUTHOR ""
 
 public plugin_init() {
 	register_plugin(PLUGIN, VERSION, AUTHOR)
