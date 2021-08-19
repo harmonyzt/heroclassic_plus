@@ -165,6 +165,7 @@ public player_death()
 		remove_task(MSM_TASK_INFORMER);
 		set_task( MSM_BOSS_TIME, "msm_boss_random" );
 		client_print( 0, print_chat, "%L", LANG_PLAYER, "BOSS_DEATH", killername, float_to_num( MSM_BOSS_TIME ) );
+        client_cmd(0,"spk msm/boss_defeated")
 	}
 
     if (killer != victim && isconnected[killer] == 1 && isconnected[victim] == 1)
@@ -248,7 +249,7 @@ stock freeze_player( id, status ) {
 public msm_boss_info() {
 	if( msm_boss <= 0 ) return PLUGIN_HANDLED;
 	for( new id = 1; id <= mxPlayers; id++ ) {
-		set_hudmessage( 0, 127, 255, -1.0, 0.21, 0, 0.50, 1.0 );
+		set_hudmessage( 0, 127, 255, -1.0, 0.15, 0, 0.50, 1.0 );
 		show_hudmessage( id, "%L", LANG_PLAYER, "BOSS_HEALTH", get_user_health( msm_boss ) );
 	}
 	return PLUGIN_CONTINUE;
@@ -267,6 +268,10 @@ public msm_boss_timer() {
 }
 
 showMenu (id) {
+    if(is_user_bot(id) == 1){
+        msm_set_user_boss(id);
+        return PLUGIN_HANDLED;
+    }
 	new buffer [ 512 ], len = format( buffer, charsmax( buffer ), "%L", LANG_PLAYER, "BOSS_CHOOSE_MENU", timeselect );
 	
 	len += format( buffer[ len ], charsmax( buffer ) - len, "%L", LANG_PLAYER, "BOSS_BECOME_MENU");
@@ -290,7 +295,7 @@ public msm_func_boss( id, key ) {
 public msm_boss_random() {
 	if(get_playersnum() >= MSM_BOSS_PLAYERS ) {
 		static Players[32], Count, id_rand;
-		get_players(Players, Count, "ach");
+		get_players(Players, Count, "ah");
 		id_rand = random_num(0, Count - 1);
 		msm_boss = Players[id_rand];
 		msm_active = true;
@@ -308,7 +313,7 @@ public msm_set_user_boss(id) {
 		set_user_health(id, MSM_BOSS_HEALTH);
 		set_task (1.0, "msm_boss_info", MSM_TASK_INFORMER, _, _, "b");
 		freeze_player(msm_boss, false );
-		
+		client_cmd(0,"spk msm/boss_spawned")
 		switch(cs_get_user_team(id)) {
 			case CS_TEAM_T: set_user_rendering(id, kRenderFxGlowShell, 255, 0, 0, kRenderNormal, 4);
 			case CS_TEAM_CT: set_user_rendering(id, kRenderFxGlowShell, 0, 0, 255, kRenderNormal, 4);
@@ -326,4 +331,6 @@ public plugin_precache(){
     precache_sound("msm/serverjoin.wav")
     precache_sound("msm/triplekill.wav")
     precache_sound("msm/unstoppable.wav")
+    precache_sound("msm/boss_defeated.wav")
+    precache_sound("msm/boss_spawned.wav")
 }
