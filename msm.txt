@@ -8,3 +8,12 @@ KILLING_SPREE = %s IS ON KILLING SPREE!
 UNSTOPPABLE = %s IS FUCKING UNSTOPPABLE!
 MANIAC = %s IS A MANIAC! SOMEONE STOP HIM!
 MASSACRE = %s JUST MADE MASSACRE! NO ONE CAN STOP HIM!
+
+BOSS_LEFT = %s (Boss) just left the game... New boss will appear in %d.
+BOSS_DEATH = %s Defeated the boss! New boss will appear in %d.
+BOSS_HEALTH = Aware! Boss has %d health!
+BOSS_CHOOSE_MENU = \yDo you want to become a boss?^n\dYou have %d sec.
+BOSS_BECOME_MENU = n^n\d[1].\w Become Boss
+BOSS_DECLINE_MENU = ^n\d[2].\w I don't want to
+BOSS_TIMEOUT = Time out!
+BOSS_NOPLAYERS = No boss have chosen.
