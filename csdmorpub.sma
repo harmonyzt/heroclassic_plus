@@ -1,7 +1,7 @@
 /********************************************************************************************************		
 ----------------------	
 Note
-I made this description in english because AMXX-Studio unlike russian language on ANSI AND UTF-8 coding
+I made this description in english because AMXX-Studio doesn't like russian language on ANSI AND UTF-8 coding
 --------------------			
 Its modernized plugin version of original Public or CSDM
 If you want more meat, type /ffa (for meat disabled :DDDDDD)
@@ -24,26 +24,26 @@ Added Administrator menu (More bugs, later, I fix them)
 Added Player Menu
 Added Add-on (status_Value)
 MORE FUNCTIONS
-For users of flags H in new round + 5 Exp Army Ranks (Neded Evil Army ranks)
+For users of flags H in new round + 5 Exp Army Ranks (Needs Evil Army ranks)
 Needed plugins for good works of main plugin
 1) Evil Army Ranks (All versions)
 2) Army Ranks (Some versions)
 3) CSDM MAIN (VERY IMPORTANT)
 4) CSDM FFA (VERY IMPORTANT)
-5) CSDM EQUIP (on your taste)
+5) CSDM EQUIP
 6) CSDM PRESET SPAWN (VERY IMPORTANT)
 7) CSDM TICKETS (VERY IMPORTANT)
-7) GUNGAME REFIL AMMO gg_ammo
-8) WEAPON REMOVER test_wpnrmv (CSDM wpn remover bad works)
+7) GUNGAME REFILL AMMO gg_ammo
+8) WEAPON REMOVER test_wpnrmv (CSDM wpn remover works really bad)
 **************************************************************************************************************/
 
 #include < amxmodx >	//Core of this Plugin
-#include < fun >	// Nedded for set_user_frags
-#include < dhudmessage >	// Nedded for show_dhudmessage
-#include < cstrike >	// Nedded for cs_set_user_deaths
-#include < csdm >	// Nedded for CSDM COMMANDS
-#include < hamsandwich >	//Nedded for Check new Round
-#include < evil_army >		//Nedded for Exp+
+#include < fun >	// Needed for set_user_frags
+#include < dhudmessage >	// Needed for show_dhudmessage
+#include < cstrike >	// Needed for cs_set_user_deaths
+#include < csdm >	// Needed for CSDM COMMANDS
+#include < hamsandwich >	//Needed for Check new Round
+#include < evil_army >		//Needed for Exp+
 #include < ColorChat2 >		//color chat doesnt works (* colorchat2)
 #include < amxmisc >		//configsDir
 
@@ -423,7 +423,6 @@ client_cmd(id,"record ^"ShalnayaPulya_%s^"",getmap)
 ColorChat(id,RED,"-----------------------------------------")
 ColorChat(id,GREY,"Сейчас идет запись демо")
 ColorChat(id,GREY,"Имя демо: ShalnayaPulya_%s", getmap)
-ColorChat(id,GREY,"Плагин сделал Андрей")
 ColorChat(id,RED,"-----------------------------------------")
 }else{
 return
