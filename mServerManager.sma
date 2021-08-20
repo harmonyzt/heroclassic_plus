@@ -47,7 +47,7 @@ public plugin_init()
     register_logevent("round_start", 2, "1=Round_Start");
     register_dictionary("msm.txt");
     RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);  //Catching incoming damage.
-    register_menu("class_choose_menu", 1023, "msm_func_classchange");
+    //register_menu("class_choose_menu", 1023, "msm_func_classchange");
 	set_task(15.0, "msm_boss_random",_,_,_,"b");
     //register_clcmd("say /svm", "class_change")
 }
