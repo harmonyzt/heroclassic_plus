@@ -7,20 +7,22 @@
 #include < hamsandwich >//For catching player's damage and increasing it.
 #include < fakemeta >   //For custom player models.
 
+////////   PLUGIN CHILD-INCLUDES   //////////
+
+//#include "PREF_SERVMANAGER/class_init_sl.inl"
+
+/////////////////////////////////////
+
 #pragma     tabsize 0
 #define plug    "MSM"
-#define ver     "0.4"
+#define ver     "0.6b"
 #define auth    "blurry & MuiX"
 #define ADMIN_FLAG  'H'
 
-#define MSM_TASK_RANDOM      665    // ID of random task.
-#define MSM_TASK_TIMER       666    // ID of timer.
-#define MSM_TASK_INFORMER    667    // ID of informer (might delete it soon)
+#define MSM_TASK_RANDOM      675    // ID of random task.
 
 #define MSM_BOSS_HEALTH 2000					//Boss health.
 #define MSM_BOSS_AMMO   300						//Ammo for boss.
-#define MSM_BOSS_SELECT	5						//Time for player to select to be a boss or not.
-#define MSM_BOSS_TIME   60.0					//Delay between searching a new boss.
 #define MSM_BOSS_PLAYERS    4					//Start choosing boss if 'n' player or more.
 #define MSM_BOSS_DAMAGE 2.3						//Damage multiplier.
 
@@ -31,58 +33,36 @@ enum _:InfoTable
     score,
     healed
 }
-enum _:StatTable
-{
-    statheads,
-    statkills,
-    statdamage,
-    stathpstolen,
-    statdeaths,
-    statfbmade,
-}
-new stat[128][StatTable]
-new info[128][InfoTable]
-new dmgTakenHUD, dmgDealtHUD
-new isconnected[32]
-new isFirstBlood = 0
-new announcehud
-new mxPlayers
-new msm_boss, msm_active = false
-new timeselect = MSM_BOSS_SELECT
+new info[128][InfoTable];
+new dmgTakenHUD, dmgDealtHUD;
+new isFirstBlood = 0;
+new announcehud;
+new msm_boss, msm_active = 0;
 
 public plugin_init()
 {
     register_plugin(plug, ver, auth);
-    register_event("SendAudio", "t_won", "a", "2&%!MRAD_terwin"); 	//TT win trigger
-	register_event("SendAudio", "ct_won", "a", "2&%!MRAD_ctwin");	//CT win trigger
     register_event("Damage", "damage_taken", "b", "2!0", "3=0", "4!0");
-    register_event( "DeathMsg","player_death","a");
-    register_logevent( "round_start", 2, "1=Round_Start" );
+    register_event("DeathMsg","player_death","a");
+    register_logevent("round_start", 2, "1=Round_Start");
     register_dictionary("msm.txt");
-    RegisterHam( Ham_TakeDamage, "player", "fwd_Take_Damage", 0 );  //Catching incoming damage.
-    register_menu( "msm_menu_boss", 1023, "msm_func_boss" );
-	set_task( MSM_BOSS_TIME, "msm_boss_random", MSM_TASK_RANDOM );
-    set_task( MSM_BOSS_TIME, "msm_boss_random", MSM_TASK_RANDOM );
-    mxPlayers = get_maxplayers();
-    dmgTakenHUD = CreateHudSyncObj();
-    dmgDealtHUD = CreateHudSyncObj();
-    announcehud = CreateHudSyncObj();
+    RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);  //Catching incoming damage.
+    //register_menu("class_choose_menu", 1023, "msm_func_classchange");
+	set_task(15.0, "msm_boss_random",_,_,_,"b");
+    //register_clcmd("say /svm", "class_change")
 }
 
 public client_putinserver(id){
-    isconnected[id] = 1
     set_task(2.5,"welcomepl",id)
 }
 
 public client_disconnect(id){
     new dcName[32]
-    if( msm_active && id == msm_boss ) {    //Checking if boss left or not and announcing next one.
+    if( msm_active == 1 && id == msm_boss ) {    //Checking if boss left or not and announcing next one.
 		msm_boss = 0;
-		msm_active = true;
-		set_task(MSM_BOSS_TIME, "msm_boss_random");
-		client_print(0, print_chat, "%L", LANG_PLAYER, "BOSS_LEFT", get_user_name(id,dcName,31), MSM_BOSS_TIME);
+		msm_active = 0;
+		client_print(0, print_chat, "%L", LANG_PLAYER, "BOSS_LEFT", get_user_name(id,dcName,31));
 	}
-    isconnected[id] = 0
     return PLUGIN_CONTINUE;
 }
 
@@ -98,26 +78,17 @@ public record_demo(id){
     client_cmd(id,"record fireplay_%s%d", mapname, randomnrd)
 }
 
-// Triggers either first or second one depends on what team won.
-public t_won(){
-
-}
-
-public ct_won(){
-
-}
-
 public round_start(){
     isFirstBlood = 0
-    for(new id = 1; id <= get_maxplayers(); id++){
+    //for(new id = 1; id <= get_maxplayers(); id++){
        // info[id][death] = 0
-    }
+    //}
 }
 
 // Damage Visualisation.
 public damage_taken(id)
 {
-    if (isconnected[id] == 1 )
+    if (is_user_connected(id))
     {
         new damage, attacker;
         damage = read_data(2)
@@ -143,10 +114,9 @@ public player_death()
 {
     static killer, victim, hshot;
     killer = read_data(1);
-    if (isconnected[killer] == 0) // Server crash fix "Out of bounds"
-        return PLUGIN_HANDLED
-
     victim = read_data(2);
+    if (!is_user_connected(killer) | !is_user_connected(victim)) // Server crash fix "Out of bounds"
+        return PLUGIN_HANDLED
     hshot = read_data(3);
     new killername[32]
     get_user_name(killer, killername, 31);
@@ -161,14 +131,12 @@ public player_death()
     if(victim == msm_boss) {    //Death of boss.
 		cs_reset_user_model(victim);
 		msm_boss = 0; set_user_rendering(victim, kRenderFxGlowShell, 0, 0, 0, kRenderNormal, 0);
-		msm_active = true;
-		remove_task(MSM_TASK_INFORMER);
-		set_task( MSM_BOSS_TIME, "msm_boss_random" );
-		client_print( 0, print_chat, "%L", LANG_PLAYER, "BOSS_DEATH", killername, float_to_num( MSM_BOSS_TIME ) );
+		msm_active = 0;
+		client_print(0, print_chat, "%L", LANG_PLAYER, "BOSS_DEATH", killername);
         client_cmd(0,"spk msm/boss_defeated")
 	}
 
-    if (killer != victim && isconnected[killer] == 1 && isconnected[victim] == 1)
+    if (killer != victim)
     {
         info[killer][score] += 10
         info[victim][score] -=10
@@ -217,10 +185,13 @@ public player_death()
 }
 
 // Catching incoming damage (since it's not event its from ham inc i had to make another one :/)
-public fwd_Take_Damage( victim, inflicator, attacker, Float:damage ) {
-	if( isconnected[attacker] == 0 || msm_boss != attacker ) return;
-	if( victim == attacker || !victim ) return;
-	SetHamParamFloat( 4, damage * MSM_BOSS_DAMAGE );
+public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
+	if(!is_user_connected(attacker)) return;
+	if(victim == attacker || !victim) return;
+    if(msm_boss == attacker){ //Multiplying damage for boss
+	    SetHamParamFloat( 4, damage * MSM_BOSS_DAMAGE );
+    }
+
 }
 
 // Simple as that.
@@ -246,74 +217,29 @@ stock freeze_player( id, status ) {
 	return true;
 }
 
-public msm_boss_info() {
-	if( msm_boss <= 0 ) return PLUGIN_HANDLED;
-	for( new id = 1; id <= mxPlayers; id++ ) {
-		set_hudmessage( 0, 127, 255, -1.0, 0.15, 0, 0.50, 1.0 );
-		show_hudmessage( id, "%L", LANG_PLAYER, "BOSS_HEALTH", get_user_health( msm_boss ) );
-	}
-	return PLUGIN_CONTINUE;
-}
-
-public msm_boss_timer() {
-	if( timeselect == 0 && msm_boss != 0 ) {
-		remove_task( MSM_TASK_TIMER );
-		freeze_player( msm_boss, false );
-		msm_boss = 0;
-	} else {
-		timeselect--;
-		freeze_player(msm_boss, true);
-		showMenu(msm_boss);
-	}
-}
-
-showMenu (id) {
-    if(is_user_bot(id) == 1){
-        msm_set_user_boss(id);
-        return PLUGIN_HANDLED;
-    }
-	new buffer [ 512 ], len = format( buffer, charsmax( buffer ), "%L", LANG_PLAYER, "BOSS_CHOOSE_MENU", timeselect );
-	
-	len += format( buffer[ len ], charsmax( buffer ) - len, "%L", LANG_PLAYER, "BOSS_BECOME_MENU");
-	len += format( buffer[ len ], charsmax( buffer ) - len, "%L", LANG_PLAYER, "BOSS_DECLINE_MENU");
-	
-	show_menu( id, MENU_KEY_0|MENU_KEY_1, buffer, -1, "msm_menu_boss" );
-	return PLUGIN_CONTINUE;
-}
-
-public msm_func_boss( id, key ) {
-	if( timeselect <= 0 || msm_boss != id ) { client_print(id, print_chat, "%L", LANG_PLAYER, "BOSS_TIMEOUT"); return PLUGIN_HANDLED; }
-	switch( key ) {
-		case 0: msm_set_user_boss(id);
-		case 1: freeze_player( msm_boss, false);
-		case 9: showMenu(id);
-	}
-	remove_task(MSM_TASK_TIMER);
-	return PLUGIN_HANDLED;
-}
-
 public msm_boss_random() {
-	if(get_playersnum() >= MSM_BOSS_PLAYERS ) {
+	if(msm_active == 0) {
 		static Players[32], Count, id_rand;
 		get_players(Players, Count, "ah");
 		id_rand = random_num(0, Count - 1);
 		msm_boss = Players[id_rand];
-		msm_active = true;
-		timeselect = MSM_BOSS_SELECT;
-		set_task (1.0, "msm_boss_timer", MSM_TASK_TIMER, _, _, "b");
-		remove_task(MSM_TASK_RANDOM );
-	} else client_print(0, print_chat, "%L", LANG_PLAYER, "BOSS_NOPLAYERS");
+		msm_active = 1;
+        msm_set_user_boss(msm_boss);
+        console_print(0,"Boss appeared");
+        server_print("Boss appeared")
+	}
 }
 
 public msm_set_user_boss(id) {
 	if( is_user_connected(id)) {
 		//cs_set_user_model(id,"entermodelhere");
+        console_print(0,"Boss appeared");
 		give_item(id,"weapon_m249");
 		cs_set_user_bpammo(id, CSW_M249, MSM_BOSS_AMMO);
 		set_user_health(id, MSM_BOSS_HEALTH);
-		set_task (1.0, "msm_boss_info", MSM_TASK_INFORMER, _, _, "b");
-		freeze_player(msm_boss, false );
 		client_cmd(0,"spk msm/boss_spawned")
+        console_print(0,"Setting boss");
+        server_print("Setting boss")
 		switch(cs_get_user_team(id)) {
 			case CS_TEAM_T: set_user_rendering(id, kRenderFxGlowShell, 255, 0, 0, kRenderNormal, 4);
 			case CS_TEAM_CT: set_user_rendering(id, kRenderFxGlowShell, 0, 0, 255, kRenderNormal, 4);
@@ -333,4 +259,7 @@ public plugin_precache(){
     precache_sound("msm/unstoppable.wav")
     precache_sound("msm/boss_defeated.wav")
     precache_sound("msm/boss_spawned.wav")
+    dmgTakenHUD = CreateHudSyncObj();
+    dmgDealtHUD = CreateHudSyncObj();
+    announcehud = CreateHudSyncObj();
 }
