@@ -9,7 +9,7 @@
 
 ////////   PLUGIN CHILD-INCLUDES   //////////
 
-//#include "PREF_SERVMANAGER/class_init_sl.inl"
+#include "PREF_SERVMANAGER/class_init_sl.inl"
 
 /////////////////////////////////////
 
@@ -42,14 +42,14 @@ new msm_boss, msm_active = 0;
 public plugin_init()
 {
     register_plugin(plug, ver, auth);
-    register_event("Damage", "damage_taken", "b", "2!0", "3=0", "4!0");
-    register_event("DeathMsg","player_death","a");
-    register_logevent("round_start", 2, "1=Round_Start");
-    register_dictionary("msm.txt");
-    RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);  //Catching incoming damage.
-    //register_menu("class_choose_menu", 1023, "msm_func_classchange");
-	set_task(15.0, "msm_boss_random",_,_,_,"b");
-    //register_clcmd("say /svm", "class_change")
+    register_event("Damage", "damage_taken", "b", "2!0", "3=0", "4!0"); //
+    register_event("DeathMsg","player_death","a");                      //
+    register_logevent("round_start", 2, "1=Round_Start");               //
+    register_dictionary("msm.txt");                                     //
+    RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        //Catching incoming damage.
+    register_menu("class_choose_menu", 1023, "msm_func_classchange");   //
+    register_clcmd("say /svm", "class_change")                          //
+    set_task(15.0, "msm_boss_random",_,_,_,"b");                        //
 }
 
 public client_putinserver(id){

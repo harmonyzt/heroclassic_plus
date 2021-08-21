@@ -1,10 +1,10 @@
-/*enum _:attributes
+enum _:attributes
 {
     damage, speed, lifesteal, sl_leashstack, sl_leashstolen
 };
 new attribute[128][attributes];
 
-menuchange (id) {
+class_change(id) {
 	new buffer [512], len = format( buffer, charsmax( buffer ), "%L");
 	
 	len += format( buffer[ len ], charsmax( buffer ) - len, "%L", LANG_PLAYER, "BOSS_BECOME_MENU");
@@ -22,4 +22,3 @@ public msm_func_classchange(id, key) {
 	}
 	return PLUGIN_HANDLED;
 }
-*/
