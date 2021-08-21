@@ -7,11 +7,6 @@
 #include < hamsandwich >//For catching player's damage and increasing it.
 #include < fakemeta >   //For custom player models.
 
-////////   PLUGIN CHILD-INCLUDES   //////////
-
-#include "PREF_SERVMANAGER/class_init_sl.inl"
-
-/////////////////////////////////////
 
 #pragma     tabsize 0
 #define plug    "MSM"
@@ -32,7 +27,7 @@ enum _:InfoTable
     headshots,
     score,
     healed
-}
+};
 new info[128][InfoTable];
 new dmgTakenHUD, dmgDealtHUD;
 new isFirstBlood = 0;
@@ -46,11 +41,17 @@ public plugin_init()
     register_event("DeathMsg","player_death","a");                      //
     register_logevent("round_start", 2, "1=Round_Start");               //
     register_dictionary("msm.txt");                                     //
-    RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        //Catching incoming damage.
+    RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
     register_menu("class_choose_menu", 1023, "msm_func_classchange");   //
-    register_clcmd("say /svm", "class_change")                          //
-    set_task(15.0, "msm_boss_random",_,_,_,"b");                        //
+    register_clcmd("say /svm", "class_change")                          // Class change menu
+    set_task(15.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 15 seconds. TODO: cfg
 }
+
+////////   PLUGIN CHILD-INCLUDES   //////////
+
+#include "PREF_SERVMANAGER/intMenu.inl"
+
+/////////////////////////////////////
 
 public client_putinserver(id){
     set_task(2.5,"welcomepl",id)
@@ -63,6 +64,7 @@ public client_disconnect(id){
 		msm_active = 0;
 		client_print(0, print_chat, "%L", LANG_PLAYER, "BOSS_LEFT", get_user_name(id,dcName,31));
 	}
+    class[id][]
     return PLUGIN_CONTINUE;
 }
 
@@ -83,30 +85,6 @@ public round_start(){
     //for(new id = 1; id <= get_maxplayers(); id++){
        // info[id][death] = 0
     //}
-}
-
-// Damage Visualisation.
-public damage_taken(id)
-{
-    if (is_user_connected(id))
-    {
-        new damage, attacker;
-        damage = read_data(2)
-        attacker = get_user_attacker(id)
-        set_hudmessage(234, 75, 75, 0.54, 0.52, 0, 0.5, 0.30, 0.5, 0.5, -1)
-        ShowSyncHudMsg(id, dmgTakenHUD, "%d", damage)
-        if ((attacker > 0) && (attacker < 33))
-        {
-            set_hudmessage(15, 180, 90, 0.54, 0.45, 0, 0.5, 0.30, 0.5, 0.5, -1);
-            ShowSyncHudMsg(attacker, dmgDealtHUD, "%d", damage);
-        }
-        //Calculating health we will give to player (attacker)
-        if(get_user_flags(attacker) & ADMIN_FLAG){
-        info[attacker][healed]= get_user_health(attacker) + 1;
-        set_user_health(attacker,info[attacker][healed]);
-        info[attacker][healed]= get_user_health(attacker)
-        }
-    }
 }
 
 // Triggers on any player death.
@@ -186,12 +164,24 @@ public player_death()
 
 // Catching incoming damage (since it's not event its from ham inc i had to make another one :/)
 public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
-	if(!is_user_connected(attacker)) return;
+	if(!is_user_connected(attacker) | !is_user_connected(victim)) return;
 	if(victim == attacker || !victim) return;
     if(msm_boss == attacker){ //Multiplying damage for boss
 	    SetHamParamFloat( 4, damage * MSM_BOSS_DAMAGE );
     }
 
+    set_hudmessage(234, 75, 75, 0.54, 0.52, 0, 0.5, 0.30, 0.5, 0.5, -1);
+    ShowSyncHudMsg(victim, dmgTakenHUD, "%d", damage);
+        if ((attacker > 0) && (attacker < 33)){
+            set_hudmessage(15, 180, 90, 0.54, 0.45, 0, 0.5, 0.30, 0.5, 0.5, -1);
+            ShowSyncHudMsg(attacker, dmgDealtHUD, "%d", damage);
+        }
+        //Calculating health we will give to player (attacker)
+        if(get_user_flags(attacker) & ADMIN_FLAG){
+        info[attacker][healed]= get_user_health(attacker) + 1;
+        set_user_health(attacker,info[attacker][healed]);
+        info[attacker][healed]= get_user_health(attacker)
+        }
 }
 
 // Simple as that.

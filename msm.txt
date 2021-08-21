@@ -12,8 +12,7 @@ MASSACRE = %s JUST MADE MASSACRE! NO ONE CAN STOP HIM!
 BOSS_LEFT = %s (Boss) just left the game... 
 BOSS_DEATH = %s Defeated the boss! 
 BOSS_HEALTH = Aware! Boss has %d health!
-BOSS_CHOOSE_MENU = \yDo you want to become a boss?^n\dYou have %d sec.
-BOSS_BECOME_MENU = n^n\d[1].\w Become Boss
-BOSS_DECLINE_MENU = ^n\d[2].\w I don't want to
-BOSS_TIMEOUT = Time out!
 BOSS_NOPLAYERS = No boss have chosen.
+
+CLASS_CHANGE = Welcome to \dServer Manager
+CLASS_CHOOSE_SL = Play as Slark
