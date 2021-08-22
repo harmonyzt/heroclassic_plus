@@ -6,11 +6,12 @@
 #include < cstrike >    //For catching player's team and giving ammo.
 #include < hamsandwich >//For catching player's damage and increasing it.
 #include < fakemeta >   //For custom player models.
+#include < csdm >
 
 
 #pragma     tabsize 0
 #define plug    "MSM"
-#define ver     "0.7"
+#define ver     "0.8p"
 #define auth    "blurry & MuiX"
 #define ADMIN_FLAG  'H'
 
@@ -34,19 +35,6 @@ new isFirstBlood = 0;
 new announcehud;
 new msm_boss, msm_active = 0;
 
-// Class / Attributes start
-enum _:attributes
-{
-    dmg, speed, lifesteal, sl_leashstack, sl_leashstolen
-};
-
-enum _:classes
-{
-    none, sl, pg
-};
-new attribute[128][attributes];
-new class[128][classes];
-
 public plugin_init()
 {
     register_plugin(plug, ver, auth);
@@ -57,6 +45,13 @@ public plugin_init()
     register_clcmd( "say /svm","class_change" );
     set_task(15.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 15 seconds. TODO: cfg
 }
+
+//////////////// Trying this once again ////////////////
+
+#include "PREF_SERVMANAGER/intMenu.inl"
+#include "PREF_SERVMANAGER/preSpawnInt.inl"
+
+////////////////////////////////////////////////////////
 
 public client_putinserver(id){
     set_task(2.5,"welcomepl",id)
@@ -246,40 +241,6 @@ public msm_set_user_boss(id) {
 		}
 	}
 }
-
-// Here goes everything that is related to heroes
-public class_change(id){
-    new menu = menu_create( "\rChoose your class", "menu_handler" );
-    menu_additem( menu, "\wPlay as \ySlark ", "", 0 );
-    menu_additem( menu, "\wPlay as \yUndying", "", 0 );
-    menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
-    menu_display( id, menu, 0 );
- }
-
- public menu_handler(id, menu, item)
- {
-    switch(item)
-    {
-        case 0:
-        {
-         	menu_destroy(menu);
-         	return PLUGIN_HANDLED;
-        }
-        case 1:
-        {
-        	menu_destroy(menu);
-         	return PLUGIN_HANDLED;
-        }
-        case MENU_EXIT:
-        {
-        	menu_destroy(menu);
-         	return PLUGIN_HANDLED;
-        }
-    }
-	menu_destroy( menu );
-    return PLUGIN_HANDLED;
- }
-
 public plugin_precache(){
     precache_sound("msm/firstblood.wav")
     precache_sound("msm/headshot.wav")

@@ -1,6 +1,6 @@
 enum _:attributes
 {
-    dmg, speed, lifesteal, sl_leashstack, sl_leashstolen
+    dmg, speed, lifesteal, sl_leashstack, sl_leashstolen, spawnhealth
 };
 
 enum _:classes
@@ -11,9 +11,9 @@ new attribute[128][attributes];
 new class[128][classes];
 
 public class_change(id){
-    new menu = menu_create( "\rServer Manager", "menu_handler" );
-    menu_additem( menu, "\wChoose 1", "", 0 );
-    menu_additem( menu, "\wChoose 2", "", 0 );
+    new menu = menu_create( "\rChoose your class", "menu_handler" );
+    menu_additem( menu, "\wPlay as \ySlark ", "", 0 );
+    menu_additem( menu, "\wPlay as \yUndying", "", 0 );
     menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
     menu_display( id, menu, 0 );
  }
