@@ -10,27 +10,34 @@ enum _:classes
 new attribute[128][attributes];
 new class[128][classes];
 
-public class_change(id) {
-	new buffer [512], len = format( buffer, charsmax( buffer ), "%L", LANG_PLAYER, "CLASS_CHANGE");
-	
-	len += format( buffer[ len ], charsmax( buffer ) - len, "%L", LANG_PLAYER, "CLASS_SL");
-	len += format( buffer[ len ], charsmax( buffer ) - len, "%L", LANG_PLAYER, "CLASS_PG");
-	
-	show_menu( id, MENU_KEY_0|MENU_KEY_1, buffer, -1, "class_choose_menu" );
-}
-public msm_func_classchange(id, key) {
-	switch( key ) {
-		case 0:{
-		class[id][none] = 0
-		class[id][pg] = 0
-		class[id][sl] = 1
-		}
-		case 1:{
-		class[id][none] = 0
-		class[id][pg] = 1
-		class[id][sl] = 0
-		}
-		case 9: return  0;
-	}
-	return PLUGIN_HANDLED;
-}
+public class_change(id){
+    new menu = menu_create( "\rServer Manager", "menu_handler" );
+    menu_additem( menu, "\wChoose 1", "", 0 );
+    menu_additem( menu, "\wChoose 2", "", 0 );
+    menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
+    menu_display( id, menu, 0 );
+ }
+
+ public menu_handler(id, menu, item)
+ {
+    switch(item)
+    {
+        case 0:
+        {
+         	menu_destroy(menu);
+         	return PLUGIN_HANDLED;
+        }
+        case 1:
+        {
+        	menu_destroy(menu);
+         	return PLUGIN_HANDLED;
+        }
+        case MENU_EXIT:
+        {
+        	menu_destroy(menu);
+         	return PLUGIN_HANDLED;
+        }
+    }
+	menu_destroy( menu );
+    return PLUGIN_HANDLED;
+ }

@@ -14,5 +14,9 @@ BOSS_DEATH = %s Defeated the boss!
 BOSS_HEALTH = Aware! Boss has %d health!
 BOSS_NOPLAYERS = No boss have chosen.
 
-CLASS_CHANGE = Welcome to \dServer Manager
-CLASS_CHOOSE_SL = Play as Slark
+CLASS_CHANGE = \wWelcome to \rServer Manager^n^n
+CLASS_SL = \wPlay as \ySlark^n
+CLASS_PG = \wPlay as \yUndying^n
+
+SL_PLAY = You are playing as slark now.
+PG_PLAY = You are playing as unduying now.
