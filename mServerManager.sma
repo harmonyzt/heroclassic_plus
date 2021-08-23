@@ -55,9 +55,7 @@ public plugin_init()
 
 public client_putinserver(id){
     set_task(2.5,"welcomepl",id)
-    class[id][none] = 1
-	class[id][pg] = 0
-	class[id][sl] = 0
+    hero[id] = NONE
 }
 
 public client_disconnect(id){
@@ -65,11 +63,9 @@ public client_disconnect(id){
     if( msm_active == 1 && id == msm_boss ) {    //Checking if boss left or not and announcing next one.
 		msm_boss = 0;
 		msm_active = 0;
-		client_print(0, print_chat, "%L", LANG_PLAYER, "BOSS_LEFT", get_user_name(id,dcName,31));
+		ColorChat(0, RED, "%L", LANG_PLAYER, "BOSS_LEFT", get_user_name(id,dcName,31));
 	}
-    class[id][none] = 1
-	class[id][pg] = 0
-	class[id][sl] = 0
+    hero[id] = NONE
     return PLUGIN_CONTINUE;
 }
 
@@ -87,9 +83,6 @@ public record_demo(id){
 
 public round_start(){
     isFirstBlood = 0
-    //for(new id = 1; id <= get_maxplayers(); id++){
-       // info[id][death] = 0
-    //}
 }
 
 // Triggers on any player death.
@@ -108,8 +101,10 @@ public player_death()
 		cs_reset_user_model(victim);
 		msm_boss = 0; set_user_rendering(victim, kRenderFxGlowShell, 0, 0, 0, kRenderNormal, 0);
 		msm_active = 0;
-		client_print(0, print_chat, "%L", LANG_PLAYER, "BOSS_DEATH", killername);
+        set_dhudmessage(99, 184, 255, -1.0, 0.65, 1, 6.0, 3.0, 1.5, 1.5)
+        show_dhudmessage(0, "%L", LANG_PLAYER, "BOSS_DEATH", killername);
         client_cmd(0,"spk msm/boss_defeated")
+        emit_sound(victim,CHAN_STATIC,"msm/boss_death.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM)
 	}
 
     if (killer != victim)
@@ -167,7 +162,6 @@ public player_death()
 }
 
 // Catching incoming damage
-// TODO #28 (its so bad)
 public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
     // Some checking before doing anything.
 	if(!is_user_connected(attacker) | !is_user_connected(victim)) return;
@@ -223,24 +217,38 @@ public msm_boss_random() {      // Choosing random player to be a boss
 		get_players(Players, Count, "ah");
 		id_rand = random_num(0, Count - 1);
 		msm_boss = Players[id_rand];
+        if(hero[msm_boss] != NONE){
+            msm_boss = 0
+            return PLUGIN_HANDLED;
+        }
 		msm_active = 1;
         msm_set_user_boss(msm_boss);
 	}
+    return PLUGIN_HANDLED;
 }
 
 public msm_set_user_boss(id) {
-	if( is_user_connected(id)) {
-		//cs_set_user_model(id,"entermodelhere");
+	if(is_user_connected(id) && hero[msm_boss] == NONE) {
+		cs_set_user_model(id,"msm_pl_boss");
 		give_item(id,"weapon_m249");
 		cs_set_user_bpammo(id, CSW_M249, MSM_BOSS_AMMO);
 		set_user_health(id, MSM_BOSS_HEALTH);
 		client_cmd(0,"spk msm/boss_spawned")
+        new nm[33]; get_user_name(id, nm, 32)
+        set_dhudmessage(99, 184, 255, -1.0, 0.65, 1, 6.0, 3.0, 1.5, 1.5)
+        show_dhudmessage(0, "%L", LANG_PLAYER, "BOSS_SPAWNED", nm);
+
 		switch(cs_get_user_team(id)) {
 			case CS_TEAM_T: set_user_rendering(id, kRenderFxGlowShell, 255, 0, 0, kRenderNormal, 4);
 			case CS_TEAM_CT: set_user_rendering(id, kRenderFxGlowShell, 0, 0, 255, kRenderNormal, 4);
 		}
 	}
 }
+
+stock msm_get_user_hero(id){
+    return hero[id]
+}
+
 public plugin_precache(){
     precache_sound("msm/firstblood.wav")
     precache_sound("msm/headshot.wav")
@@ -253,7 +261,12 @@ public plugin_precache(){
     precache_sound("msm/unstoppable.wav")
     precache_sound("msm/boss_defeated.wav")
     precache_sound("msm/boss_spawned.wav")
+    precache_sound("msm/boss_death.wav")
     precache_sound("msm/sl.wav")
+    precache_sound("msm/none_laugh.wav")
+    precache_sound("msm/none_laugh1.wav")
+    precache_sound("msm/none_laugh2.wav")
+    precache_model("models/player/msm_pl_boss/msm_pl_boss.mdl")
     dmgTakenHUD = CreateHudSyncObj();
     dmgDealtHUD = CreateHudSyncObj();
     announcehud = CreateHudSyncObj();

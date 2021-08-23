@@ -9,9 +9,9 @@ UNSTOPPABLE = %s IS FUCKING UNSTOPPABLE!
 MANIAC = %s IS A MANIAC! SOMEONE STOP HIM!
 MASSACRE = %s JUST MADE MASSACRE! NO ONE CAN STOP HIM!
 
-BOSS_LEFT = %s (Boss) just left the game... 
+BOSS_LEFT = Boss %s just left the game... 
 BOSS_DEATH = %s Defeated the boss! 
-BOSS_HEALTH = Aware! Boss has %d health!
+BOSS_SPAWNED = Aware!^n %s got some powers!
 BOSS_NOPLAYERS = No boss have chosen.
 
 SL_PLAY = You are playing as slark now.
