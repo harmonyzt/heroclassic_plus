@@ -172,7 +172,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
 	    SetHamParamFloat( 4, damage * MSM_BOSS_DAMAGE );    //Multiplying damage for boss
     }
     new damagepure = floatround(damage, floatround_round)
-    set_hudmessage(234, 75, 75, 0.54, 0.52, 0, 0.5, 0.30, 0.5, 0.5, -1);    // Didn't test this (TODO #26)
+    set_hudmessage(234, 75, 75, 0.54, 0.52, 0, 0.5, 0.30, 0.5, 0.5, -1); 
     ShowSyncHudMsg(victim, dmgTakenHUD, "%d", damagepure);
 
     set_hudmessage(15, 180, 90, 0.54, 0.45, 0, 0.5, 0.30, 0.5, 0.5, -1);
@@ -186,14 +186,6 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
         }
         // Here goes stealing attributes (TODO #27)
         // Code blah blah...
-}
-
-// Simple as that.
-stock float_to_num(Float:num) {
-	new str[16]; float_to_str( num, str, 15 );
-	new buffer = contain( str, "," );
-	format( str, buffer, str );
-	return str_to_num( str );
 }
 
 stock freeze_player(id, status) {           // Just a func of freezing player on place. P useful sometimes so I'll leave it.

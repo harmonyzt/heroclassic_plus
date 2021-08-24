@@ -20,7 +20,8 @@ new const nonehero_sounds[][] =
 //
 public class_change(id){
     new menu = menu_create( "\w[SVM BETA] \rChoose your class", "menu_handler" );
-    menu_additem( menu, "\wPlay as \ySlark ", "", 0 );
+    menu_additem( menu, "\wDon't play as \yanyone", "", 0 );
+    menu_additem( menu, "\wPlay as \ySlark", "", 0 );
     menu_additem( menu, "\wPlay as \yUndying", "", 0 );
     menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
     menu_display( id, menu, 0 );
@@ -34,14 +35,14 @@ public class_change(id){
     {
         case 0:
         {
-         	ColorChat(id, GREEN, "%L", LANG_PLAYER, "SL_PLAY")
-            hero[id] = SL
-            play_s_sound(id)
-         	return PLUGIN_HANDLED;
+            hero[id] = NONE;
+            play_s_sound(id);
         }
         case 1:
         {
-        	menu_destroy(menu);
+         	ColorChat(id, GREEN, "%L", LANG_PLAYER, "SL_PLAY")
+            hero[id] = SL;
+            play_s_sound(id);
          	return PLUGIN_HANDLED;
         }
         case MENU_EXIT:
@@ -50,7 +51,7 @@ public class_change(id){
          	return PLUGIN_HANDLED;
         }
     }
-	menu_destroy( menu );
+	menu_destroy(menu);
     return PLUGIN_HANDLED;
  }
 //
