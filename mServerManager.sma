@@ -53,7 +53,7 @@ public plugin_init()
 #include "PREF_SERVMANAGER/intMenu.inl"
 #include "PREF_SERVMANAGER/deathEvent.inl"
 #include "PREF_SERVMANAGER/playerRespawn.inl"
-//#include "PREF_SERVMANAGER/nativeSupport.inl"     // Development
+//#include "PREF_SERVMANAGER/nativeSupport.inl"     // Under development
 #include "PREF_SERVMANAGER/botSupport.inl"
 
 ////////////////////////////////////////////////////////
@@ -105,13 +105,12 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
     }
 
     new damagepure = floatround(damage, floatround_round)
-    if (damagepure < 0){
     set_hudmessage(234, 75, 75, 0.54, 0.52, 0, 0.5, 0.30, 0.5, 0.5, -1); 
     ShowSyncHudMsg(victim, dmgTakenHUD, "%d", damagepure);
 
     set_hudmessage(15, 180, 90, 0.54, 0.45, 0, 0.5, 0.30, 0.5, 0.5, -1);
     ShowSyncHudMsg(attacker, dmgDealtHUD, "%d", damagepure);
-    }
+
         // Here goes stealing attributes
         // Code blah blah...
         switch(msm_get_user_hero(attacker)){
@@ -122,7 +121,6 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
 
             case SL:{
                 new Float:maxspeedreduceformula[33]
-                new slow[33];
                 attribute[victim][sl_leashstack] += 1
                 attribute[attacker][sl_selfstack] += 1
                 if(attribute[victim][sl_leashstack] < 1){
@@ -192,7 +190,6 @@ public info_display(){
         if(is_user_connected(id) && is_user_alive(id)){
             switch(msm_get_user_hero(id)){
                 case NONE:{
-
                 }
             }
         }
