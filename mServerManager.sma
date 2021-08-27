@@ -1,11 +1,11 @@
-#include < amxmodx >    //Main amxmodx include.
-#include < amxmisc >    //Old menu.
-#include < fun >        //For glow effect.
-#include < dhudmessage >//For new format of hud messages
-#include < colorchat2 > //For colored simple chat.
-#include < cstrike >    //For catching player's team and giving ammo.
-#include < hamsandwich >//For catching player's damage and increasing it.
-#include < fakemeta >   //For custom player models.
+#include < amxmodx >        //Main amxmodx include.
+#include < amxmisc >        //Old menu.
+#include < fun >            //For glow effect.
+#include < dhudmessage >    //For new format of hud messages.
+#include < colorchat2 >     //For colored simple chat.
+#include < cstrike >        //For catching player's team and giving ammo.
+#include < hamsandwich >    //For catching player's damage and increasing it.
+#include < fakemeta >       //For custom player models.
 #include < csdm >
 
 
@@ -15,11 +15,10 @@
 #define auth    "blurry & MuiX"
 #define ADMIN_FLAG  'H'
 
-#define MSM_TASK_RANDOM      675    // ID of random task.
+#define MSM_TASK_RANDOM      675                // ID of random task.
 
 #define MSM_BOSS_HEALTH 2000					//Boss health.
 #define MSM_BOSS_AMMO   300						//Ammo for boss.
-#define MSM_BOSS_PLAYERS    4					//Start choosing boss if 'n' player or more.
 #define MSM_BOSS_DAMAGE 2.3						//Damage multiplier.
 
 enum _:InfoTable
@@ -27,8 +26,9 @@ enum _:InfoTable
     kills,
     headshots,
     score,
-    healed
+    dead
 };
+
 new info[128][InfoTable];
 new dmgTakenHUD, dmgDealtHUD;
 new isFirstBlood = 0;
@@ -38,18 +38,23 @@ new msm_boss, msm_active = 0;
 public plugin_init()
 {
     register_plugin(plug, ver, auth);
-    register_event("DeathMsg","player_death","a");                      //
-    register_logevent("round_start", 2, "1=Round_Start");               //
-    register_dictionary("msm.txt");                                     //
+    register_event("DeathMsg","player_death","a");                      // Catching player's death.
+    register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
+    register_dictionary("msm.txt");                                     // Registering lang file.
     RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
-    register_clcmd( "say /svm","class_change" );
-    set_task(15.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 15 seconds. TODO: cfg
+    RegisterHam(Ham_Spawn,"player","player_respawn")                    // Catching player's respawn.
+    register_clcmd( "say /svm","class_change" );                        // Registering menu (or a command to call menu)
+    set_task(15.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
+    set_task(1.0, "info_display",_,_,_,"b");                            // Displaying info for each player.
 }
 
 //////////////// Trying this once again ////////////////
 
 #include "PREF_SERVMANAGER/intMenu.inl"
-#include "PREF_SERVMANAGER/preSpawnInt.inl"
+#include "PREF_SERVMANAGER/deathEvent.inl"
+#include "PREF_SERVMANAGER/playerRespawn.inl"
+//#include "PREF_SERVMANAGER/nativeSupport.inl"     // Development
+#include "PREF_SERVMANAGER/botSupport.inl"
 
 ////////////////////////////////////////////////////////
 
@@ -83,85 +88,12 @@ public record_demo(id){
 
 public round_start(){
     isFirstBlood = 0
+        for(new id = 1; id <= get_maxplayers(); id++){
+            info[id][dead] = 0
+        }
 }
 
-// Triggers on any player death.
-public player_death() 
-{
-    static killer, victim, hshot;
-    killer = read_data(1);
-    victim = read_data(2);
-    if (!is_user_connected(killer) | !is_user_connected(victim)) // Server crash fix "Out of bounds"
-        return PLUGIN_HANDLED
-    hshot = read_data(3);
-    new killername[32]
-    get_user_name(killer, killername, 31);
-
-    if(victim == msm_boss) {    //Death of boss.
-		cs_reset_user_model(victim);
-		msm_boss = 0; set_user_rendering(victim, kRenderFxGlowShell, 0, 0, 0, kRenderNormal, 0);
-		msm_active = 0;
-        set_dhudmessage(99, 184, 255, -1.0, 0.65, 1, 6.0, 3.0, 1.5, 1.5)
-        show_dhudmessage(0, "%L", LANG_PLAYER, "BOSS_DEATH", killername);
-        client_cmd(0,"spk msm/boss_defeated")
-        emit_sound(victim,CHAN_STATIC,"msm/boss_death.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM)
-	}
-
-    if (killer != victim)
-    {
-        if (isFirstBlood == 0){     // First Blood (moved here because suiciding was causing first blood)
-            set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
-            ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "FIRST_BLOOD", killername)
-            client_cmd(0,"spk msm/firstblood")
-            isFirstBlood = 1;
-        }
-        info[killer][score] += 10
-        info[victim][score] -=10
-        info[killer][kills] +=1
-        info[victim][kills] = 0
-        if (hshot)
-        {
-            info[killer][headshots] +=1
-            info[killer][score] +=5
-            client_cmd(0,"spk msm/headshot")
-        }
-        switch(info[killer][kills]){    // Simply Announcing killstreaks
-            case 3:{
-                set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
-                ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "TRIPLE_KILL", killername);
-                client_cmd(0,"spk msm/triplekill")
-            }
-            case 5:{
-                set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
-                ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MULTI_KILL", killername);
-                client_cmd(0,"spk msm/multikill")
-            }
-            case 6:{
-                set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
-                ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "KILLING_SPREE", killername);
-                client_cmd(0,"spk msm/killingspree")
-            }
-            case 7:{
-                set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
-                ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "UNSTOPPABLE", killername);
-                client_cmd(0,"spk msm/unstoppable")
-            }
-            case 8:{
-                set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
-                ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MANIAC", killername);
-                client_cmd(0,"spk msm/maniac")
-            }
-            case 10:{
-                set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
-                ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MASSACRE", killername);
-                client_cmd(0,"spk msm/massacre")
-            }
-        }
-    }
-    return PLUGIN_HANDLED
-}
-
-// Catching incoming damage
+// Catching incoming damage.
 public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
     // Some checking before doing anything.
 	if(!is_user_connected(attacker) | !is_user_connected(victim)) return;
@@ -169,23 +101,41 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
     if(get_user_team (attacker) == get_user_team (victim)) return
 
     if(msm_boss == attacker){
-	    SetHamParamFloat( 4, damage * MSM_BOSS_DAMAGE );    //Multiplying damage for boss
+	    SetHamParamFloat( 4, damage * MSM_BOSS_DAMAGE );    //Multiplying damage for boss.
     }
+
     new damagepure = floatround(damage, floatround_round)
+    if (damagepure < 0){
     set_hudmessage(234, 75, 75, 0.54, 0.52, 0, 0.5, 0.30, 0.5, 0.5, -1); 
     ShowSyncHudMsg(victim, dmgTakenHUD, "%d", damagepure);
 
     set_hudmessage(15, 180, 90, 0.54, 0.45, 0, 0.5, 0.30, 0.5, 0.5, -1);
     ShowSyncHudMsg(attacker, dmgDealtHUD, "%d", damagepure);
-
-        //Calculating health we will give to player (attacker) (actually will be reworked since it's useless for now)
-        if(get_user_flags(attacker) & ADMIN_FLAG){
-        info[attacker][healed]= get_user_health(attacker) + 1;
-        set_user_health(attacker,info[attacker][healed]);
-        info[attacker][healed]= get_user_health(attacker)
-        }
-        // Here goes stealing attributes (TODO #27)
+    }
+        // Here goes stealing attributes
         // Code blah blah...
+        switch(msm_get_user_hero(attacker)){
+
+            case NONE:{
+                // None of the effects
+            }
+
+            case SL:{
+                new Float:maxspeedreduceformula[33]
+                new slow[33];
+                attribute[victim][sl_leashstack] += 1
+                attribute[attacker][sl_selfstack] += 1
+                if(attribute[victim][sl_leashstack] < 1){
+                    maxspeedreduceformula[victim] = get_user_maxspeed(victim) - float(attribute[victim][sl_leashstack])
+                    set_user_maxspeed(victim, maxspeedreduceformula[victim])
+                }
+            }
+
+            case UNDYING:{
+                
+            }
+
+        }
 }
 
 stock freeze_player(id, status) {           // Just a func of freezing player on place. P useful sometimes so I'll leave it.
@@ -237,7 +187,19 @@ public msm_set_user_boss(id) {
 	}
 }
 
-stock msm_get_user_hero(id){
+public info_display(){
+    for(new id = 1; id <= get_maxplayers(); id++){
+        if(is_user_connected(id) && is_user_alive(id)){
+            switch(msm_get_user_hero(id)){
+                case NONE:{
+
+                }
+            }
+        }
+    }
+}
+
+public msm_get_user_hero(id){
     return hero[id]
 }
 
