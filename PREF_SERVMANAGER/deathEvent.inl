@@ -29,11 +29,11 @@ public player_death()
             isFirstBlood = 1;
         }
         info[killer][score] += 10
-        info[victim][score] -=10
         info[killer][kills] +=1
-        info[victim][kills] = 0
-        info[victim][dead] = 1
 
+        // Reseting attributes and scores from victim
+        info[victim][kills] = 0
+        info[victim][score] -=10
         attribute[victim][sl_leashstack] = 0;
         attribute[victim][sl_selfstack] = 0;
         attribute[victim][undying_hpstack] = 0;

@@ -1,8 +1,7 @@
 public player_respawn(id){
-    info[id][dead] = 0
-    set_hero_attribute(id)
+    //set_hero_attribute(id)
 }
-
+// Removing stolen attributes
 public set_hero_attribute(id){
 
 }

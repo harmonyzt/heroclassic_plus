@@ -25,8 +25,7 @@ enum _:InfoTable
 {
     kills,
     headshots,
-    score,
-    dead
+    score
 };
 
 new info[128][InfoTable];
@@ -45,7 +44,7 @@ public plugin_init()
     RegisterHam(Ham_Spawn,"player","player_respawn")                    // Catching player's respawn.
     register_clcmd( "say /svm","class_change" );                        // Registering menu (or a command to call menu)
     set_task(15.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
-    set_task(1.0, "info_display",_,_,_,"b");                            // Displaying info for each player.
+    set_task(0.6, "info_display",_,_,_,"b");                            // Displaying info for each player.
 }
 
 //////////////// Trying this once again ////////////////
@@ -88,9 +87,8 @@ public record_demo(id){
 
 public round_start(){
     isFirstBlood = 0
-        for(new id = 1; id <= get_maxplayers(); id++){
-            info[id][dead] = 0
-        }
+        //for(new id = 1; id <= get_maxplayers(); id++){
+        //}
 }
 
 // Catching incoming damage.
@@ -136,7 +134,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
         }
 }
 
-stock freeze_player(id, status) {           // Just a func of freezing player on place. P useful sometimes so I'll leave it.
+stock freeze_player(id, status) {           // Just a func of freezing player on place. P useful sometimes so I'll leave it for something later.
 	if(!is_user_connected(id) && !is_user_alive(id)) return false;
 	set_user_godmode(id, status);
 	if(status) {
@@ -187,13 +185,19 @@ public msm_set_user_boss(id) {
 
 public info_display(){
     for(new id = 1; id <= get_maxplayers(); id++){
-        if(is_user_connected(id) && is_user_alive(id)){
+        if(is_user_connected(id)){
             switch(msm_get_user_hero(id)){
                 case NONE:{
+                    // Skiping this
+                }
+                case SL:{
+                set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
+                show_dhudmessage(id, "%L%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_SL", LANG_PLAYER, "HERO_SL_SELFSTACK", attribute[id][sl_selfstack]);
                 }
             }
         }
     }
+    return PLUGIN_HANDLED;
 }
 
 public msm_get_user_hero(id){

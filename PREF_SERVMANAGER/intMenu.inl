@@ -16,7 +16,7 @@ new hero[33];
 // Creating Menu
 //
 public class_change(id){
-    if(info[id][dead] == 1){
+    if(!is_user_alive(id)){
         ColorChat(id, RED, "%L", LANG_PLAYER, "NOT_ALIVE")
         return PLUGIN_HANDLED
     }
@@ -75,7 +75,7 @@ public play_s_sound(id) {
 if(is_user_alive(id)){
     switch(msm_get_user_hero(id)){
         case NONE:{
-            emit_sound(id, CHAN_STATIC, nonehero_sounds[id][random_num(1,3)], VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
+            emit_sound(id, CHAN_STATIC, "msm/none_laugh.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
         }
         case SL:{
             emit_sound(id, CHAN_STATIC, "msm/sl.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
