@@ -134,7 +134,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
         }
 }
 
-stock freeze_player(id, status) {           // Just a func of freezing player on place. P useful sometimes so I'll leave it for something later.
+stock freeze_player(id, status) {           // freezing player on place. P useful sometimes so I'll leave it for something later.
 	if(!is_user_connected(id) && !is_user_alive(id)) return false;
 	set_user_godmode(id, status);
 	if(status) {
@@ -188,7 +188,7 @@ public info_display(){
         if(is_user_connected(id)){
             switch(msm_get_user_hero(id)){
                 case NONE:{
-                    // Skiping this
+                    // Skiping this (TODO don't skip this as we actually will have some stuff showing for none heroes)
                 }
                 case SL:{
                 set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
@@ -219,8 +219,6 @@ public plugin_precache(){
     precache_sound("msm/boss_death.wav")
     precache_sound("msm/sl.wav")
     precache_sound("msm/none_laugh.wav")
-    precache_sound("msm/none_laugh1.wav")
-    precache_sound("msm/none_laugh2.wav")
     precache_model("models/player/msm_pl_boss/msm_pl_boss.mdl")
     dmgTakenHUD = CreateHudSyncObj();
     dmgDealtHUD = CreateHudSyncObj();

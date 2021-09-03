@@ -6,10 +6,6 @@ enum _:
 {
     NONE, SL, UNDYING, ZEUS, BERSERK
 };
-new const nonehero_sounds[][] =
-{
-    "msm/none_laugh.wav", "msm/none_laugh1.wav", "msm/none_laugh2.wav"
-};
 new attribute[256][attributes];
 new hero[33];
 //
@@ -42,8 +38,7 @@ public class_change(id){
             attribute[id][sl_leashstack] = 0;
             attribute[id][sl_selfstack] = 0;
             play_s_sound(id);
-
-        return PLUGIN_HANDLED;
+            return PLUGIN_HANDLED;
         }
         case 1:
         {
