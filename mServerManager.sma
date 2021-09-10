@@ -60,6 +60,7 @@ public plugin_init()
 public client_putinserver(id){
     set_task(2.5,"welcomepl",id)
     hero[id] = NONE
+    hero_hp[id] = 600;
 }
 
 public client_disconnect(id){
@@ -114,7 +115,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
         switch(msm_get_user_hero(attacker)){
 
             case NONE:{
-                // None of the effects
+                // None of the effects (actually there will be)
             }
 
             case SL:{

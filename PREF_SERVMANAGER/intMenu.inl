@@ -7,6 +7,7 @@ enum _:
     NONE, SL, UNDYING, ZEUS, BERSERK
 };
 new attribute[256][attributes];
+new hero_hp[33];
 new hero[33];
 //
 // Creating Menu
@@ -34,7 +35,8 @@ public class_change(id){
     {
         case 0:
         {
-            hero[id] = NONE;
+            hero[id] = NONE
+            hero_hp[id] = 600;
             attribute[id][sl_leashstack] = 0;
             attribute[id][sl_selfstack] = 0;
             play_s_sound(id);
@@ -42,8 +44,9 @@ public class_change(id){
         }
         case 1:
         {
+            hero[id] = SL
+            hero_hp[id] = 500;
          	ColorChat(id, GREEN, "%L", LANG_PLAYER, "SL_PLAY")
-            hero[id] = SL;
             attribute[id][sl_leashstack] = 0
             attribute[id][sl_selfstack] = 0
             play_s_sound(id);
@@ -51,7 +54,8 @@ public class_change(id){
         }
         case 2:
         {
-
+            hero[id] = UNDYING
+            hero_hp[id] = 700; 
         }
         // Add cases
         case MENU_EXIT:

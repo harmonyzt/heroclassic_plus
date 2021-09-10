@@ -10,6 +10,9 @@ public player_death()
     new killername[32]
     get_user_name(killer, killername, 31);
 
+    // Setting a timer (TODO add this depending on mode atm csmd or not; csdm atm)
+    set_task(2.5, "player_respawn", victim,_,_,_);
+
     //Death of boss.
     if(victim == msm_boss)
     {
