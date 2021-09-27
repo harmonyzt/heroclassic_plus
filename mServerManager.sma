@@ -9,7 +9,7 @@
 #include < csdm >
 
 
-#pragma     tabsize 0
+#pragma tabsize 0
 #define plug    "MSM"
 #define ver     "0.8p"
 #define auth    "blurry & MuiX"
@@ -41,7 +41,7 @@ public plugin_init()
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
     register_dictionary("msm.txt");                                     // Registering lang file.
     RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
-    RegisterHam(Ham_Spawn,"player","player_respawn")                    // Catching player's respawn.
+    //RegisterHam(Ham_Spawn,"player","player_respawn")                    // Catching player's respawn.
     register_clcmd( "say /svm","class_change" );                        // Registering menu (or a command to call menu)
     set_task(15.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
     set_task(0.6, "info_display",_,_,_,"b");                            // Displaying info for each player.
@@ -111,7 +111,6 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
     ShowSyncHudMsg(attacker, dmgDealtHUD, "%d", damagepure);
 
         // Here goes stealing attributes
-        // Code blah blah...
         switch(msm_get_user_hero(attacker)){
 
             case NONE:{
@@ -122,23 +121,48 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                 new Float:maxspeedreduceformula[33]
                 attribute[victim][sl_leashstack] += 1
                 attribute[attacker][sl_selfstack] += 1
-                if(attribute[victim][sl_leashstack] < 1){
+                if(attribute[victim][sl_leashstack] > 1){
                     maxspeedreduceformula[victim] = get_user_maxspeed(victim) - float(attribute[victim][sl_leashstack])
                     set_user_maxspeed(victim, maxspeedreduceformula[victim])
                 }
             }
 
-            case UNDYING:{
+            case UNDYING:
+            {
+                attribute[attacker][undying_hpstolen_timed] += 1;
+                if(attribute[attacker][undying_hpstolen_timed] > 1)
+                    undying_hp_gain(attacker);
+            }
+            
+            case BERSERK:
+            {
+                if(get_user_health(attacker) <= 225 && get_user_health(attacker) > 100)
+                {
+                    SetHamParamFloat(4, damage * 1.5);
+                }   else   {
+                    SetHamParamFloat(4, damage * 3);
+                }
+            }
+            
+            case ZEUS:
+            {
                 
             }
 
         }
 }
+public undying_hp_gain(id)
+{
+    new totalhealth = undying_hpstolen_timed + 9 + get_user_health(id);
+    set_user_health(id, totalhealth);
+}
 
 stock freeze_player(id, status) {           // freezing player on place. P useful sometimes so I'll leave it for something later.
-	if(!is_user_connected(id) && !is_user_alive(id)) return false;
+	if(!is_user_connected(id) && !is_user_alive(id)) 
+        return false;
 	set_user_godmode(id, status);
-	if(status) {
+	if(status) 
+    {
 		set_pev(id, pev_flags, pev(id, pev_flags) | FL_FROZEN);
 		set_user_gravity( id, 9999.0 );
 		set_user_rendering(id, kRenderFxGlowShell, 80, 224, 255, kRenderNormal, 5);
@@ -189,11 +213,20 @@ public info_display(){
         if(is_user_connected(id)){
             switch(msm_get_user_hero(id)){
                 case NONE:{
-                    // Skiping this (TODO don't skip this as we actually will have some stuff showing for none heroes)
+                    set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
+                    show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_NONE", LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case SL:{
-                set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
-                show_dhudmessage(id, "%L%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_SL", LANG_PLAYER, "HERO_SL_SELFSTACK", attribute[id][sl_selfstack]);
+                    set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
+                    show_dhudmessage(id, "%L %L^n%L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_SL", LANG_PLAYER, "HERO_SL_SELFSTACK", attribute[id][sl_selfstack], LANG_PLAYER, "HP", get_user_health(id));
+                }
+                case UNDYING:{
+                    set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
+                    show_dhudmessage(id, "%L %L^n%L ^n%L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_UD", LANG_PLAYER, "HERO_UD_HPSTACK", attribute[id][undying_hpstack], LANG_PLAYER, "HERO_UD_HPSTOLEN", attribute[id][undying_hpstolen_timed], LANG_PLAYER, "HP", get_user_health(id));
+                }
+                case BERSERK:{
+                    set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
+                    show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BERSERK", LANG_PLAYER,"HP", get_user_health(id));
                 }
             }
         }

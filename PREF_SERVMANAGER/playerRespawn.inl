@@ -1,6 +1,10 @@
-public player_respawn(id){
-    set_hero_attribute(id)
+public csdm_PreSpawn(player, bool:fake){
+    set_hero_attribute(player)
 }
+
+//public player_respawn(id){
+//    set_hero_attribute(id)
+//}
 // Removing stolen attributes
 public set_hero_attribute(id){
 switch(msm_get_user_hero(id)){

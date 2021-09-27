@@ -10,9 +10,6 @@ public player_death()
     new killername[32]
     get_user_name(killer, killername, 31);
 
-    // Setting a timer (TODO add this depending on mode atm csmd or not; csdm atm)
-    set_task(2.5, "player_respawn", victim,_,_,_);
-
     //Death of boss.
     if(victim == msm_boss)
     {
@@ -45,14 +42,39 @@ public player_death()
         info[victim][score] -=10
         attribute[victim][sl_leashstack] = 0;
         attribute[victim][sl_selfstack] = 0;
-        attribute[victim][undying_hpstack] = 0;
-        attribute[victim][undying_hpstolen] = 0;
-
+        attribute[victim][undying_hpstolen_timed] = 0;
         if (hshot)
         {
             info[killer][headshots] +=1
             info[killer][score] +=5
             client_cmd(0,"spk msm/headshot")
+        }
+        switch(msm_get_user_hero(killer)){
+
+            case NONE:{
+                
+            }
+
+            case SL:{
+
+            }
+
+            case UNDYING:
+            {
+                attribute[killer][undying_hpstack] += 1;
+                hero_hp[killer] += 30;
+            }
+            
+            case BERSERK:
+            {
+
+            }
+            
+            case ZEUS:
+            {
+                
+            }
+
         }
         // Simply Announcing killstreaks
         switch(info[killer][kills])
