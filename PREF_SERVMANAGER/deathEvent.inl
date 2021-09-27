@@ -10,7 +10,9 @@ public player_death()
     new killername[32]
     get_user_name(killer, killername, 31);
 
-    if(victim == msm_boss) {    //Death of boss.
+    //Death of boss.
+    if(victim == msm_boss)
+    {
 		cs_reset_user_model(victim);
 		msm_boss = 0; set_user_rendering(victim, kRenderFxGlowShell, 0, 0, 0, kRenderNormal, 0);
 		msm_active = 0;
@@ -22,56 +24,93 @@ public player_death()
 
     if (killer != victim)
     {
-        if (isFirstBlood == 0){     // First Blood (moved here because suiciding was causing first blood)
+        // First Blood (moved here because suiciding was causing first blood)
+        if (isFirstBlood == 0)
+        {
             set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
             ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "FIRST_BLOOD", killername)
             client_cmd(0,"spk msm/firstblood")
             isFirstBlood = 1;
         }
-        info[killer][score] += 10
-        info[victim][score] -=10
-        info[killer][kills] +=1
-        info[victim][kills] = 0
-        info[victim][dead] = 1
 
+        // Giving a killer one kill and scores (attributes)
+        info[killer][score] += 10
+        info[killer][kills] +=1
+
+        // Reseting attributes and scores from victim
+        info[victim][kills] = 0
+        info[victim][score] -=10
         attribute[victim][sl_leashstack] = 0;
         attribute[victim][sl_selfstack] = 0;
-        attribute[victim][undying_hpstack] = 0;
-        attribute[victim][undying_hpstolen] = 0;
-
+        attribute[victim][undying_hpstolen_timed] = 0;
         if (hshot)
         {
             info[killer][headshots] +=1
             info[killer][score] +=5
             client_cmd(0,"spk msm/headshot")
         }
-        switch(info[killer][kills]){    // Simply Announcing killstreaks
-            case 3:{
+        switch(msm_get_user_hero(killer)){
+
+            case NONE:{
+                
+            }
+
+            case SL:{
+
+            }
+
+            case UNDYING:
+            {
+                attribute[killer][undying_hpstack] += 1;
+                hero_hp[killer] += 30;
+            }
+            
+            case BERSERK:
+            {
+
+            }
+            
+            case ZEUS:
+            {
+                
+            }
+
+        }
+        // Simply Announcing killstreaks
+        switch(info[killer][kills])
+        { 
+            case 3:
+            {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "TRIPLE_KILL", killername);
                 client_cmd(0,"spk msm/triplekill")
             }
-            case 5:{
+            case 5:
+            {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MULTI_KILL", killername);
                 client_cmd(0,"spk msm/multikill")
             }
-            case 6:{
+            case 6:
+            {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "KILLING_SPREE", killername);
                 client_cmd(0,"spk msm/killingspree")
             }
-            case 7:{
+            case 7:
+            {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "UNSTOPPABLE", killername);
                 client_cmd(0,"spk msm/unstoppable")
             }
-            case 8:{
+            case 8:
+            {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MANIAC", killername);
                 client_cmd(0,"spk msm/maniac")
             }
-            case 10:{
+            case 10:
+            {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MASSACRE", killername);
                 client_cmd(0,"spk msm/massacre")

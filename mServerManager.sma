@@ -9,7 +9,7 @@
 #include < csdm >
 
 
-#pragma     tabsize 0
+#pragma tabsize 0
 #define plug    "MSM"
 #define ver     "0.8p"
 #define auth    "blurry & MuiX"
@@ -25,8 +25,7 @@ enum _:InfoTable
 {
     kills,
     headshots,
-    score,
-    dead
+    score
 };
 
 new info[128][InfoTable];
@@ -42,10 +41,10 @@ public plugin_init()
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
     register_dictionary("msm.txt");                                     // Registering lang file.
     RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
-    RegisterHam(Ham_Spawn,"player","player_respawn")                    // Catching player's respawn.
+    //RegisterHam(Ham_Spawn,"player","player_respawn")                    // Catching player's respawn.
     register_clcmd( "say /svm","class_change" );                        // Registering menu (or a command to call menu)
     set_task(15.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
-    set_task(1.0, "info_display",_,_,_,"b");                            // Displaying info for each player.
+    set_task(0.6, "info_display",_,_,_,"b");                            // Displaying info for each player.
 }
 
 //////////////// Trying this once again ////////////////
@@ -53,7 +52,7 @@ public plugin_init()
 #include "PREF_SERVMANAGER/intMenu.inl"
 #include "PREF_SERVMANAGER/deathEvent.inl"
 #include "PREF_SERVMANAGER/playerRespawn.inl"
-//#include "PREF_SERVMANAGER/nativeSupport.inl"     // Development
+//#include "PREF_SERVMANAGER/nativeSupport.inl"     // Under development
 #include "PREF_SERVMANAGER/botSupport.inl"
 
 ////////////////////////////////////////////////////////
@@ -61,6 +60,7 @@ public plugin_init()
 public client_putinserver(id){
     set_task(2.5,"welcomepl",id)
     hero[id] = NONE
+    hero_hp[id] = 600;
 }
 
 public client_disconnect(id){
@@ -88,9 +88,8 @@ public record_demo(id){
 
 public round_start(){
     isFirstBlood = 0
-        for(new id = 1; id <= get_maxplayers(); id++){
-            info[id][dead] = 0
-        }
+        //for(new id = 1; id <= get_maxplayers(); id++){
+        //}
 }
 
 // Catching incoming damage.
@@ -105,43 +104,65 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
     }
 
     new damagepure = floatround(damage, floatround_round)
-    if (damagepure < 0){
     set_hudmessage(234, 75, 75, 0.54, 0.52, 0, 0.5, 0.30, 0.5, 0.5, -1); 
     ShowSyncHudMsg(victim, dmgTakenHUD, "%d", damagepure);
 
     set_hudmessage(15, 180, 90, 0.54, 0.45, 0, 0.5, 0.30, 0.5, 0.5, -1);
     ShowSyncHudMsg(attacker, dmgDealtHUD, "%d", damagepure);
-    }
+
         // Here goes stealing attributes
-        // Code blah blah...
         switch(msm_get_user_hero(attacker)){
 
             case NONE:{
-                // None of the effects
+                // None of the effects (actually there will be)
             }
 
             case SL:{
                 new Float:maxspeedreduceformula[33]
-                new slow[33];
                 attribute[victim][sl_leashstack] += 1
                 attribute[attacker][sl_selfstack] += 1
-                if(attribute[victim][sl_leashstack] < 1){
+                if(attribute[victim][sl_leashstack] > 1){
                     maxspeedreduceformula[victim] = get_user_maxspeed(victim) - float(attribute[victim][sl_leashstack])
                     set_user_maxspeed(victim, maxspeedreduceformula[victim])
                 }
             }
 
-            case UNDYING:{
+            case UNDYING:
+            {
+                attribute[attacker][undying_hpstolen_timed] += 1;
+                if(attribute[attacker][undying_hpstolen_timed] > 1)
+                    undying_hp_gain(attacker);
+            }
+            
+            case BERSERK:
+            {
+                if(get_user_health(attacker) <= 225 && get_user_health(attacker) > 100)
+                {
+                    SetHamParamFloat(4, damage * 1.5);
+                }   else   {
+                    SetHamParamFloat(4, damage * 3);
+                }
+            }
+            
+            case ZEUS:
+            {
                 
             }
 
         }
 }
+public undying_hp_gain(id)
+{
+    new totalhealth = undying_hpstolen_timed + 9 + get_user_health(id);
+    set_user_health(id, totalhealth);
+}
 
-stock freeze_player(id, status) {           // Just a func of freezing player on place. P useful sometimes so I'll leave it.
-	if(!is_user_connected(id) && !is_user_alive(id)) return false;
+stock freeze_player(id, status) {           // freezing player on place. P useful sometimes so I'll leave it for something later.
+	if(!is_user_connected(id) && !is_user_alive(id)) 
+        return false;
 	set_user_godmode(id, status);
-	if(status) {
+	if(status) 
+    {
 		set_pev(id, pev_flags, pev(id, pev_flags) | FL_FROZEN);
 		set_user_gravity( id, 9999.0 );
 		set_user_rendering(id, kRenderFxGlowShell, 80, 224, 255, kRenderNormal, 5);
@@ -189,14 +210,28 @@ public msm_set_user_boss(id) {
 
 public info_display(){
     for(new id = 1; id <= get_maxplayers(); id++){
-        if(is_user_connected(id) && is_user_alive(id)){
+        if(is_user_connected(id)){
             switch(msm_get_user_hero(id)){
                 case NONE:{
-
+                    set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
+                    show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_NONE", LANG_PLAYER, "HP", get_user_health(id));
+                }
+                case SL:{
+                    set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
+                    show_dhudmessage(id, "%L %L^n%L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_SL", LANG_PLAYER, "HERO_SL_SELFSTACK", attribute[id][sl_selfstack], LANG_PLAYER, "HP", get_user_health(id));
+                }
+                case UNDYING:{
+                    set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
+                    show_dhudmessage(id, "%L %L^n%L ^n%L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_UD", LANG_PLAYER, "HERO_UD_HPSTACK", attribute[id][undying_hpstack], LANG_PLAYER, "HERO_UD_HPSTOLEN", attribute[id][undying_hpstolen_timed], LANG_PLAYER, "HP", get_user_health(id));
+                }
+                case BERSERK:{
+                    set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
+                    show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BERSERK", LANG_PLAYER,"HP", get_user_health(id));
                 }
             }
         }
     }
+    return PLUGIN_HANDLED;
 }
 
 public msm_get_user_hero(id){
@@ -218,8 +253,6 @@ public plugin_precache(){
     precache_sound("msm/boss_death.wav")
     precache_sound("msm/sl.wav")
     precache_sound("msm/none_laugh.wav")
-    precache_sound("msm/none_laugh1.wav")
-    precache_sound("msm/none_laugh2.wav")
     precache_model("models/player/msm_pl_boss/msm_pl_boss.mdl")
     dmgTakenHUD = CreateHudSyncObj();
     dmgDealtHUD = CreateHudSyncObj();
