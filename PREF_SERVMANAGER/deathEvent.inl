@@ -25,13 +25,13 @@ public player_death()
     if (killer != victim)
     {
         // First Blood (moved here because suiciding was causing first blood)
-        if (isFirstBlood == 0)
-        {
-            set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
-            ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "FIRST_BLOOD", killername)
-            client_cmd(0,"spk msm/firstblood")
-            isFirstBlood = 1;
-        }
+        //if (isFirstBlood == 0)
+        //{
+        //    set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
+        //    ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "FIRST_BLOOD", killername)
+        //    client_cmd(0,"spk msm/firstblood")
+        //    isFirstBlood = 1;
+        //}
 
         // Giving a killer one kill and scores (attributes)
         info[killer][score] += 10
@@ -43,12 +43,16 @@ public player_death()
         attribute[victim][sl_leashstack] = 0;
         attribute[victim][sl_selfstack] = 0;
         attribute[victim][undying_hpstolen_timed] = 0;
+
+        // On headshot
         if (hshot)
         {
             info[killer][headshots] +=1
             info[killer][score] +=5
             client_cmd(0,"spk msm/headshot")
         }
+
+        // Getting / Giving attributes for each classes on success kill
         switch(msm_get_user_hero(killer)){
 
             case NONE:{
@@ -76,6 +80,7 @@ public player_death()
             }
 
         }
+
         // Simply Announcing killstreaks
         switch(info[killer][kills])
         { 
@@ -97,19 +102,19 @@ public player_death()
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "KILLING_SPREE", killername);
                 client_cmd(0,"spk msm/killingspree")
             }
-            case 7:
+            case 8:
             {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "UNSTOPPABLE", killername);
                 client_cmd(0,"spk msm/unstoppable")
             }
-            case 8:
+            case 10:
             {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MANIAC", killername);
                 client_cmd(0,"spk msm/maniac")
             }
-            case 10:
+            case 12:
             {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MASSACRE", killername);
