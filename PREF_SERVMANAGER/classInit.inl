@@ -44,6 +44,7 @@ public class_change(id){
             hero_hp[id] = 600;
             attribute[id][sl_leashstack] = 0;
             attribute[id][sl_selfstack] = 0;
+            msm_align_model(id);
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }
@@ -54,6 +55,7 @@ public class_change(id){
          	ColorChat(id, GREEN, "%L", LANG_PLAYER, "SL_PLAY");
             attribute[id][sl_leashstack] = 0
             attribute[id][sl_selfstack] = 0
+            msm_align_model(id);
             play_s_sound(id);
             
          	return PLUGIN_HANDLED
@@ -63,6 +65,7 @@ public class_change(id){
             hero[id] = UNDYING
             hero_hp[id] = 480;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "UD_PLAY"); 
+            msm_align_model(id);
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }
@@ -71,6 +74,7 @@ public class_change(id){
             hero[id] = BERSERK
             hero_hp[id] = 550;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "BERSERK_PLAY"); 
+            msm_align_model(id);
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }

@@ -13,7 +13,6 @@ public player_death()
     //Death of boss.
     if(victim == msm_boss)
     {
-		cs_reset_user_model(victim);
 		msm_boss = 0; set_user_rendering(victim, kRenderFxGlowShell, 0, 0, 0, kRenderNormal, 0);
 		msm_active = 0;
         set_dhudmessage(99, 184, 255, -1.0, 0.65, 1, 6.0, 3.0, 1.5, 1.5)
@@ -33,16 +32,17 @@ public player_death()
         //    isFirstBlood = 1;
         //}
 
-        // Giving a killer one kill and scores (attributes)
+        // Giving a killer one kill and scores
         info[killer][score] += 10
         info[killer][kills] +=1
 
         // Reseting attributes and scores from victim
-        info[victim][kills] = 0
-        info[victim][score] -=10
+        info[victim][kills] = 0;
+        info[victim][score] -=10;
         attribute[victim][sl_leashstack] = 0;
         attribute[victim][sl_selfstack] = 0;
         attribute[victim][undying_hpstolen_timed] = 0;
+        attribute[victim][poisoned_from_undying] = 0;
 
         // On headshot
         if (hshot)
@@ -63,24 +63,23 @@ public player_death()
 
             }
 
-            case UNDYING:
-            {
+            case UNDYING:{
                 attribute[killer][undying_hpstack] += 1;
                 hero_hp[killer] += 30;
             }
             
-            case BERSERK:
-            {
+            case BERSERK:{
 
             }
             
-            case ZEUS:
-            {
+            case ZEUS:{
                 
             }
 
         }
-
+        // Giving the victim info about killer
+        new herochat = msm_get_user_hero(killer)
+        ColorChat(victim, RED, "%L", LANG_PLAYER, "DEATH_INFO", killername, herochat)
         // Simply Announcing killstreaks
         switch(info[killer][kills])
         { 

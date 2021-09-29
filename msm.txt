@@ -14,6 +14,8 @@ BOSS_DEATH = %s Defeated the boss!
 BOSS_SPAWNED = Aware!^n %s got some powers!
 BOSS_NOPLAYERS = No boss have chosen.
 
+DEATH_INFO = You were killed by %s playing as %s
+
 SL_PLAY = You are playing as slark now.
 UD_PLAY = You are playing as undying now.
 BERSERK_PLAY = You are playing as berserk now.

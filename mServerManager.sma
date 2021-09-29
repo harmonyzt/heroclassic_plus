@@ -47,7 +47,7 @@ public plugin_init()
     set_task(60.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
     set_task(0.3, "HudTick",_,_,_,"b");                            // Displaying info for each player.
     set_task(1.0, "OneTick",_,_,_,"b");
-    set_task(10.0, "Bot_Think",_,_,_,"b");
+    set_task(10.0, "BotThink",_,_,_,"b");
 }
 
 //////////////// Trying this once again ////////////////
@@ -80,6 +80,7 @@ public client_disconnect(id){
     attribute[id][sl_selfstack] = 0;
     attribute[id][undying_hpstack] = 0;
     attribute[id][undying_hpstolen_timed] = 0;
+    attribute[id][poisoned_from_undying] = 0;
     hero[id] = NONE
 
     return PLUGIN_CONTINUE;
@@ -119,12 +120,11 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
 
             case NONE:
             {
-                new Float:totalhealSurv[32];
-                totalhealSurv[attacker] = get_user_health(attacker) + (hero_hp[victim] * 0.01);
-                set_user_health(attacker, floatround(totalhealSurv[attacker], floatround_round));
-
-                if(get_user_health(attacker) < 700)
-                    set_user_health(attacker, 700)   
+                if(get_user_health(attacker) < 700){
+                    set_user_health(attacker, get_user_health(attacker) + 3); 
+                } else {
+                    set_user_health(attacker, 700)  
+                }
             }
 
             case SL:{
@@ -241,10 +241,6 @@ public HudTick(){
     return PLUGIN_HANDLED;
 }
 
-public msm_get_user_hero(id){
-    return hero[id]
-}
-
 // Ticking one second to count something
 public OneTick(){
     for(new id = 1; id <= get_maxplayers(); id++){
@@ -255,7 +251,7 @@ public OneTick(){
             }
             if(attribute[id][poisoned_from_undying] >= 1 && get_user_health(id) > 15){  // Poisoned
                 set_user_health(id, get_user_health(id) - 15)
-                user_fade(id, 0, 230, 30, 175, 1, 1)
+                user_fade(id, 0, 230, 30, 50, 2, 1)
                 attribute[id][poisoned_from_undying] -= 1
                 emit_sound(id, CHAN_STATIC, "msm/undying_poison.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
             }
@@ -279,6 +275,10 @@ public plugin_precache(){
     precache_sound("msm/sl_spawn.wav")
     precache_sound("msm/none_spawn.wav")
     precache_model("models/player/msm_pl_boss/msm_pl_boss.mdl")
+    precache_model("models/player/msm-ct/msm-ct.mdl")
+    precache_model("models/player/msm-tt/msm-tt.mdl")
+    precache_model("models/player/msm-undying/msm-undying.mdl")
+    precache_model("models/player/msm-ghostface/msm-ghostface.mdl")
     precache_sound("msm/undying_spawn.wav")
     precache_sound("msm/berserk_spawn.wav")
     precache_sound("msm/zeus_spawn.wav")
