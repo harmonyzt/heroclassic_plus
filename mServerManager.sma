@@ -47,14 +47,15 @@ public plugin_init()
     set_task(60.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
     set_task(0.3, "HudTick",_,_,_,"b");                            // Displaying info for each player.
     set_task(1.0, "OneTick",_,_,_,"b");
-    
+    set_task(10.0, "Bot_Think",_,_,_,"b");
 }
 
 //////////////// Trying this once again ////////////////
 
-#include "PREF_SERVMANAGER/intMenu.inl"
+#include "PREF_SERVMANAGER/classInit.inl"
 #include "PREF_SERVMANAGER/deathEvent.inl"
 #include "PREF_SERVMANAGER/playerRespawn.inl"
+#include "PREF_SERVMANAGER/pluginStocks.inl"
 //#include "PREF_SERVMANAGER/nativeSupport.inl"     // Under development
 #include "PREF_SERVMANAGER/botSupport.inl"
 
@@ -119,7 +120,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
             case NONE:
             {
                 new Float:totalhealSurv[32];
-                totalhealSurv[attacker] = get_user_health(attacker) + (hero_hp[victim] * 0.03);
+                totalhealSurv[attacker] = get_user_health(attacker) + (hero_hp[victim] * 0.01);
                 set_user_health(attacker, floatround(totalhealSurv[attacker], floatround_round));
 
                 if(get_user_health(attacker) < 700)
@@ -142,6 +143,8 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                 attribute[attacker][undying_hpstolen_timed] += 1;
                 if(attribute[attacker][undying_hpstolen_timed] > 1)
                     undying_hp_gain(attacker);
+
+                attribute[victim][poisoned_from_undying] = 5;   //Setting poison damage ( Watch OneTick() )
             }
             
             case BERSERK:
@@ -174,28 +177,11 @@ public damager(id){
     set_hudmessage(15, 180, 90, 0.54, 0.45, 0, 0.5, 0.30, 0.5, 0.5, -1);
     ShowSyncHudMsg(attacker, dmgDealtHUD, "%d", damage);
 }
+
 public undying_hp_gain(id)
 {
     new totalhealth = undying_hpstolen_timed + 9 + get_user_health(id);
     set_user_health(id, totalhealth);
-    hero_hp[id] += totalhealth;
-}
-
-stock freeze_player(id, status) {           // freezing player on place. P useful sometimes so I'll leave it for something later.
-	if(!is_user_connected(id) && !is_user_alive(id)) 
-        return false;
-	set_user_godmode(id, status);
-	if(status) 
-    {
-		set_pev(id, pev_flags, pev(id, pev_flags) | FL_FROZEN);
-		set_user_gravity( id, 9999.0 );
-		set_user_rendering(id, kRenderFxGlowShell, 80, 224, 255, kRenderNormal, 5);
-	} else {
-		set_pev(id, pev_flags, pev( id, pev_flags ) & ~FL_FROZEN);
-		set_user_rendering(id, kRenderFxGlowShell, 0, 0, 0, kRenderNormal, 0);
-		set_user_gravity(id, 1.0 );
-	}
-	return true;
 }
 
 public msm_boss_random() {      // Choosing random player to be a boss
@@ -235,21 +221,18 @@ public msm_set_user_boss(id) {
 public HudTick(){
     for(new id = 1; id <= get_maxplayers(); id++){
         if(is_user_connected(id) && is_user_connected(id) && is_user_alive(id)){
+            set_dhudmessage(43, 211, 88, 0.02, 0.60, 0, 6.0, 0.3, 0.3, 0.3);
             switch(msm_get_user_hero(id)){
                 case NONE:{
-                    set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
                     show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_NONE", LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case SL:{
-                    set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
                     show_dhudmessage(id, "%L %L^n%L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_SL", LANG_PLAYER, "HERO_SL_SELFSTACK", attribute[id][sl_selfstack], LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case UNDYING:{
-                    set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
-                    show_dhudmessage(id, "%L %L^n%L ^n%L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_UD", LANG_PLAYER, "HERO_UD_HPSTACK", attribute[id][undying_hpstack], LANG_PLAYER, "HERO_UD_HPSTOLEN", attribute[id][undying_hpstolen_timed], LANG_PLAYER, "HP", get_user_health(id));
+                    show_dhudmessage(id, "%L %L^n%L ^n%L ^n%L %L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_UD", LANG_PLAYER, "HERO_UD_HPSTACK", attribute[id][undying_hpstack], LANG_PLAYER, "HERO_UD_HPSTOLEN", attribute[id][undying_hpstolen_timed], LANG_PLAYER, "PASSIVE", LANG_PLAYER, "PASSIVE_POISON_TOUCH", LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case BERSERK:{
-                    set_dhudmessage(43, 211, 88, 0.0, 0.67, 0, 6.0, 0.5, 0.2, 0.2);
                     show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BERSERK", LANG_PLAYER,"HP", get_user_health(id));
                 }
             }
@@ -262,11 +245,20 @@ public msm_get_user_hero(id){
     return hero[id]
 }
 
+// Ticking one second to count something
 public OneTick(){
     for(new id = 1; id <= get_maxplayers(); id++){
-        if(is_user_connected(id) && is_user_connected(id) && is_user_alive(id) && hero[id] == UNDYING && attribute[id][undying_hpstolen_timed] > 0){
-            attribute[id][undying_hpstolen_timed] -= 1;
-            hero_hp[id] -= 10;
+        if(is_user_connected(id) && is_user_connected(id) && is_user_alive(id)){
+            if(hero[id] == UNDYING && attribute[id][undying_hpstolen_timed] > 0 && get_user_health(id) > 10){
+                attribute[id][undying_hpstolen_timed] -= 1;
+                set_user_health(id, get_user_health(id) - 5)
+            }
+            if(attribute[id][poisoned_from_undying] >= 1 && get_user_health(id) > 15){  // Poisoned
+                set_user_health(id, get_user_health(id) - 15)
+                user_fade(id, 0, 230, 30, 175, 1, 1)
+                attribute[id][poisoned_from_undying] -= 1
+                emit_sound(id, CHAN_STATIC, "msm/undying_poison.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
+            }
         }
     }
 }
@@ -284,11 +276,13 @@ public plugin_precache(){
     precache_sound("msm/boss_defeated.wav")
     precache_sound("msm/boss_spawned.wav")
     precache_sound("msm/boss_death.wav")
-    precache_sound("msm/sl.wav")
-    precache_sound("msm/none_laugh.wav")
+    precache_sound("msm/sl_spawn.wav")
+    precache_sound("msm/none_spawn.wav")
     precache_model("models/player/msm_pl_boss/msm_pl_boss.mdl")
     precache_sound("msm/undying_spawn.wav")
-    precache_sound("msm/berserkimpact.wav")
+    precache_sound("msm/berserk_spawn.wav")
+    precache_sound("msm/zeus_spawn.wav")
+    precache_sound("msm/undying_poison.wav")
     dmgTakenHUD = CreateHudSyncObj();
     dmgDealtHUD = CreateHudSyncObj();
     announcehud = CreateHudSyncObj();

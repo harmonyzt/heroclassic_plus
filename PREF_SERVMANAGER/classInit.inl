@@ -1,6 +1,6 @@
 enum _:attributes
 {
-    sl_leashstack, sl_selfstack, undying_hpstack, undying_hpstolen_timed
+    sl_leashstack, sl_selfstack, undying_hpstack, undying_hpstolen_timed, poisoned_from_undying
 };
 enum _:
 {
@@ -99,19 +99,19 @@ public play_s_sound(id) {
 if(is_user_alive(id)){
     switch(msm_get_user_hero(id)){
         case NONE:{
-            emit_sound(id, CHAN_STATIC, "msm/none_laugh.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
+            emit_sound(id, CHAN_STATIC, "msm/none_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
         }
         case SL:{
-            emit_sound(id, CHAN_STATIC, "msm/sl.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
+            emit_sound(id, CHAN_STATIC, "msm/sl_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
         }
         case UNDYING:{
             emit_sound(id, CHAN_STATIC, "msm/undying_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
         }
         case ZEUS:{
-            emit_sound(id, CHAN_STATIC, "msm/sl.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
+            emit_sound(id, CHAN_STATIC, "msm/zeus_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
         }
         case BERSERK:{
-            emit_sound(id, CHAN_STATIC, "msm/berserkimpact.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
+            emit_sound(id, CHAN_STATIC, "msm/berserk_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
         }
     }
 }
