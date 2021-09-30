@@ -40,14 +40,14 @@ public plugin_init()
     register_plugin(plug, ver, auth);
     register_event("DeathMsg","player_death","a");                      // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
-    register_event("Damage", "damager", "b", "2!0", "3=0", "4!0")
+    register_event("Damage", "damager", "b", "2!0", "3=0", "4!0")       // Catching REAL damage 
     register_dictionary("msm.txt");                                     // Registering lang file.
     RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
     register_clcmd( "say /svm","class_change" );                        // Registering menu (or a command to call menu)
     set_task(60.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
-    set_task(0.3, "HudTick",_,_,_,"b");                            // Displaying info for each player.
-    set_task(1.0, "OneTick",_,_,_,"b");
-    set_task(10.0, "BotThink",_,_,_,"b");
+    set_task(0.3, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
+    set_task(1.0, "OneTick",_,_,_,"b");                                 // One tick
+    set_task(10.0, "BotThink",_,_,_,"b");                               // Bot thinking to pick a class
 }
 
 //////////////// Trying this once again ////////////////
