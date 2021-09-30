@@ -1,5 +1,6 @@
 // Useful features
 
+// Simple fade
 stock user_fade(id, red, green, blue, density, duration, hold_time)
 {
 	message_begin(MSG_ONE_UNRELIABLE,get_user_msgid("ScreenFade"),{0,0,0},id)
@@ -13,7 +14,8 @@ stock user_fade(id, red, green, blue, density, duration, hold_time)
 	message_end()
 }
 
-stock freeze_player(id, status) {           // freezing player on place. P useful sometimes so I'll leave it for something later.
+// Freezing player on place
+stock freeze_player(id, status) {
 	if(!is_user_connected(id) && !is_user_alive(id)) 
         return false;
 	set_user_godmode(id, status);
@@ -46,8 +48,8 @@ stock msm_align_model(id){
 		cs_set_user_model(id,"msm-undying")
 	}
 }
-// Returning name of hero
 
+// Returning name of hero
 stock msm_get_user_hero(id){
     return hero[id]
 }

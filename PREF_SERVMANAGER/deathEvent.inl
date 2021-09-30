@@ -23,14 +23,14 @@ public player_death()
 
     if (killer != victim)
     {
-        // First Blood (moved here because suiciding was causing first blood)
-        //if (isFirstBlood == 0)
-        //{
-        //    set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
-        //    ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "FIRST_BLOOD", killername)
-        //    client_cmd(0,"spk msm/firstblood")
-        //    isFirstBlood = 1;
-        //}
+         //First Blood (moved here because suiciding was causing first blood)
+        if (isFirstBlood == 0)
+        {
+            set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5)
+            ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "FIRST_BLOOD", killername)
+            client_cmd(0,"spk msm/firstblood")
+            isFirstBlood = 1;
+        }
 
         // Giving a killer one kill and scores
         info[killer][score] += 10
