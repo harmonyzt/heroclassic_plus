@@ -1,13 +1,13 @@
 #include < amxmodx >        //Main amxmodx include.
-#include < amxmisc >        //Old menu.
+#include < amxmisc >        //For an old menu.
 #include < fun >            //For glow effect.
 #include < dhudmessage >    //For new format of hud messages.
 #include < colorchat2 >     //For colored simple chat.
 #include < cstrike >        //For catching player's team and giving ammo.
 #include < hamsandwich >    //For catching player's damage and increasing it.
 #include < fakemeta >       //For custom player models.
-#include < csdm >
-#include < float >
+#include < csdm >           //For tracking player prespawn.
+#include < float >          //For calculations.
 
 
 #pragma tabsize 0
@@ -46,7 +46,7 @@ public plugin_init()
     register_clcmd( "say /svm","class_change" );                        // Registering menu (or a command to call menu)
     set_task(60.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
     set_task(0.3, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
-    set_task(1.0, "OneTick",_,_,_,"b");                                 // One tick
+    set_task(1.0, "OneTick",_,_,_,"b");                                 // One tick for whole server.
     set_task(10.0, "BotThink",_,_,_,"b");                               // Bot thinking to pick a class
 }
 
@@ -61,12 +61,14 @@ public plugin_init()
 
 ////////////////////////////////////////////////////////
 
+// Welcoming player
 public client_putinserver(id){
     set_task(2.5,"welcomepl",id)
     hero[id] = NONE
     hero_hp[id] = 600;
 }
 
+// On disconnect
 public client_disconnect(id){
     new dcName[32]
     if( msm_active == 1 && id == msm_boss ) {    //Checking if boss left or not and announcing next one.
@@ -86,11 +88,13 @@ public client_disconnect(id){
     return PLUGIN_CONTINUE;
 }
 
+// Recording a demo when player joins.
 public welcomepl(id){
     set_task(1.0,"record_demo", id)
     client_cmd(id,"spk msm/serverjoin")
 }
 
+// Recording a demo when player joins.
 public record_demo(id){
     new mapname[32]; new randomnrd = random_num(1,9999)
     get_mapname(mapname,31)
@@ -98,6 +102,7 @@ public record_demo(id){
     client_cmd(id,"record fireplay_%s%d", mapname, randomnrd)
 }
 
+// Not fully implemented yet.
 public round_start(){
     isFirstBlood = 0
     //for(new id = 1; id <= get_maxplayers(); id++){
@@ -111,13 +116,14 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
 	if(victim == attacker || !victim) return;
     if(get_user_team (attacker) == get_user_team (victim)) return
 
+    //Multiplying damage for boss.
     if(msm_boss == attacker){
-	    SetHamParamFloat( 4, damage * MSM_BOSS_DAMAGE );    //Multiplying damage for boss.
+	    SetHamParamFloat( 4, damage * MSM_BOSS_DAMAGE );
     }
 
         // Here goes stealing attributes
         switch(msm_get_user_hero(attacker)){
-
+            // For survivors max hp is 700 so we keep it.
             case NONE:
             {
                 if(get_user_health(attacker) < 700){
@@ -126,7 +132,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                     set_user_health(attacker, 700)  
                 }
             }
-
+            // Slark is stealing damage from victim formula.
             case SL:{
                 new Float:maxspeedreduceformula[33];
                 attribute[victim][sl_leashstack] += 1
@@ -137,7 +143,8 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                     SetHamParamFloat(4, damage + (attribute[attacker][sl_selfstack] * 2));
                 }
             }
-
+            
+            // Giving some attributes to undying when hit and hitting victim
             case UNDYING:
             {
                 attribute[attacker][undying_hpstolen_timed] += 1;
@@ -147,6 +154,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                 attribute[victim][poisoned_from_undying] = 5;   //Setting poison damage ( Watch OneTick() )
             }
             
+            // Multiplying damage if berserks health is lower 50% (or so)
             case BERSERK:
             {
                 new Float:berserk_damage = hero_hp[victim] * 0.10
@@ -156,6 +164,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                     SetHamParamFloat(4, damage + (berserk_damage * 2));
             }
             
+            //In development.
             case ZEUS:
             {
                 
