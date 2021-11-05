@@ -12,15 +12,15 @@
 
 #pragma tabsize 0
 #define plug    "MSM"
-#define ver     "0.8p"
+#define ver     "0.9 beta"
 #define auth    "blurry & MuiX"
 #define ADMIN_FLAG  'H'
 
-#define MSM_TASK_RANDOM      675                // ID of random task.
+#define MSM_TASK_RANDOM 675     // ID of random task.
 
-#define MSM_BOSS_HEALTH 2300					//Boss health.
-#define MSM_BOSS_AMMO   300						//Ammo for boss.
-#define MSM_BOSS_DAMAGE 2.2						//Damage multiplier.
+#define MSM_BOSS_HEALTH 2300    //Boss health.
+#define MSM_BOSS_AMMO   300     //Ammo for boss.
+#define MSM_BOSS_DAMAGE 2.2     //Damage multiplier.
 
 enum _:InfoTable
 {
@@ -40,17 +40,17 @@ public plugin_init()
     register_plugin(plug, ver, auth);
     register_event("DeathMsg","player_death","a");                      // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
-    register_event("Damage", "damager", "b", "2!0", "3=0", "4!0")       // Catching REAL damage 
+    register_event("Damage", "damager", "b", "2!0", "3=0", "4!0");       // Catching REAL damage 
     register_dictionary("msm.txt");                                     // Registering lang file.
     RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
     register_clcmd( "say /svm","class_change" );                        // Registering menu (or a command to call menu)
     set_task(60.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
     set_task(0.3, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
-    set_task(1.0, "OneTick",_,_,_,"b");                                 // One tick for whole server.
+    set_task(1.0, "OneTick",_,_,_,"b");                                 // One second tick for plugin.
     set_task(10.0, "BotThink",_,_,_,"b");                               // Bot thinking to pick a class
 }
 
-//////////////// Trying this once again ////////////////
+//////////////// Loading Main Plugin Functions ////////////////
 
 #include "PREF_SERVMANAGER/classInit.inl"
 #include "PREF_SERVMANAGER/deathEvent.inl"
@@ -59,12 +59,12 @@ public plugin_init()
 //#include "PREF_SERVMANAGER/nativeSupport.inl"     // Under development
 #include "PREF_SERVMANAGER/botSupport.inl"
 
-////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
 
 // Welcoming player
 public client_putinserver(id){
-    set_task(2.5,"welcomepl",id)
-    hero[id] = NONE
+    set_task(2.5,"welcomepl",id);
+    hero[id] = NONE;
     hero_hp[id] = 600;
 }
 
@@ -83,28 +83,28 @@ public client_disconnect(id){
     attribute[id][undying_hpstack] = 0;
     attribute[id][undying_hpstolen_timed] = 0;
     attribute[id][poisoned_from_undying] = 0;
-    hero[id] = NONE
+    hero[id] = NONE;
 
     return PLUGIN_CONTINUE;
 }
 
 // Recording a demo when player joins.
 public welcomepl(id){
-    set_task(1.0,"record_demo", id)
-    client_cmd(id,"spk msm/serverjoin")
+    set_task(1.0,"record_demo", id);
+    client_cmd(id,"spk msm/serverjoin");
 }
 
 // Recording a demo when player joins.
 public record_demo(id){
-    new mapname[32]; new randomnrd = random_num(1,9999)
-    get_mapname(mapname,31)
-    ColorChat(id, TEAM_COLOR, "%L", LANG_PLAYER, "DEMO_RECORDING", mapname, randomnrd)
-    client_cmd(id,"record fireplay_%s%d", mapname, randomnrd)
+    new mapname[32]; new randomnrd = random_num(1,9999);
+    get_mapname(mapname,31);
+    ColorChat(id, TEAM_COLOR, "%L", LANG_PLAYER, "DEMO_RECORDING", mapname, randomnrd);
+    client_cmd(id,"record fireplay_%s%d", mapname, randomnrd);
 }
 
 // Not fully implemented yet.
 public round_start(){
-    isFirstBlood = 0
+    isFirstBlood = 0;
     //for(new id = 1; id <= get_maxplayers(); id++){
     //}
 }
@@ -114,7 +114,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
     // Some checking before doing anything.
 	if(!is_user_connected(attacker) | !is_user_connected(victim)) return;
 	if(victim == attacker || !victim) return;
-    if(get_user_team (attacker) == get_user_team (victim)) return
+    if(get_user_team (attacker) == get_user_team (victim)) return;
 
     //Multiplying damage for boss.
     if(msm_boss == attacker){
@@ -123,27 +123,28 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
 
         // Here goes stealing attributes
         switch(msm_get_user_hero(attacker)){
-            // For survivors max hp is 700 so we keep it.
+            // For survivors max hp gained from vampire is 700 so we keep it.
             case NONE:
             {
                 if(get_user_health(attacker) < 700){
                     set_user_health(attacker, get_user_health(attacker) + 3); 
                 } else {
-                    set_user_health(attacker, 700)  
+                    set_user_health(attacker, 700);
                 }
             }
-            // Slark is stealing damage from victim formula.
+            // Slark stealing damage and slowing victim formula.
             case SL:{
                 new Float:maxspeedreduceformula[33];
-                attribute[victim][sl_leashstack] += 1
-                attribute[attacker][sl_selfstack] += 1
+                attribute[victim][sl_leashstack] += 1;
+                attribute[attacker][sl_selfstack] += 1;
                 if(attribute[victim][sl_leashstack] > 1){
-                    maxspeedreduceformula[victim] = get_user_maxspeed(victim) - float(attribute[victim][sl_leashstack])
-                    set_user_maxspeed(victim, maxspeedreduceformula[victim])
+                    maxspeedreduceformula[victim] = get_user_maxspeed(victim) - float(attribute[victim][sl_leashstack]);
+                    set_user_maxspeed(victim, maxspeedreduceformula[victim]);
                     SetHamParamFloat(4, damage + (attribute[attacker][sl_selfstack] * 2));
                 }
             }
             
+
             // Giving some attributes to undying when hit and hitting victim
             case UNDYING:
             {
@@ -151,31 +152,30 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                 if(attribute[attacker][undying_hpstolen_timed] > 1)
                     undying_hp_gain(attacker);
 
-                attribute[victim][poisoned_from_undying] = 5;   //Setting poison damage ( Watch OneTick() )
+                attribute[victim][poisoned_from_undying] = 5;   // Setting poison damage on victim ( Go to OneTick() )
             }
             
             // Multiplying damage if berserks health is lower 50% (or so)
             case BERSERK:
             {
-                new Float:berserk_damage = hero_hp[victim] * 0.10
+                new Float:berserk_damage = hero_hp[victim] * 0.10;
                 SetHamParamFloat(4, damage + berserk_damage);
 
                 if(get_user_health(attacker) < (hero_hp[attacker] * 0.35))
                     SetHamParamFloat(4, damage + (berserk_damage * 2));
             }
             
-            //In development.
             case ZEUS:
             {
                 
             }
 
         }
-}
+} 
 
 public damager(id){
-    static attacker; attacker = get_user_attacker(id)
-    static damage; damage = read_data(2)   
+    static attacker; attacker = get_user_attacker(id);
+    static damage; damage = read_data(2);
 
     if(!is_user_connected(attacker) | !is_user_connected(id)) return;
 	if(id == attacker || !id) return;
@@ -200,7 +200,7 @@ public msm_boss_random() {      // Choosing random player to be a boss
 		id_rand = random_num(0, Count - 1);
 		msm_boss = Players[id_rand];
         if(hero[msm_boss] != NONE){
-            msm_boss = 0
+            msm_boss = 0;
             return PLUGIN_HANDLED;
         }
 		msm_active = 1;
@@ -215,9 +215,9 @@ public msm_set_user_boss(id) {
 		give_item(id,"weapon_m249");
 		cs_set_user_bpammo(id, CSW_M249, MSM_BOSS_AMMO);
 		set_user_health(id, MSM_BOSS_HEALTH);
-		client_cmd(0,"spk msm/boss_spawned")
-        new nm[33]; get_user_name(id, nm, 32)
-        set_dhudmessage(99, 184, 255, -1.0, 0.65, 1, 6.0, 3.0, 1.5, 1.5)
+		client_cmd(0,"spk msm/boss_spawned");
+        new nm[33]; get_user_name(id, nm, 32);
+        set_dhudmessage(99, 184, 255, -1.0, 0.65, 1, 6.0, 3.0, 1.5, 1.5);
         show_dhudmessage(0, "%L", LANG_PLAYER, "BOSS_SPAWNED", nm);
 
 		switch(cs_get_user_team(id)) {
@@ -250,7 +250,7 @@ public HudTick(){
     return PLUGIN_HANDLED;
 }
 
-// Ticking one second to count something
+// Ticking one second for plugin to count
 public OneTick(){
     for(new id = 1; id <= get_maxplayers(); id++){
         if(is_user_connected(id) && is_user_connected(id) && is_user_alive(id)){
@@ -258,7 +258,7 @@ public OneTick(){
                 attribute[id][undying_hpstolen_timed] -= 1;
                 set_user_health(id, get_user_health(id) - 5)
             }
-            if(attribute[id][poisoned_from_undying] >= 1 && get_user_health(id) > 15){  // Poisoned
+            if(attribute[id][poisoned_from_undying] >= 1 && get_user_health(id) > 15){  // Victim is Poisoned
                 set_user_health(id, get_user_health(id) - 15)
                 user_fade(id, 0, 230, 30, 50, 2, 1)
                 attribute[id][poisoned_from_undying] -= 1

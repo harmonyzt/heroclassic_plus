@@ -14,8 +14,8 @@ new hero[33];
 //
 public class_change(id){
     if(!is_user_alive(id)){
-        ColorChat(id, RED, "%L", LANG_PLAYER, "NOT_ALIVE")
-        return PLUGIN_HANDLED
+        ColorChat(id, RED, "%L", LANG_PLAYER, "NOT_ALIVE");
+        return PLUGIN_HANDLED;
     }
 
     new menu = menu_create( "\w[SVM BETA] \rChoose your class", "menu_handler" );
@@ -40,7 +40,7 @@ public class_change(id){
     {
         case 0:
         {
-            hero[id] = NONE
+            hero[id] = NONE;
             hero_hp[id] = 600;
             attribute[id][sl_leashstack] = 0;
             attribute[id][sl_selfstack] = 0;
@@ -50,11 +50,11 @@ public class_change(id){
         }
         case 1:
         {
-            hero[id] = SL
+            hero[id] = SL;
             hero_hp[id] = 530;
          	ColorChat(id, GREEN, "%L", LANG_PLAYER, "SL_PLAY");
-            attribute[id][sl_leashstack] = 0
-            attribute[id][sl_selfstack] = 0
+            attribute[id][sl_leashstack] = 0;
+            attribute[id][sl_selfstack] = 0;
             msm_align_model(id);
             play_s_sound(id);
             
@@ -62,7 +62,7 @@ public class_change(id){
         }
         case 2:
         {
-            hero[id] = UNDYING
+            hero[id] = UNDYING;
             hero_hp[id] = 480;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "UD_PLAY"); 
             msm_align_model(id);
@@ -71,7 +71,7 @@ public class_change(id){
         }
         case 3:
         {
-            hero[id] = BERSERK
+            hero[id] = BERSERK;
             hero_hp[id] = 550;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "BERSERK_PLAY"); 
             msm_align_model(id);
@@ -80,7 +80,7 @@ public class_change(id){
         }
         case 4:
         {
-            hero[id] = ZEUS
+            hero[id] = ZEUS;
             hero_hp[id] = 200;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "ZEUS_PLAY"); 
             play_s_sound(id);
@@ -90,7 +90,7 @@ public class_change(id){
         case MENU_EXIT:
         {
         	menu_destroy(menu);
-         	return PLUGIN_HANDLED
+         	return PLUGIN_HANDLED;
         }
     }
 	menu_destroy(menu);
@@ -103,19 +103,19 @@ public play_s_sound(id) {
 if(is_user_alive(id)){
     switch(msm_get_user_hero(id)){
         case NONE:{
-            emit_sound(id, CHAN_STATIC, "msm/none_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
+            emit_sound(id, CHAN_STATIC, "msm/none_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
         }
         case SL:{
-            emit_sound(id, CHAN_STATIC, "msm/sl_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
+            emit_sound(id, CHAN_STATIC, "msm/sl_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
         }
         case UNDYING:{
-            emit_sound(id, CHAN_STATIC, "msm/undying_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
+            emit_sound(id, CHAN_STATIC, "msm/undying_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
         }
         case ZEUS:{
-            emit_sound(id, CHAN_STATIC, "msm/zeus_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
+            emit_sound(id, CHAN_STATIC, "msm/zeus_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
         }
         case BERSERK:{
-            emit_sound(id, CHAN_STATIC, "msm/berserk_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
+            emit_sound(id, CHAN_STATIC, "msm/berserk_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
         }
     }
 }
