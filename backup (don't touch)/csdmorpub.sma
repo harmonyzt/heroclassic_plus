@@ -109,7 +109,7 @@ public plugin_cfg()
 public menu_server(id)
 {
             {
-	new a_Menu = menu_create("\r.::\wМеню Сервера\r::.^n\dMADE ANDREY", "menu_rendering")
+	new a_Menu = menu_create("\r.::\wМеню Сервера\r::.^n\d", "menu_rendering")
 	menu_additem(a_Menu, "\yТоп \r10", "1", 0);
 	menu_additem(a_Menu, "\yТоп \r30", "2", 0);
 	menu_additem(a_Menu, "\yОбнулить счёт", "3", 0);
@@ -217,7 +217,7 @@ public menu_admin(id)
 	}
 	if (get_user_flags(id) & ADMIN_LEVEL_H)
             {
-	new b_Menu = menu_create("\rМеню Администратора ^n\dMADE ANDREY", "menu_rendering2")
+	new b_Menu = menu_create("\rМеню Администратора ^n\d", "menu_rendering2")
 	menu_additem(b_Menu, "\rВзять \y[AK-47 Gold]", "1", 0);
 	menu_additem(b_Menu, "\rВзять \y[AK-47]", "2", 0);
 	menu_additem(b_Menu, "\rВзять \y[M4A1]", "3", 0);
@@ -354,7 +354,7 @@ public menu_player(id)
 {
 {
             {
-	new c_Menu = menu_create("\yМеню \rИгрока ^n\dMADE ANDREY", "menu_rendering3")
+	new c_Menu = menu_create("\yМеню \rИгрока ^n\d", "menu_rendering3")
 	menu_additem(c_Menu, "\rВзять \y[AK-47 Gold]", "1", 0);
 	menu_additem(c_Menu, "\rВзять \y[M4A1 Gold]", "2", 0);
 	menu_setprop(c_Menu, MPROP_BACKNAME, "Назад")
