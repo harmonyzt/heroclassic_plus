@@ -4,11 +4,12 @@ enum _:attributes
 };
 enum _:
 {
-    NONE, SL, UNDYING, ZEUS, BERSERK
+    NONE, SL, UNDYING, ZEUS, BERSERK, BOSS
 };
 new attribute[256][attributes];
 new hero_hp[33];
 new hero[33];
+new hero_armor[33];
 //
 // Creating Menu
 //
@@ -42,9 +43,9 @@ public class_change(id){
         {
             hero[id] = NONE;
             hero_hp[id] = 600;
+            hero_armor[id] = 30;
             attribute[id][sl_leashstack] = 0;
             attribute[id][sl_selfstack] = 0;
-            msm_align_model(id);
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }
@@ -52,10 +53,10 @@ public class_change(id){
         {
             hero[id] = SL;
             hero_hp[id] = 530;
+            hero_armor[id] = 35;
          	ColorChat(id, GREEN, "%L", LANG_PLAYER, "SL_PLAY");
             attribute[id][sl_leashstack] = 0;
             attribute[id][sl_selfstack] = 0;
-            msm_align_model(id);
             play_s_sound(id);
             
          	return PLUGIN_HANDLED
@@ -64,8 +65,8 @@ public class_change(id){
         {
             hero[id] = UNDYING;
             hero_hp[id] = 480;
+            hero_armor[id] = 15;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "UD_PLAY"); 
-            msm_align_model(id);
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }
@@ -73,19 +74,29 @@ public class_change(id){
         {
             hero[id] = BERSERK;
             hero_hp[id] = 550;
+            hero_armor[id] = 20;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "BERSERK_PLAY"); 
-            msm_align_model(id);
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }
         case 4:
         {
             hero[id] = ZEUS;
-            hero_hp[id] = 200;
+            hero_hp[id] = 250;
+            hero_armor[id] = 10;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "ZEUS_PLAY"); 
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }
+        /*case 5:
+        {
+            hero[id] = KNIGHT;
+            hero_hp[id] = 700;
+            hero_armor[id] = 50;
+            ColorChat(id, GREEN, "%L", LANG_PLAYER, "ZEUS_PLAY"); 
+            play_s_sound(id);
+            return PLUGIN_HANDLED;
+        }*/
 
         case MENU_EXIT:
         {

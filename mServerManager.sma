@@ -1,18 +1,18 @@
-#include < amxmodx >        //Main amxmodx include.
-#include < amxmisc >        //For an old menu.
-#include < fun >            //For glow effect.
-#include < dhudmessage >    //For new format of hud messages.
-#include < colorchat2 >     //For colored simple chat.
-#include < cstrike >        //For catching player's team and giving ammo.
-#include < hamsandwich >    //For catching player's damage and increasing it.
-#include < fakemeta >       //For custom player models.
-#include < csdm >           //For tracking player prespawn.
-#include < float >          //For calculations.
+#include < amxmodx >        //  Main amxmodx include.
+#include < amxmisc >        //  For an old menu.
+#include < fun >            //  For glow effect.
+#include < dhudmessage >    //  For new format of hud messages.
+#include < colorchat2 >     //  For colored simple chat.
+#include < cstrike >        //  For catching player's team and giving ammo.
+#include < hamsandwich >    //  For catching player's damage and increasing it.
+#include < fakemeta >       //  For custom player models.
+#include < csdm >           //  For tracking player prespawn.
+#include < float >          //  For calculations.
 
 
 #pragma tabsize 0
 #define plug    "MSM"
-#define ver     "0.9 beta"
+#define ver     "1.0"
 #define auth    "blurry & MuiX"
 #define ADMIN_FLAG  'H'
 
@@ -105,21 +105,23 @@ public record_demo(id){
 // Not fully implemented yet.
 public round_start(){
     isFirstBlood = 0;
-    //for(new id = 1; id <= get_maxplayers(); id++){
-    //}
+    for(new id = 1; id <= get_maxplayers(); id++){
+    }
 }
 
 // Catching incoming damage.
 public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
-    // Some checking before doing anything.
+    //   Some checking before doing anything.
 	if(!is_user_connected(attacker) | !is_user_connected(victim)) return;
 	if(victim == attacker || !victim) return;
     if(get_user_team (attacker) == get_user_team (victim)) return;
 
-    //Multiplying damage for boss.
+    //  Multiplying damage for boss.
     if(msm_boss == attacker){
 	    SetHamParamFloat( 4, damage * MSM_BOSS_DAMAGE );
     }
+
+    //  Reducing damage based on victim's armor.
 
         // Here goes stealing attributes
         switch(msm_get_user_hero(attacker)){
@@ -219,7 +221,7 @@ public msm_set_user_boss(id) {
         new nm[33]; get_user_name(id, nm, 32);
         set_dhudmessage(99, 184, 255, -1.0, 0.65, 1, 6.0, 3.0, 1.5, 1.5);
         show_dhudmessage(0, "%L", LANG_PLAYER, "BOSS_SPAWNED", nm);
-
+        hero[id] = BOSS;
 		switch(cs_get_user_team(id)) {
 			case CS_TEAM_T: set_user_rendering(id, kRenderFxGlowShell, 255, 0, 0, kRenderNormal, 4);
 			case CS_TEAM_CT: set_user_rendering(id, kRenderFxGlowShell, 0, 0, 255, kRenderNormal, 4);
@@ -258,7 +260,9 @@ public OneTick(){
                 attribute[id][undying_hpstolen_timed] -= 1;
                 set_user_health(id, get_user_health(id) - 5)
             }
-            if(attribute[id][poisoned_from_undying] >= 1 && get_user_health(id) > 15){  // Victim is Poisoned
+
+            // If victim is poisoned
+            if(attribute[id][poisoned_from_undying] >= 1 && get_user_health(id) > 15){
                 set_user_health(id, get_user_health(id) - 15)
                 user_fade(id, 0, 230, 30, 50, 2, 1)
                 attribute[id][poisoned_from_undying] -= 1
@@ -283,11 +287,6 @@ public plugin_precache(){
     precache_sound("msm/boss_death.wav")
     precache_sound("msm/sl_spawn.wav")
     precache_sound("msm/none_spawn.wav")
-    precache_model("models/player/msm_pl_boss/msm_pl_boss.mdl")
-    precache_model("models/player/msm-ct/msm-ct.mdl")
-    precache_model("models/player/msm-tt/msm-tt.mdl")
-    precache_model("models/player/msm-undying/msm-undying.mdl")
-    precache_model("models/player/msm-ghostface/msm-ghostface.mdl")
     precache_sound("msm/undying_spawn.wav")
     precache_sound("msm/berserk_spawn.wav")
     precache_sound("msm/zeus_spawn.wav")

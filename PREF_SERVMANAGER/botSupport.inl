@@ -17,6 +17,6 @@ if (hero[id_rand] == NONE){
             hero[id_rand] = UNDYING;
         }
     }
-        return PLUGIN_HANDLED;
     }
+    return PLUGIN_HANDLED;
 }

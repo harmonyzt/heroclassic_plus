@@ -32,23 +32,6 @@ stock freeze_player(id, status) {
 	return true;
 }
 
-// Giving a default model
-stock msm_align_model(id){
-	if(hero[id] == NONE || hero[id] == ZEUS || hero[id] == BERSERK){
-        switch(cs_get_user_team(id)){
-            case CS_TEAM_T:{
-                cs_set_user_model(id,"msm-tt");
-            }
-            case CS_TEAM_CT:{
-                cs_set_user_model(id,"msm-ct");
-            }
-        }
-    }
-	if(hero[id] == UNDYING){
-		cs_set_user_model(id,"msm-undying")
-	}
-}
-
 // Returning name of hero
 stock msm_get_user_hero(id){
     return hero[id]
