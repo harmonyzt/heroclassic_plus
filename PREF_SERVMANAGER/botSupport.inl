@@ -3,7 +3,7 @@ public BotThink() {
 	static Players[32], Count, id_rand;
 	get_players(Players, Count, "ahd");
 	id_rand = random_num(0, Count - 1);
-    new ran_number = random_num(1,3);
+    new ran_number = random_num(1,4);
 
 if (hero[id_rand] == NONE){
     switch(ran_number){
@@ -15,6 +15,9 @@ if (hero[id_rand] == NONE){
         }
         case 3:{
             hero[id_rand] = UNDYING;
+        }
+        case 4:{
+            hero[id_rand] = KNIGHT;
         }
     }
     }
