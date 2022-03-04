@@ -34,6 +34,7 @@ new dmgTakenHUD, dmgDealtHUD;
 new isFirstBlood = 0;
 new announcehud;
 new msm_boss, msm_active = 0;
+new bool:is_shield_broken[33];
 
 public plugin_init()
 {
@@ -106,6 +107,7 @@ public record_demo(id){
 public round_start(){
     isFirstBlood = 0;
     for(new id = 1; id <= get_maxplayers(); id++){
+
     }
 }
 
@@ -115,11 +117,13 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
 	if(!is_user_connected(attacker) | !is_user_connected(victim)) return;
 	if(victim == attacker || !victim) return;
     if(get_user_team (attacker) == get_user_team (victim)) return;
+    
 
     //  Multiplying damage for boss.
     if(msm_boss == attacker){
 	    SetHamParamFloat( 4, damage * MSM_BOSS_DAMAGE );
     }
+
 
     //  Reducing damage based on victim's armor.
 
@@ -171,9 +175,41 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
             {
                 
             }
-
+ 
+        }
+        
+        //  Knight's shield ability
+        if(hero[victim] == KNIGHT){
+            if(knight_shield[victim] <= 0 && is_shield_broken[victim] == false){ 
+                set_task(20.0, "recover_knight_shiled",victim,_,_,_,0);
+                is_shield_broken[victim] = true;
+                knight_shield[victim] = 0;
+            }else if(attacker && is_shield_broken[victim] == false){
+                knight_shield[victim] -= 1;
+                SetHamParamFloat(4, damage * 0);
+                switch (random_num(1,4)){
+                    case 1:{
+                         emit_sound(victim,CHAN_STATIC,"msm/wp_bullet1.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                    }
+                    case 2:{
+                        emit_sound(victim,CHAN_STATIC,"msm/wp_bullet2.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                    }
+                    case 3:{
+                        emit_sound(victim,CHAN_STATIC,"msm/wp_bullet3.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                    }
+                    case 4:{
+                         emit_sound(victim,CHAN_STATIC,"msm/wp_bullet4.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                    }
+                }
+            }
         }
 } 
+
+public recover_knight_shiled(id){
+    knight_shield[id] = 15;
+    is_shield_broken[id] = false;
+    emit_sound(id,CHAN_STATIC,"msm/knight_shield_ready.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM)
+}
 
 public damager(id){
     static attacker; attacker = get_user_attacker(id);
@@ -246,6 +282,13 @@ public HudTick(){
                 case BERSERK:{
                     show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BERSERK", LANG_PLAYER,"HP", get_user_health(id));
                 }
+                case ZEUS:{
+
+                }
+                case KNIGHT:{
+                    show_dhudmessage(id, "%L %L^n%L %L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_KNIGHT", LANG_PLAYER, "PASSIVE", LANG_PLAYER, "PASSIVE_KNIGHT_SHIELD", knight_shield[id], LANG_PLAYER, "HP", get_user_health(id));
+                }
+                
             }
         }
     }
@@ -291,6 +334,11 @@ public plugin_precache(){
     precache_sound("msm/berserk_spawn.wav")
     precache_sound("msm/zeus_spawn.wav")
     precache_sound("msm/undying_poison.wav")
+    precache_sound("msm/knight_shield_ready.wav")
+    precache_sound("msm/wp_bullet1.wav")
+    precache_sound("msm/wp_bullet2.wav")
+    precache_sound("msm/wp_bullet3.wav")
+    precache_sound("msm/wp_bullet4.wav")
     dmgTakenHUD = CreateHudSyncObj();
     dmgDealtHUD = CreateHudSyncObj();
     announcehud = CreateHudSyncObj();
