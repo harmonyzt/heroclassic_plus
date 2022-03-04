@@ -183,7 +183,6 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
             if(knight_shield[victim] <= 0 && is_shield_broken[victim] == false){ 
                 set_task(20.0, "recover_knight_shiled",victim,_,_,_,0);
                 is_shield_broken[victim] = true;
-                knight_shield[victim] = 0;
             }else if(attacker && is_shield_broken[victim] == false){
                 knight_shield[victim] -= 1;
                 SetHamParamFloat(4, damage * 0);
