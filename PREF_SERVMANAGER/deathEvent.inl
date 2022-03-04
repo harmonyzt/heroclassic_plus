@@ -39,10 +39,7 @@ public player_death()
         // Reseting attributes and scores from victim
         info[victim][kills] = 0;
         info[victim][score] -=10;
-        attribute[victim][sl_leashstack] = 0;
-        attribute[victim][sl_selfstack] = 0;
-        attribute[victim][undying_hpstolen_timed] = 0;
-        attribute[victim][poisoned_from_undying] = 0;
+        
 
         // On headshot
         if (hshot)
@@ -58,28 +55,54 @@ public player_death()
             case NONE:{
                 
             }
-
             case SL:{
 
             }
-
             case UNDYING:{
                 attribute[killer][undying_hpstack] += 1;
                 hero_hp[killer] += 30;
             }
-            
             case BERSERK:{
 
             }
+            case ZEUS:{
             
+            }
+            case KNIGHT:{
+
+            }
+        }
+
+        // Resetting all stats for dead heros
+        switch(msm_get_user_hero(victim)){
+            case NONE:{
+                
+            }
+            case SL:{
+                attribute[victim][sl_leashstack] = 0;
+                attribute[victim][sl_selfstack] = 0;
+            }
+            case UNDYING:{
+                attribute[victim][undying_hpstolen_timed] = 0;
+                attribute[victim][poisoned_from_undying] = 0;
+            }
+            case BERSERK:{
+
+            }
             case ZEUS:{
                 
+            }
+            case KNIGHT:{
+                remove_task(victim, 0)
+                knight_shield[victim] = 15;
+                is_shield_broken[victim] = false;
             }
 
         }
         // Giving the victim info about killer
         new herochat = msm_get_user_hero(killer);
         ColorChat(victim, RED, "%L", LANG_PLAYER, "DEATH_INFO", killername, herochat);
+
         // Simply Announcing killstreaks
         switch(info[killer][kills])
         { 

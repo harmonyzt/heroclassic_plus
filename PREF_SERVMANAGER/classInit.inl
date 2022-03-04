@@ -4,12 +4,12 @@ enum _:attributes
 };
 enum _:
 {
-    NONE, SL, UNDYING, ZEUS, BERSERK, BOSS
+    NONE, SL, UNDYING, ZEUS, BERSERK, BOSS, KNIGHT
 };
 new attribute[256][attributes];
 new hero_hp[33];
 new hero[33];
-new hero_armor[33];
+new knight_shield[33];
 //
 // Creating Menu
 //
@@ -25,6 +25,7 @@ public class_change(id){
     menu_additem( menu, "\wPlay as \yUndying", "", 0 );
     menu_additem( menu, "\wPlay as \yBerserk", "", 0 );
     menu_additem( menu, "\wPlay as \yZeus", "", 0 );
+    menu_additem( menu, "\wPlay as \yKnight", "", 0 );
     menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
     menu_display( id, menu, 0 );
 
@@ -43,7 +44,6 @@ public class_change(id){
         {
             hero[id] = NONE;
             hero_hp[id] = 600;
-            hero_armor[id] = 30;
             attribute[id][sl_leashstack] = 0;
             attribute[id][sl_selfstack] = 0;
             play_s_sound(id);
@@ -53,7 +53,6 @@ public class_change(id){
         {
             hero[id] = SL;
             hero_hp[id] = 530;
-            hero_armor[id] = 35;
          	ColorChat(id, GREEN, "%L", LANG_PLAYER, "SL_PLAY");
             attribute[id][sl_leashstack] = 0;
             attribute[id][sl_selfstack] = 0;
@@ -65,7 +64,6 @@ public class_change(id){
         {
             hero[id] = UNDYING;
             hero_hp[id] = 480;
-            hero_armor[id] = 15;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "UD_PLAY"); 
             play_s_sound(id);
             return PLUGIN_HANDLED;
@@ -74,7 +72,6 @@ public class_change(id){
         {
             hero[id] = BERSERK;
             hero_hp[id] = 550;
-            hero_armor[id] = 20;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "BERSERK_PLAY"); 
             play_s_sound(id);
             return PLUGIN_HANDLED;
@@ -83,20 +80,20 @@ public class_change(id){
         {
             hero[id] = ZEUS;
             hero_hp[id] = 250;
-            hero_armor[id] = 10;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "ZEUS_PLAY"); 
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }
-        /*case 5:
+        case 5:
         {
             hero[id] = KNIGHT;
-            hero_hp[id] = 700;
-            hero_armor[id] = 50;
-            ColorChat(id, GREEN, "%L", LANG_PLAYER, "ZEUS_PLAY"); 
+            hero_hp[id] = 900;
+            knight_shield[id] = 15;
+            is_shield_broken[id] = false;
+            ColorChat(id, GREEN, "%L", LANG_PLAYER, "KNIGHT_PLAY"); 
             play_s_sound(id);
             return PLUGIN_HANDLED;
-        }*/
+        }
 
         case MENU_EXIT:
         {
@@ -127,6 +124,9 @@ if(is_user_alive(id)){
         }
         case BERSERK:{
             emit_sound(id, CHAN_STATIC, "msm/berserk_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
+        }
+        case KNIGHT:{
+            emit_sound(id, CHAN_STATIC, "msm/knight_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
         }
     }
 }

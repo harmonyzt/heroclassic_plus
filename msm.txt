@@ -20,6 +20,7 @@ SL_PLAY = You are playing as slark now.
 UD_PLAY = You are playing as undying now.
 BERSERK_PLAY = You are playing as berserk now.
 ZEUS_PLAY = You are playing as zeus now.
+KNIGHT_PLAY = You are playing as knight now.
 
 NOT_ALIVE = You can't use this while dead.
 
@@ -29,16 +30,18 @@ HERO_SL = Slark
 HERO_ZEUS = Zeus
 HERO_UD = Undying
 HERO_BERSERK = Berserk
+HERO_KNIGHT = Knight
 
-HP = Health: [%d]
+HP = Health: [ %d ]
 
-HERO_ULT = Ultimate in - [%d]
+HERO_ULT = Ultimate in - [ %d ]
 HERO_ULT_READY = Ultimate ready!
 
-HERO_SL_SELFSTACK = Leash Stack: [%d]
+HERO_SL_SELFSTACK = Leash Stack: [ %d ]
 
-HERO_UD_HPSTACK = Health Stacks: [%d]
-HERO_UD_HPSTOLEN = Temporary Health Stacks: [%d]
+HERO_UD_HPSTACK = Health Stacks: [ %d ]
+HERO_UD_HPSTOLEN = Temporary Health Stacks: [ %d ]
 
 PASSIVE = Passive:
 PASSIVE_POISON_TOUCH = Poison Touch
+PASSIVE_KNIGHT_SHIELD = Shield Durability: [ %d ]
