@@ -35,6 +35,7 @@ new isFirstBlood = 0;
 new announcehud;
 new msm_boss, msm_active = 0;
 new bool:is_shield_broken[33];
+new g_msgHideWeapon
 
 public plugin_init()
 {
@@ -45,6 +46,10 @@ public plugin_init()
     register_dictionary("msm.txt");                                     // Registering lang file.
     RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
     register_clcmd( "say /svm","class_change" );                        // Registering menu (or a command to call menu)
+    g_msgHideWeapon = get_user_msgid("HideWeapon");
+	register_event("ResetHUD", "onResetHUD", "b");
+	register_message(g_msgHideWeapon, "msgHideWeapon");
+
     set_task(60.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
     set_task(0.3, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
     set_task(1.0, "OneTick",_,_,_,"b");                                 // One second tick for plugin.
@@ -59,6 +64,7 @@ public plugin_init()
 #include "PREF_SERVMANAGER/pluginStocks.inl"
 //#include "PREF_SERVMANAGER/nativeSupport.inl"     // Under development
 #include "PREF_SERVMANAGER/botSupport.inl"
+#include "PREF_SERVMANAGER/hideHUD.inl"
 
 ///////////////////////////////////////////////////////////////
 
