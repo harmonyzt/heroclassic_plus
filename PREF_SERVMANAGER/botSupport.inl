@@ -5,21 +5,21 @@ public BotThink() {
 	id_rand = random_num(0, Count - 1);
     new ran_number = random_num(1,4);
 
-if (hero[id_rand] == NONE){
-    switch(ran_number){
-        case 1:{
-            hero[id_rand] = BERSERK;
+    if (hero[id_rand] == NONE){
+        switch(ran_number){
+            case 1:{
+                hero[id_rand] = BERSERK;
+            }
+            case 2:{
+                hero[id_rand] = SL;
+            }
+            case 3:{
+                hero[id_rand] = UNDYING;
+            }
+            case 4:{
+                hero[id_rand] = KNIGHT;
+            }
         }
-        case 2:{
-            hero[id_rand] = SL;
-        }
-        case 3:{
-            hero[id_rand] = UNDYING;
-        }
-        case 4:{
-            hero[id_rand] = KNIGHT;
-        }
-    }
     }
     return PLUGIN_HANDLED;
 }
