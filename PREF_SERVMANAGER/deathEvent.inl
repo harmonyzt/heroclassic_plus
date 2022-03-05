@@ -13,7 +13,8 @@ public player_death()
     //Death of boss.
     if(victim == msm_boss)
     {
-		msm_boss = 0; set_user_rendering(victim, kRenderFxGlowShell, 0, 0, 0, kRenderNormal, 0);
+		msm_boss = 0;
+        set_user_rendering(victim, kRenderFxGlowShell, 0, 0, 0, kRenderNormal, 0);
 		msm_active = 0;
         set_dhudmessage(99, 184, 255, -1.0, 0.65, 1, 6.0, 3.0, 1.5, 1.5);
         show_dhudmessage(0, "%L", LANG_PLAYER, "BOSS_DEATH", killername);
