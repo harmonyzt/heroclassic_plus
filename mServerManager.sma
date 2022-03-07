@@ -8,15 +8,13 @@
 #include < fakemeta >       //  For custom player models.
 #include < csdm >           //  For tracking player prespawn.
 #include < float >          //  For calculations.
-
+#include < nvault >          //  For calculations.
 
 #pragma tabsize 0
 #define plug    "MSM"
-#define ver     "1.0"
+#define ver     "1.3b"
 #define auth    "blurry & MuiX"
 #define ADMIN_FLAG  'H'
-
-#define MSM_TASK_RANDOM 675     // ID of random task.
 
 #define MSM_BOSS_HEALTH 2300    //Boss health.
 #define MSM_BOSS_AMMO   300     //Ammo for boss.
@@ -26,7 +24,9 @@ enum _:InfoTable
 {
     kills,
     headshots,
-    score
+    score,
+    hasVampiricHelmet,
+    hasGloriousArmor
 };
 
 new info[128][InfoTable];
@@ -36,64 +36,40 @@ new announcehud;
 new msm_boss, msm_active = 0;
 new bool:is_shield_broken[33];
 new g_msgHideWeapon
+new msm_vault
 
 public plugin_init()
 {
     register_plugin(plug, ver, auth);
     register_event("DeathMsg","player_death","a");                      // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
-    register_event("Damage", "damager", "b", "2!0", "3=0", "4!0");       // Catching REAL damage 
+    register_event("Damage", "damager", "b", "2!0", "3=0", "4!0");      // Catching REAL damage 
     register_dictionary("msm.txt");                                     // Registering lang file.
     RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
     register_clcmd( "say /svm","class_change" );                        // Registering menu (or a command to call menu)
-    g_msgHideWeapon = get_user_msgid("HideWeapon");
-	register_event("ResetHUD", "onResetHUD", "b");
-	register_message(g_msgHideWeapon, "msgHideWeapon");
-
+    g_msgHideWeapon = get_user_msgid("HideWeapon");                     // 
+	register_event("ResetHUD", "onResetHUD", "b");                      //
+	register_message(g_msgHideWeapon, "msgHideWeapon");                 // Hiding
+    msm_vault = nvault_open("mserver");
     set_task(60.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
     set_task(0.3, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
     set_task(1.0, "OneTick",_,_,_,"b");                                 // One second tick for plugin.
-    set_task(random_float(15.0,70.0), "BotThink",_,_,_,"b");                               // Bot thinking to pick a class
+    set_task(random_float(15.0,70.0), "BotThink",_,_,_,"b");            // Bot thinking to pick a class
 }
 
-//////////////// Loading Main Plugin Functions ////////////////
+////////////////    Loading Main Plugin Functions   ////////////////
 
-#include "PREF_SERVMANAGER/classInit.inl"
-#include "PREF_SERVMANAGER/deathEvent.inl"
-#include "PREF_SERVMANAGER/playerRespawn.inl"
-#include "PREF_SERVMANAGER/pluginStocks.inl"
+#include "PREF_SERVMANAGER/Class_Init.inl"
+#include "PREF_SERVMANAGER/Death_Event.inl"
+#include "PREF_SERVMANAGER/Player_Respawn.inl"
+#include "PREF_SERVMANAGER/Plugin_Stocks.inl"
 //#include "PREF_SERVMANAGER/nativeSupport.inl"     // Under development
-#include "PREF_SERVMANAGER/botSupport.inl"
-#include "PREF_SERVMANAGER/hideHUD.inl"
-
+#include "PREF_SERVMANAGER/Bot_Support.inl"
+#include "PREF_SERVMANAGER/Hide_HUD.inl"
+#include "PREF_SERVMANAGER/NVault.inl"
 ///////////////////////////////////////////////////////////////
 
-// Welcoming player
-public client_putinserver(id){
-    set_task(2.5,"welcomepl",id);
-    hero[id] = NONE;
-    hero_hp[id] = 600;
-}
 
-// On disconnect
-public client_disconnect(id){
-    new dcName[32]
-    if( msm_active == 1 && id == msm_boss ) {    //Checking if boss left or not and announcing next one.
-		msm_boss = 0;
-		msm_active = 0;
-		ColorChat(0, RED, "%L", LANG_PLAYER, "BOSS_LEFT", get_user_name(id,dcName,31));
-	}
-
-    // Reseting all attributes if player disconnects
-    attribute[id][sl_leashstack] = 0;
-    attribute[id][sl_selfstack] = 0;
-    attribute[id][undying_hpstack] = 0;
-    attribute[id][undying_hpstolen_timed] = 0;
-    attribute[id][poisoned_from_undying] = 0;
-    hero[id] = NONE;
-
-    return PLUGIN_CONTINUE;
-}
 
 // Recording a demo when player joins.
 public welcomepl(id){
@@ -152,7 +128,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                 if(attribute[victim][sl_leashstack] > 1){
                     maxspeedreduceformula[victim] = get_user_maxspeed(victim) - float(attribute[victim][sl_leashstack]);
                     set_user_maxspeed(victim, maxspeedreduceformula[victim]);
-                    SetHamParamFloat(4, damage + (attribute[attacker][sl_selfstack] * 2));
+                    SetHamParamFloat(4, damage + (attribute[attacker][sl_selfstack] * 1.5));
                 }
             }
             
@@ -320,6 +296,11 @@ public OneTick(){
     }
 }
 
+// Closing data storage when plugin finished it's work
+public plugin_end(){
+	nvault_close(msm_vault);
+}
+
 public plugin_precache(){
     precache_sound("msm/firstblood.wav")
     precache_sound("msm/headshot.wav")
@@ -340,6 +321,7 @@ public plugin_precache(){
     precache_sound("msm/zeus_spawn.wav")
     precache_sound("msm/undying_poison.wav")
     precache_sound("msm/knight_shield_ready.wav")
+    precache_sound("msm/knight_spawn.wav")
     precache_sound("msm/wp_bullet1.wav")
     precache_sound("msm/wp_bullet2.wav")
     precache_sound("msm/wp_bullet3.wav")
