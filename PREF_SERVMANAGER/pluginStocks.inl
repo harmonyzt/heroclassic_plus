@@ -1,5 +1,3 @@
-// Useful features
-
 // Simple fade
 stock user_fade(id, red, green, blue, density, duration, hold_time)
 {

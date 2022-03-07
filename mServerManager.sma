@@ -53,7 +53,7 @@ public plugin_init()
     set_task(60.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
     set_task(0.3, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
     set_task(1.0, "OneTick",_,_,_,"b");                                 // One second tick for plugin.
-    set_task(10.0, "BotThink",_,_,_,"b");                               // Bot thinking to pick a class
+    set_task(random_float(15.0,70.0), "BotThink",_,_,_,"b");                               // Bot thinking to pick a class
 }
 
 //////////////// Loading Main Plugin Functions ////////////////
