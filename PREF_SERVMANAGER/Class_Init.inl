@@ -44,6 +44,7 @@ public class_change(id){
         {
             hero[id] = NONE;
             hero_hp[id] = 600;
+            set_user_health(player, hero_hp[player])
             attribute[id][sl_leashstack] = 0;
             attribute[id][sl_selfstack] = 0;
             play_s_sound(id);
@@ -54,6 +55,7 @@ public class_change(id){
             hero[id] = SL;
             hero_hp[id] = 530;
          	ColorChat(id, GREEN, "%L", LANG_PLAYER, "SL_PLAY");
+             set_user_health(player, hero_hp[player])
             attribute[id][sl_leashstack] = 0;
             attribute[id][sl_selfstack] = 0;
             play_s_sound(id);
@@ -65,6 +67,7 @@ public class_change(id){
             hero[id] = UNDYING;
             hero_hp[id] = 480;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "UD_PLAY"); 
+            set_user_health(player, hero_hp[player])
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }
@@ -73,6 +76,7 @@ public class_change(id){
             hero[id] = BERSERK;
             hero_hp[id] = 550;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "BERSERK_PLAY"); 
+            set_user_health(player, hero_hp[player])
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }
@@ -81,6 +85,7 @@ public class_change(id){
             hero[id] = ZEUS;
             hero_hp[id] = 250;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "ZEUS_PLAY"); 
+            set_user_health(player, hero_hp[player])
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }
@@ -91,6 +96,7 @@ public class_change(id){
             knight_shield[id] = 15;
             is_shield_broken[id] = false;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "KNIGHT_PLAY"); 
+            set_user_health(player, hero_hp[player])
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }

@@ -40,7 +40,7 @@ public player_death()
         // Reseting attributes and scores from victim
         info[victim][kills] = 0;
         info[victim][score] -=10;
-        
+        attribute[victim][poisoned_from_undying] = 0;
 
         // On headshot
         if (hshot)
@@ -85,7 +85,6 @@ public player_death()
             }
             case UNDYING:{
                 attribute[victim][undying_hpstolen_timed] = 0;
-                attribute[victim][poisoned_from_undying] = 0;
             }
             case BERSERK:{
 
@@ -95,8 +94,6 @@ public player_death()
             }
             case KNIGHT:{
                 remove_task(victim, 0)
-                knight_shield[victim] = 15;
-                is_shield_broken[victim] = false;
             }
 
         }

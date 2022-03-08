@@ -12,13 +12,13 @@
 
 #pragma tabsize 0
 #define plug    "MSM"
-#define ver     "1.3b"
-#define auth    "blurry & MuiX"
+#define ver     "1.4b"
+#define auth    "harmony & MuiX"
 #define ADMIN_FLAG  'H'
 
-#define MSM_BOSS_HEALTH 2300    //Boss health.
-#define MSM_BOSS_AMMO   300     //Ammo for boss.
-#define MSM_BOSS_DAMAGE 2.2     //Damage multiplier.
+#define MSM_BOSS_HEALTH 2300    //  Boss health.
+#define MSM_BOSS_AMMO   300     //  Ammo for boss.
+#define MSM_BOSS_DAMAGE 2.2     //  Damage multiplier.
 
 enum _:InfoTable
 {
@@ -29,14 +29,16 @@ enum _:InfoTable
     hasGloriousArmor
 };
 
-new info[128][InfoTable];
-new dmgTakenHUD, dmgDealtHUD;
-new isFirstBlood = 0;
-new announcehud;
-new msm_boss, msm_active = 0;
-new bool:is_shield_broken[33];
-new g_msgHideWeapon
-new msm_vault
+new info[128][InfoTable];           // Info made for skill and such
+new dmgTakenHUD, dmgDealtHUD;       // Custom damager
+new isFirstBlood = 0;               // To check if there was a first blood or not
+new announcehud;                    // HUD for kill announcer
+new msm_boss, msm_active = 0;       // For boss, to check if there is one or not
+new bool:is_shield_broken[33];      // To check if shield broken or not (KNIGHT)
+new g_msgHideWeapon                 // For hiding HUD
+new msm_vault                       // For NVault
+new CT_Kills                        // For counting kills from both kills
+new TT_Kills                        // For counting kills from both kills
 
 public plugin_init()
 {
@@ -68,7 +70,6 @@ public plugin_init()
 #include "PREF_SERVMANAGER/Hide_HUD.inl"
 #include "PREF_SERVMANAGER/NVault.inl"
 ///////////////////////////////////////////////////////////////
-
 
 
 // Recording a demo when player joins.
@@ -106,12 +107,9 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
 	    SetHamParamFloat( 4, damage * MSM_BOSS_DAMAGE );
     }
 
-
-    //  Reducing damage based on victim's armor.
-
-        // Here goes stealing attributes
+        // Gaining and stealing attributes for each class on damage
         switch(msm_get_user_hero(attacker)){
-            // For survivors max hp gained from vampire is 700 so we keep it.
+            // For survivors max hp gained from vampire is 700
             case NONE:
             {
                 if(get_user_health(attacker) < 700){
@@ -163,7 +161,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
         //  Knight's shield ability
         if(hero[victim] == KNIGHT){
             if(knight_shield[victim] <= 0 && is_shield_broken[victim] == false){ 
-                set_task(20.0, "recover_knight_shiled",victim,_,_,_,0);
+                set_task(20.0, "recover_knight_shield",victim,_,_,_,0);
                 is_shield_broken[victim] = true;
             }else if(attacker && is_shield_broken[victim] == false){
                 knight_shield[victim] -= 1;
@@ -186,7 +184,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
         }
 } 
 
-public recover_knight_shiled(id){
+public recover_knight_shield(id){
     knight_shield[id] = 15;
     is_shield_broken[id] = false;
     emit_sound(id,CHAN_STATIC,"msm/knight_shield_ready.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM)
