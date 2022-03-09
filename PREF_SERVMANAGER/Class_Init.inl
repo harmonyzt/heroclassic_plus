@@ -43,7 +43,7 @@ public class_change(id){
         case 0:
         {
             hero[id] = NONE;
-            hero_hp[id] = 600;
+            hero_hp[id] = 500;
             set_user_health(id, hero_hp[id])
             attribute[id][sl_leashstack] = 0;
             attribute[id][sl_selfstack] = 0;
@@ -65,7 +65,7 @@ public class_change(id){
         case 2:
         {
             hero[id] = UNDYING;
-            hero_hp[id] = 480;
+            hero_hp[id] = 380;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "UD_PLAY"); 
             set_user_health(id, hero_hp[id])
             play_s_sound(id);
@@ -74,7 +74,7 @@ public class_change(id){
         case 3:
         {
             hero[id] = BERSERK;
-            hero_hp[id] = 550;
+            hero_hp[id] = 450;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "BERSERK_PLAY"); 
             set_user_health(id, hero_hp[id])
             play_s_sound(id);
@@ -92,7 +92,7 @@ public class_change(id){
         case 5:
         {
             hero[id] = KNIGHT;
-            hero_hp[id] = 900;
+            hero_hp[id] = 600;
             knight_shield[id] = 15;
             is_shield_broken[id] = false;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "KNIGHT_PLAY"); 
