@@ -33,6 +33,7 @@ HERO_ZEUS = Zeus
 HERO_UD = Undying
 HERO_BERSERK = Berserk
 HERO_KNIGHT = Knight
+HERO_BOSS = Boss
 
 HP = Health: [ %d ]
 

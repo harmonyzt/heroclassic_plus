@@ -262,12 +262,14 @@ public HudTick(){
                     show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BERSERK", LANG_PLAYER,"HP", get_user_health(id));
                 }
                 case ZEUS:{
-
+                    show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_ZEUS", LANG_PLAYER,"HP", get_user_health(id));
                 }
                 case KNIGHT:{
                     show_dhudmessage(id, "%L %L^n%L %L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_KNIGHT", LANG_PLAYER, "PASSIVE", LANG_PLAYER, "PASSIVE_KNIGHT_SHIELD", knight_shield[id], LANG_PLAYER, "HP", get_user_health(id));
                 }
-                
+                case BOSS:{
+                    show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BOSS", LANG_PLAYER,"HP", get_user_health(id));
+                }
             }
         }
     }
