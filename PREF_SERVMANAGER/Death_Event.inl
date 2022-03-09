@@ -74,7 +74,7 @@ public player_death()
             }
         }
 
-        // Resetting all stats for dead heros
+        // Resetting gained stats for each dead hero
         switch(msm_get_user_hero(victim)){
             case NONE:{
                 
