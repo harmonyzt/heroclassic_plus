@@ -8,6 +8,8 @@ KILLING_SPREE = %s IS ON KILLING SPREE!
 UNSTOPPABLE = %s IS FUCKING UNSTOPPABLE!
 MANIAC = %s IS A MANIAC! SOMEONE STOP HIM!
 MASSACRE = %s JUST MADE MASSACRE! NO ONE CAN STOP HIM!
+HATTRICK_CT = CT WON THIS FLAWLESSLY
+HATTICK_TT = TT WON THIS FLAWLESSLY
 
 BOSS_LEFT = Boss %s just left the game... 
 BOSS_DEATH = %s Defeated the boss! 
@@ -20,6 +22,7 @@ SL_PLAY = You are playing as slark now.
 UD_PLAY = You are playing as undying now.
 BERSERK_PLAY = You are playing as berserk now.
 ZEUS_PLAY = You are playing as zeus now.
+KNIGHT_PLAY = You are playing as knight now.
 
 NOT_ALIVE = You can't use this while dead.
 
@@ -29,6 +32,8 @@ HERO_SL = Slark
 HERO_ZEUS = Zeus
 HERO_UD = Undying
 HERO_BERSERK = Berserk
+HERO_KNIGHT = Knight
+HERO_BOSS = Boss
 
 HP = Health: [ %d ]
 
@@ -42,3 +47,19 @@ HERO_UD_HPSTOLEN = Temporary Health Stacks: [ %d ]
 
 PASSIVE = Passive:
 PASSIVE_POISON_TOUCH = Poison Touch
+PASSIVE_KNIGHT_SHIELD = Shield Durability: [ %d ]
+
+SCORE = Score: [ %s ]
+
+[ru]
+
+FIRST_BLOOD = %s ПРОЛИЛ ПЕРВУЮ КРОВЬ!
+TRIPLE_KILL = %s ЗАЕБАШИЛ ТРОИХ!
+MULTI_KILL = %s ВХОДИТ ВО ВКУС!
+KILLING_SPREE = %s СОВСЕМ АХУЕЛ 5 НА 0!
+UNSTOPPABLE = %s НЕПРЕОДОЛИМ!
+MANIAC = %s ЕБАНЫЙ МАНЬЯК! ОСТАНОВИТЕ ЕГО!
+MASSACRE = %s ПРОСТО МАШИНА! НИКТО ЕГО НЕ ОСТАНОВИТ!
+
+HATTRICK_CT = КТ ПОБЕДИЛИ ПОЧТИ БЕЗ ПОТЕРЬ!
+HATTICK_TT = ТТ ПОБЕДИЛИ ПОЧТИ БЕЗ ПОТЕРЬ!
