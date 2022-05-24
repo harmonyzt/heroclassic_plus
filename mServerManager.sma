@@ -61,14 +61,14 @@ public plugin_init()
 
 ////////////////    Loading Main Plugin Functions   ////////////////
 
-#include "PREF_SERVMANAGER/Class_Init.inl"
-#include "PREF_SERVMANAGER/Death_Event.inl"
-#include "PREF_SERVMANAGER/Player_Respawn.inl"
-#include "PREF_SERVMANAGER/Plugin_Stocks.inl"
+#include "PREF_SERVMANAGER/MenuClassInit.inl"
+#include "PREF_SERVMANAGER/deathEvent.inl"
+#include "PREF_SERVMANAGER/playerRespawn.inl"
+#include "PREF_SERVMANAGER/pluginStocks.inl"
 //#include "PREF_SERVMANAGER/nativeSupport.inl"     // Under development
-#include "PREF_SERVMANAGER/Bot_Support.inl"
-#include "PREF_SERVMANAGER/Hide_HUD.inl"
-#include "PREF_SERVMANAGER/NVault.inl"
+#include "PREF_SERVMANAGER/botSupport.inl"
+#include "PREF_SERVMANAGER/hideHUD.inl"
+#include "PREF_SERVMANAGER/nVault.inl"
 ///////////////////////////////////////////////////////////////
 
 
