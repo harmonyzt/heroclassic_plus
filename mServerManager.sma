@@ -11,13 +11,13 @@
 
 #pragma tabsize 0
 #define plug    "MSM"
-#define ver     "1.4b"
+#define ver     "1.5"
 #define auth    "harmony & MuiX"
 #define ADMIN_FLAG  'H'
 
-#define MSM_BOSS_HEALTH 2300    //  Boss health.
+#define MSM_BOSS_HEALTH 2000    //  Boss health.
 #define MSM_BOSS_AMMO   300     //  Ammo for boss.
-#define MSM_BOSS_DAMAGE 2.2     //  Damage multiplier.
+#define MSM_BOSS_DAMAGE 1.3     //  Damage multiplier.
 
 enum _:InfoTable
 {
@@ -28,16 +28,17 @@ enum _:InfoTable
     hasGloriousArmor
 };
 
-new info[128][InfoTable];           // Info made for skill and such
-new dmgTakenHUD, dmgDealtHUD;       // Custom damager
-new isFirstBlood = 0;               // To check if there was a first blood or not
-new announcehud;                    // HUD for kill announcer
-new msm_boss, msm_active = 0;       // For boss, to check if there is one or not
-new bool:is_shield_broken[33];      // To check if shield broken or not (KNIGHT)
-new g_msgHideWeapon                 // For hiding HUD
-new msm_vault                       // For NVault
-new CT_Kills                        // For counting kills from both kills
-new TT_Kills                        // For counting kills from both kills
+new info[128][InfoTable];           // Info made for skill and such.
+new dmgTakenHUD, dmgDealtHUD;       // Custom damager.
+new isFirstBlood = 0;               // To check if there was a first blood or not.
+new announcehud;                    // HUD for kill announcer.
+new msm_boss, msm_active = 0;       // For boss, to check if there is one or not.
+new bool:is_shield_broken[33];      // To check if shield broken or not (KNIGHT).
+new g_msgHideWeapon                 // For hiding HUD.
+new msm_vault                       // For NVault.
+new CT_Kills                        // For counting kills from both teams.
+new TT_Kills                        // For counting kills from both teams.
+new RoundCount = 0                  // For counting rounds.
 
 public plugin_init()
 {
@@ -51,7 +52,7 @@ public plugin_init()
     g_msgHideWeapon = get_user_msgid("HideWeapon");                     // Hiding default health and armor bar.
 	register_event("ResetHUD", "onResetHUD", "b");                      // Hiding default health and armor bar.
 	register_message(g_msgHideWeapon, "msgHideWeapon");                 // Hiding default health and armor bar.
-    msm_vault = nvault_open("mserver");
+    msm_vault = nvault_open("mserver");                                 // Opening nvault storage.
     set_task(60.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
     set_task(0.3, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
     set_task(1.0, "OneTick",_,_,_,"b");                                 // One second tick for plugin.
@@ -201,7 +202,7 @@ public undying_hp_gain(id)
 }
 
 public msm_boss_random() {      // Choosing random player to be a boss
-	if(msm_active == 0) {
+	if(msm_active == 0 || RoundCount > 5) {
 		static Players[32], Count, id_rand;
 		get_players(Players, Count, "ah");
 		id_rand = random_num(0, Count - 1);
@@ -219,6 +220,7 @@ public msm_boss_random() {      // Choosing random player to be a boss
 public msm_set_user_boss(id) {
 	if(is_user_connected(id) && hero[msm_boss] == NONE) {
 		cs_set_user_model(id,"msm_pl_boss");
+        client_cmd(id, "slot1; drop")
 		give_item(id,"weapon_m249");
 		cs_set_user_bpammo(id, CSW_M249, MSM_BOSS_AMMO);
 		set_user_health(id, MSM_BOSS_HEALTH);

@@ -5,8 +5,8 @@ public BotThink() {
 	id_rand = random_num(0, Count - 1);
     new ran_number = random_num(1,4);
 
-    // If bot is not having any class, set random
-    if (hero[id_rand] == NONE){
+    // If bot is not having any class, he's dead, set random
+    if (hero[id_rand] == NONE || !is_user_alive(id_rand)){
         switch(ran_number){
             case 1:{
                 hero[id_rand] = BERSERK;
