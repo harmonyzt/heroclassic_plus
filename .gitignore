@@ -1,3 +1,8 @@
+# Ignore compiled .sma plugin
 *.amxx
 
+# Ignore workspace files
 *.code-workspace
+
+# Ignore vscode folders
+.vscode
