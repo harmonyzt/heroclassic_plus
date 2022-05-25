@@ -276,7 +276,7 @@ public HudTick(){
     return PLUGIN_HANDLED;
 }
 
-// Ticking one second for plugin to count
+// Ticking one second
 public OneTick(){
     for(new id = 1; id <= get_maxplayers(); id++){
         if(is_user_connected(id) && is_user_connected(id) && is_user_alive(id)){
