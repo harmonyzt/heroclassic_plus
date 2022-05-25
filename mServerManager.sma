@@ -45,25 +45,25 @@ public plugin_init()
     register_plugin(plug, ver, auth);
     register_event("DeathMsg","player_death","a");                      // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
-    register_event("Damage", "damager", "b", "2!0", "3=0", "4!0");      // Catching REAL damage 
+    register_event("Damage", "damager", "b", "2!0", "3=0", "4!0");      // Catching REAL damage.
     register_dictionary("msm.txt");                                     // Registering lang file.
     RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
-    register_clcmd( "say /svm","class_change" );                        // Registering menu (or a command to call menu)
-    g_msgHideWeapon = get_user_msgid("HideWeapon");                     // 
-	register_event("ResetHUD", "onResetHUD", "b");                      //
-	register_message(g_msgHideWeapon, "msgHideWeapon");                 // Hiding
+    register_clcmd( "say /svm","class_change" );                        // Registering menu (or a command to call menu).
+    g_msgHideWeapon = get_user_msgid("HideWeapon");                     // Hiding default health and armor bar.
+	register_event("ResetHUD", "onResetHUD", "b");                      // Hiding default health and armor bar.
+	register_message(g_msgHideWeapon, "msgHideWeapon");                 // Hiding default health and armor bar.
     msm_vault = nvault_open("mserver");
     set_task(60.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
     set_task(0.3, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
     set_task(1.0, "OneTick",_,_,_,"b");                                 // One second tick for plugin.
-    set_task(random_float(15.0,70.0), "BotThink",_,_,_,"b");            // Bot thinking to pick a class
+    set_task(random_float(15.0,70.0), "BotThink",_,_,_,"b");            // Bot thinking to pick a class.
 }
 
 ////////////////    Loading Main Plugin Functions   ////////////////
 
 #include "PREF_SERVMANAGER/MenuClassInit.inl"
 #include "PREF_SERVMANAGER/deathEvent.inl"
-#include "PREF_SERVMANAGER/playerRespawn.inl"
+#include "PREF_SERVMANAGER/playerRoundstart.inl"
 #include "PREF_SERVMANAGER/pluginStocks.inl"
 //#include "PREF_SERVMANAGER/nativeSupport.inl"     // Under development
 #include "PREF_SERVMANAGER/botSupport.inl"
