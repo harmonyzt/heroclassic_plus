@@ -14,8 +14,8 @@ new knight_shield[33];
 // Creating Menu
 //
 public class_change(id){
-    if(!is_user_alive(id)){
-        ColorChat(id, RED, "%L", LANG_PLAYER, "NOT_ALIVE");
+    if(is_user_alive(id) || RoundCount != 1){
+        ColorChat(id, RED, "%L", LANG_PLAYER, "ALIVE");
         return PLUGIN_HANDLED;
     }
 

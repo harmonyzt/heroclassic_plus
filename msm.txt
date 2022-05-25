@@ -24,7 +24,7 @@ BERSERK_PLAY = You are playing as berserk now.
 ZEUS_PLAY = You are playing as zeus now.
 KNIGHT_PLAY = You are playing as knight now.
 
-NOT_ALIVE = You can't use this while dead.
+ALIVE = You can't use this while alive.
 
 HERO_NAME = Hero:
 HERO_NONE = Survivor
