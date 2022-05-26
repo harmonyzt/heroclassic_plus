@@ -225,14 +225,10 @@ client_cmd(attacker,"spk tfcs/hit")
 return HAM_IGNORED
 }
 
-//***************************
-//����������� ���� ��� ��� ���
-//***************************
+
 public setTeam(id)
 g_friend[id] = read_data(2)
-//***************************
-//������ ������
-//***************************
+
 public client_death(killer,victim,wpindex,hitplace,TK){
 
 if(crits[killer]==true || always_crit_win[killer]==true && mini_crits[killer]==false){
@@ -257,9 +253,7 @@ kills[victim]=0
 kills[victim]=0
 new name[32];get_user_name(killer,name,31)
 
-//***************************
-//������� �������
-//***************************
+
 if(kills[killer]==5){
 	client_cmd(killer,"spk tfcs/kill_streak")
 	set_dhudmessage(255, 127, 42, -1.0, 0.15, 1, 6.0, 4.0)
@@ -289,9 +283,7 @@ if(kills[killer]==25){
 	show_dhudmessage(0, "%L",LANG_PLAYER,"TF_25",name)
 }
 
-//****************************************************
-//���� ���� � ��� ��� ������, �� ����������� ��������
-//****************************************************
+
 if(get_user_weapon(killer)==CSW_AWP || get_user_weapon(killer)==CSW_SCOUT){
 new chance=20
 if(chance>random_num(0,60))
@@ -299,9 +291,7 @@ set_task(1.7,"Laugh_Sniper",killer)
 }
 }
 
-//***************************
-//�������� ��������
-//***************************
+
 public Laugh_Sniper(id){
 
 new randomm=random_num(1,10)
@@ -318,9 +308,7 @@ switch(randomm){
 	case 10:emit_sound(id,CHAN_STATIC,"tfcs/sniper_laugh10.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM)
 }
 }
-//***************************
-//�������� � ������
-//***************************
+
 public bomb_planted(planter){
 new winners[32],num
 get_players(winners,num,"ea","TERRORIST")
@@ -349,21 +337,13 @@ always_crit_win[winners[i]]=true
 set_task(1.0,"sound_CRIT",winners[i])
 }
 }
-//***************************
-//����������� ������ �����
-//***************************
+
 public sound_CRIT(id){
 client_cmd(id,"spk tfcs/crit_power2")
 set_task(8.0,"sound_CRIT",id)
 }
 
-//**********************************
-//��������� ����������� ������ �����
-//**********************************
 
-//***************************
-//������� ���
-//***************************
 stock color_print(id, const text[], any:...) {
 	new message[128];
 	vformat(message, charsmax(message), text, 3);
