@@ -68,14 +68,14 @@ public plugin_cfg()
 
 ////////////////    Loading Main Plugin Functions   ////////////////
 
-#include "PREF_SERVMANAGER/menuClassInit.inl"
-#include "PREF_SERVMANAGER/deathEvent.inl"
-#include "PREF_SERVMANAGER/playerRoundStart.inl"
-#include "PREF_SERVMANAGER/pluginStocks.inl"
-//#include "PREF_SERVMANAGER/nativeSupport.inl"     // Under development
-#include "PREF_SERVMANAGER/botSupport.inl"
-#include "PREF_SERVMANAGER/hideHUD.inl"
-#include "PREF_SERVMANAGER/nVault.inl"
+#include "msm_pref/menuClassInit.inl"
+#include "msm_pref/deathEvent.inl"
+#include "msm_pref/playerRoundStart.inl"
+#include "msm_pref/pluginStocks.inl"
+//#include "msm_pref/nativeSupport.inl"     // Under development
+#include "msm_pref/botSupport.inl"
+#include "msm_pref/hideHUD.inl"
+#include "msm_pref/nVault.inl"
 
 ////////////////////////////////////////////////////////////////////
 
