@@ -11,7 +11,7 @@
 
 #pragma tabsize 0
 #define plug    "MSM"
-#define ver     "1.5"
+#define ver     "1.51"
 #define auth    "harmony & MuiX"
 
 enum _:InfoTable
