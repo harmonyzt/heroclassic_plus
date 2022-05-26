@@ -36,8 +36,6 @@ new msm_boss, msm_active = 0;       // For boss, to check if there is one or not
 new bool:is_shield_broken[33];      // To check if shield broken or not (KNIGHT).
 new g_msgHideWeapon                 // For hiding HUD.
 new msm_vault                       // For NVault.
-new CT_Kills                        // For counting kills from both teams.
-new TT_Kills                        // For counting kills from both teams.
 new RoundCount = 0                  // For counting rounds.
 
 // CVARS
