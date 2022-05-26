@@ -40,9 +40,17 @@ new CT_Kills                        // For counting kills from both teams.
 new TT_Kills                        // For counting kills from both teams.
 new RoundCount = 0                  // For counting rounds.
 
+// CVARS
+new msm_boss_health, msm_boss_ammo, msm_boss_dmg_mult;
+
 public plugin_init()
 {
     register_plugin(plug, ver, auth);
+
+    msm_boss_health = register_cvar("msm_boss_health","1500");
+    msm_boss_ammo = register_cvar("msm_boss_ammo","300");
+    msm_boss_dmg_mult = register_cvar("msm_boss_dmg_mult","1.3");
+
     register_event("DeathMsg","player_death","a");                      // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
     register_event("Damage", "damager", "b", "2!0", "3=0", "4!0");      // Catching REAL damage.
@@ -61,9 +69,10 @@ public plugin_init()
 
 ////////////////    Loading Main Plugin Functions   ////////////////
 
-#include "PREF_SERVMANAGER/MenuClassInit.inl"
+#include "PREF_SERVMANAGER/cfgInit.inl"
+#include "PREF_SERVMANAGER/menuClassInit.inl"
 #include "PREF_SERVMANAGER/deathEvent.inl"
-#include "PREF_SERVMANAGER/playerRoundstart.inl"
+#include "PREF_SERVMANAGER/playerRoundStart.inl"
 #include "PREF_SERVMANAGER/pluginStocks.inl"
 //#include "PREF_SERVMANAGER/nativeSupport.inl"     // Under development
 #include "PREF_SERVMANAGER/botSupport.inl"
