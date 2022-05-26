@@ -6,3 +6,6 @@
 
 # Ignore vscode folders
 .vscode
+
+# Ignore .rar files
+*.rar
