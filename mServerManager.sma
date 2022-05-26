@@ -13,11 +13,6 @@
 #define plug    "MSM"
 #define ver     "1.5"
 #define auth    "harmony & MuiX"
-#define ADMIN_FLAG  'H'
-
-#define MSM_BOSS_HEALTH 2000    //  Boss health.
-#define MSM_BOSS_AMMO   300     //  Ammo for boss.
-#define MSM_BOSS_DAMAGE 1.3     //  Damage multiplier.
 
 enum _:InfoTable
 {
@@ -38,16 +33,13 @@ new g_msgHideWeapon                 // For hiding HUD.
 new msm_vault                       // For NVault.
 new RoundCount = 0                  // For counting rounds.
 
-// CVARS
-new msm_boss_health, msm_boss_ammo, msm_boss_dmg_mult;
-
 public plugin_init()
 {
     register_plugin(plug, ver, auth);
 
-    msm_boss_health = register_cvar("msm_boss_health","1500");
-    msm_boss_ammo = register_cvar("msm_boss_ammo","300");
-    msm_boss_dmg_mult = register_cvar("msm_boss_dmg_mult","1.3");
+    register_cvar("msm_boss_health","1500");
+    register_cvar("msm_boss_ammo","300");
+    register_cvar("msm_boss_dmg_mult","1.3");
 
     register_event("DeathMsg","player_death","a");                      // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
@@ -65,9 +57,17 @@ public plugin_init()
     set_task(random_float(15.0,70.0), "BotThink",_,_,_,"b");            // Bot thinking to pick a class.
 }
 
+public plugin_cfg()
+{
+	new cfgDir[64], szFile[192];
+	get_configsdir(cfgDir, charsmax(cfgDir));
+	formatex(szFile,charsmax(szFile),"%s/server_manager.ini",cfgDir);
+	if(file_exists(szFile))
+		server_cmd("exec %s", szFile);
+}
+
 ////////////////    Loading Main Plugin Functions   ////////////////
 
-#include "PREF_SERVMANAGER/cfgInit.inl"
 #include "PREF_SERVMANAGER/menuClassInit.inl"
 #include "PREF_SERVMANAGER/deathEvent.inl"
 #include "PREF_SERVMANAGER/playerRoundStart.inl"
@@ -104,7 +104,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
 
     //  Multiplying damage for boss.
     if(msm_boss == attacker){
-	    SetHamParamFloat( 4, damage * MSM_BOSS_DAMAGE );
+	    SetHamParamFloat( 4, damage * get_cvar_num("msm_boss_dmg_mult"));
     }
 
         // Gaining and stealing attributes for each class on damage
@@ -229,8 +229,8 @@ public msm_set_user_boss(id) {
 		cs_set_user_model(id,"msm_pl_boss");
         client_cmd(id, "slot1; drop")
 		give_item(id,"weapon_m249");
-		cs_set_user_bpammo(id, CSW_M249, MSM_BOSS_AMMO);
-		set_user_health(id, MSM_BOSS_HEALTH);
+		cs_set_user_bpammo(id, CSW_M249, get_cvar_num("msm_boss_ammo"));
+		set_user_health(id, get_cvar_num("msm_boss_health"));
 		client_cmd(0,"spk msm/boss_spawned");
         new nm[33]; get_user_name(id, nm, 32);
         set_dhudmessage(99, 184, 255, -1.0, 0.65, 1, 6.0, 3.0, 1.5, 1.5);
