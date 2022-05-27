@@ -116,25 +116,25 @@ public player_death()
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MULTI_KILL", killername);
                 client_cmd(0,"spk msm/multikill");
             }
-            case 5:
+            case 6:
             {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "KILLING_SPREE", killername);
                 client_cmd(0,"spk msm/killingspree");
             }
-            case 6:
+            case 8:
             {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "UNSTOPPABLE", killername);
                 client_cmd(0,"spk msm/unstoppable");
             }
-            case 7:
+            case 10:
             {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MANIAC", killername);
                 client_cmd(0,"spk msm/maniac");
             }
-            case 8:
+            case 12:
             {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MASSACRE", killername);
