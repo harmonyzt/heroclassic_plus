@@ -46,7 +46,7 @@ public plugin_init()
     register_event("Damage", "damager", "b", "2!0", "3=0", "4!0");      // Catching REAL damage.
     register_dictionary("msm.txt");                                     // Registering lang file.
     RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
-    register_clcmd( "say /svm","class_change" );                        // Registering menu (or a command to call menu).
+    register_clcmd( "say /class","class_change" );                        // Registering menu (or a command to call menu).
     g_msgHideWeapon = get_user_msgid("HideWeapon");                     // Hiding default health and armor bar.
 	register_event("ResetHUD", "onResetHUD", "b");                      // Hiding default health and armor bar.
 	register_message(g_msgHideWeapon, "msgHideWeapon");                 // Hiding default health and armor bar.
