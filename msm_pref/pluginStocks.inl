@@ -32,5 +32,5 @@ stock freeze_player(id, status) {
 
 // Returning name of hero
 stock msm_get_user_hero(id){
-    return hero[id]
+    return hero[id];
 }

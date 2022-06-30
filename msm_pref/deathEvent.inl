@@ -10,7 +10,7 @@ public player_death()
     new killername[32]
     get_user_name(killer, killername, 31);
 
-    //Death of boss.
+    // Death of boss
     if(victim == msm_boss)
     {
 		msm_boss = 0;
@@ -24,7 +24,7 @@ public player_death()
 
     if (killer != victim)
     {
-         //First Blood (moved here because suiciding was causing first blood)
+         // First Blood
         if (isFirstBlood == 0)
         {
             set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
@@ -74,7 +74,7 @@ public player_death()
             }
         }
 
-        // Resetting gained stats for each dead hero
+        // Reseting gained stats for each dead hero
         switch(msm_get_user_hero(victim)){
             case NONE:{
                 
@@ -97,7 +97,7 @@ public player_death()
             }
 
         }
-        // Giving the victim info about killer
+        // Giving the victim info about killer (oficially broken)
         new herochat = msm_get_user_hero(killer);
         ColorChat(victim, RED, "%L", LANG_PLAYER, "DEATH_INFO", killername, herochat);
 
