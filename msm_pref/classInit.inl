@@ -54,6 +54,7 @@ public menu_handler(id, menu, item)
             attribute[id][sl_leashstack] = 0;
             attribute[id][sl_selfstack] = 0;
             play_s_sound(id);
+
             return PLUGIN_HANDLED;
         }
         case 1:
@@ -61,12 +62,12 @@ public menu_handler(id, menu, item)
             hero[id] = SL;
             hero_hp[id] = 530;
          	ColorChat(id, GREEN, "%L", LANG_PLAYER, "SL_PLAY");
-            set_user_health(id, hero_hp[id])
+            set_user_health(id, hero_hp[id]);
             attribute[id][sl_leashstack] = 0;
             attribute[id][sl_selfstack] = 0;
             play_s_sound(id);
             
-         	return PLUGIN_HANDLED
+         	return PLUGIN_HANDLED;
         }
         case 2:
         {
@@ -75,6 +76,7 @@ public menu_handler(id, menu, item)
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "UD_PLAY"); 
             set_user_health(id, hero_hp[id])
             play_s_sound(id);
+
             return PLUGIN_HANDLED;
         }
         case 3:
@@ -84,6 +86,7 @@ public menu_handler(id, menu, item)
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "BERSERK_PLAY"); 
             set_user_health(id, hero_hp[id])
             play_s_sound(id);
+
             return PLUGIN_HANDLED;
         }
         case 4:
@@ -91,7 +94,7 @@ public menu_handler(id, menu, item)
             hero[id] = ZEUS;
             hero_hp[id] = 250;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "ZEUS_PLAY"); 
-            set_user_health(id, hero_hp[id])
+            set_user_health(id, hero_hp[id]);
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }
@@ -102,7 +105,7 @@ public menu_handler(id, menu, item)
             knight_shield[id] = 15;
             is_shield_broken[id] = false;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "KNIGHT_PLAY"); 
-            set_user_health(id, hero_hp[id])
+            set_user_health(id, hero_hp[id]);
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }

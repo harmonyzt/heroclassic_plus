@@ -11,7 +11,7 @@
 
 #pragma tabsize 0
 #define plug    "MSM"
-#define ver     "1.51"
+#define ver     "1.6"
 #define auth    "harmony & MuiX"
 
 enum _:InfoTable
@@ -44,12 +44,12 @@ public plugin_init()
     register_event("DeathMsg","player_death","a");                      // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
     register_event("Damage", "damager", "b", "2!0", "3=0", "4!0");      // Catching REAL damage.
-    register_dictionary("msm.txt");                                     // Registering lang file.
-    RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
-    register_clcmd( "say /class","class_change" );                        // Registering menu (or a command to call menu).
     g_msgHideWeapon = get_user_msgid("HideWeapon");                     // Hiding default health and armor bar.
 	register_event("ResetHUD", "onResetHUD", "b");                      // Hiding default health and armor bar.
 	register_message(g_msgHideWeapon, "msgHideWeapon");                 // Hiding default health and armor bar.
+    register_dictionary("msm.txt");                                     // Registering lang file.
+    RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
+    register_clcmd( "say /class","class_change" );                      // Registering menu (or a command to call menu).
     msm_vault = nvault_open("mserver");                                 // Opening nvault storage.
     set_task(60.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
     set_task(1.0, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
@@ -66,7 +66,7 @@ public plugin_cfg()
 		server_cmd("exec %s", szFile);
 }
 
-////////////////    Loading Main Plugin Functions   ////////////////
+////////////////    Plugin Functions   ////////////////////////////
 
 #include "msm_pref/classInit.inl"
 #include "msm_pref/deathEvent.inl"
@@ -185,7 +185,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
 public recover_knight_shield(id){
     knight_shield[id] = 15;
     is_shield_broken[id] = false;
-    emit_sound(id,CHAN_STATIC,"msm/knight_shield_ready.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM)
+    emit_sound(id,CHAN_STATIC,"msm/knight_shield_ready.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
 }
 
 public damager(id){
@@ -194,7 +194,7 @@ public damager(id){
 
     if(!is_user_connected(attacker) | !is_user_connected(id)) return;
 	if(id == attacker || !id) return;
-    if(get_user_team (attacker) == get_user_team (id)) return
+    if(get_user_team (attacker) == get_user_team (id)) return;
 
     set_hudmessage(234, 75, 75, 0.54, 0.52, 0, 0.5, 0.30, 0.5, 0.5, -1); 
     ShowSyncHudMsg(id, dmgTakenHUD, "%d", damage);
@@ -221,13 +221,13 @@ public msm_boss_random() {      // Choosing random player to be a boss
 		msm_active = 1;
         msm_set_user_boss(msm_boss);
 	}
-    return PLUGIN_HANDLED;
+        return PLUGIN_HANDLED;
 }
 
 public msm_set_user_boss(id) {
 	if(is_user_connected(id) && hero[msm_boss] == NONE) {
 		cs_set_user_model(id,"msm_pl_boss");
-        client_cmd(id, "slot1; drop")
+        client_cmd(id, "slot1; drop");
 		give_item(id,"weapon_m249");
 		cs_set_user_bpammo(id, CSW_M249, get_cvar_num("msm_boss_ammo"));
 		set_user_health(id, get_cvar_num("msm_boss_health"));

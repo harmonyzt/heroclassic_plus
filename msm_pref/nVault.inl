@@ -41,11 +41,11 @@ public register_player(id,data[]){
 	get_user_name(id,Name,32);
 
     //Setting everything to 0 for new player
-    info[id][score] = 0
-    info[id][hasVampiricHelmet] = 0
-    info[id][hasGloriousArmor] = 0
-    info[id][kills] = 0
-    info[id][headshots] = 0
+    info[id][score] = 0;
+    info[id][hasVampiricHelmet] = 0;
+    info[id][hasGloriousArmor] = 0;
+    info[id][kills] = 0;
+    info[id][headshots] = 0;
 }
 
 // On disconnect
