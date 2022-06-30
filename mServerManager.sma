@@ -68,7 +68,7 @@ public plugin_cfg()
 
 ////////////////    Loading Main Plugin Functions   ////////////////
 
-#include "msm_pref/menuClassInit.inl"
+#include "msm_pref/classInit.inl"
 #include "msm_pref/deathEvent.inl"
 #include "msm_pref/playerRoundStart.inl"
 #include "msm_pref/pluginStocks.inl"
@@ -96,7 +96,7 @@ public record_demo(id){
 
 // Catching incoming damage.
 public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
-    //   Some checking before doing anything.
+    //   Checking if player is valid before doing anything.
 	if(!is_user_connected(attacker) | !is_user_connected(victim)) return;
 	if(victim == attacker || !victim) return;
     if(get_user_team (attacker) == get_user_team (victim)) return;
@@ -109,7 +109,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
 
         // Gaining and stealing attributes for each class on damage
         switch(msm_get_user_hero(attacker)){
-            // For survivors max hp gained from vampire is 700
+            // For survivors max hp gained from health steal is 700hp
             case NONE:
             {
                 if(get_user_health(attacker) < 700){
@@ -129,7 +129,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
             }
             
 
-            // Giving some attributes to undying when hit and hitting victim
+            // Giving some attributes to undying upon hitting a victim
             case UNDYING:
             {
                 attribute[attacker][undying_hpstolen_timed] += 1;
@@ -166,7 +166,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                 SetHamParamFloat(4, damage * 0);
                 switch (random_num(1,4)){
                     case 1:{
-                         emit_sound(victim,CHAN_STATIC,"msm/wp_bullet1.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                        emit_sound(victim,CHAN_STATIC,"msm/wp_bullet1.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
                     }
                     case 2:{
                         emit_sound(victim,CHAN_STATIC,"msm/wp_bullet2.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
@@ -175,7 +175,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                         emit_sound(victim,CHAN_STATIC,"msm/wp_bullet3.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
                     }
                     case 4:{
-                         emit_sound(victim,CHAN_STATIC,"msm/wp_bullet4.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                        emit_sound(victim,CHAN_STATIC,"msm/wp_bullet4.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
                     }
                 }
             }
