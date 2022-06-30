@@ -14,7 +14,7 @@ new knight_shield[33];
 // Creating Menu
 //
 public class_change(id){
-    if(is_user_alive(id) && RoundCount < 1){
+    if(is_user_alive(id) && RoundCount < 3){
         ColorChat(id, RED, "%L", LANG_PLAYER, "ALIVE");
         return PLUGIN_HANDLED;
     }
@@ -27,7 +27,9 @@ public class_change(id){
     // Hero gains rage with every hit
     // At 15 hits he can use the special ability to deal damage as some % of max victims HP instead of constant % damage
     menu_additem( menu, "\wPlay as \yBerserk", "", 0 );
-    //
+    // REMAKE
+    // Passive -  Shock at 4% shakes victims camera
+    // Active - Has its cooldown (30 seconds), guaranted shocks an enemy for longer and disables the ability to change weapons for victim
     menu_additem( menu, "\wPlay as \yZeus", "", 0 );
     menu_additem( menu, "\wPlay as \yKnight", "", 0 );
     menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
