@@ -29,9 +29,12 @@ new isFirstBlood = 0;               // To check if there was a first blood or no
 new announcehud;                    // HUD for kill announcer.
 new msm_boss, msm_active = 0;       // For boss, to check if there is one or not.
 new bool:is_shield_broken[33];      // To check if shield broken or not (KNIGHT).
-new g_msgHideWeapon                 // For hiding HUD.
-new msm_vault                       // For NVault.
-new RoundCount = 0                  // For counting rounds.
+new g_msgHideWeapon;                 // For hiding HUD.
+new msm_vault;                       // For NVault.
+new RoundCount = 0;                  // For counting rounds.
+
+new ult_counter[33] = 0;
+new is_ult_ready[33] = 0;
 
 public plugin_init()
 {
@@ -49,7 +52,8 @@ public plugin_init()
 	register_message(g_msgHideWeapon, "msgHideWeapon");                 // Hiding default health and armor bar.
     register_dictionary("msm.txt");                                     // Registering lang file.
     RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
-    register_clcmd( "say /class","class_change" );                      // Registering menu (or a command to call menu).
+    register_clcmd("say /class","class_change");                        // Registering menu (or a command to call menu).
+    register_clcmd("activate_ultimate","activate_ult");                 // Registering menu (or a command to call menu).
     msm_vault = nvault_open("mserver");                                 // Opening nvault storage.
     set_task(60.0, "msm_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
     set_task(1.0, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
@@ -68,7 +72,9 @@ public plugin_cfg()
 
 ////////////////    Plugin Functions   ////////////////////////////
 
+
 #include "msm_pref/classInit.inl"
+#include "msm_pref/ultimateEvent.inl"
 #include "msm_pref/deathEvent.inl"
 #include "msm_pref/playerRoundStart.inl"
 #include "msm_pref/pluginStocks.inl"
@@ -101,6 +107,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
 	if(victim == attacker || !victim) return;
     if(get_user_team (attacker) == get_user_team (victim)) return;
     
+    // TODO: BOT SUPPORT ULTS
 
     //  Multiplying damage for boss.
     if(msm_boss == attacker){
@@ -158,11 +165,11 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
         
         //  Knight's shield ability
         if(hero[victim] == KNIGHT){
-            if(knight_shield[victim] <= 0 && is_shield_broken[victim] == false){ 
+            if(attribute[victim][knight_shield] <= 0 && is_shield_broken[victim] == false){ 
                 set_task(20.0, "recover_knight_shield",victim,_,_,_,0);
                 is_shield_broken[victim] = true;
             }else if(attacker && is_shield_broken[victim] == false){
-                knight_shield[victim] -= 1;
+                attribute[victim][knight_shield] -= 1;
                 SetHamParamFloat(4, damage * 0);
                 switch (random_num(1,4)){
                     case 1:{
@@ -183,7 +190,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
 } 
 
 public recover_knight_shield(id){
-    knight_shield[id] = 15;
+    attribute[id][knight_shield] = 15;
     is_shield_broken[id] = false;
     emit_sound(id,CHAN_STATIC,"msm/knight_shield_ready.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
 }
@@ -209,7 +216,7 @@ public undying_hp_gain(id)
 }
 
 public msm_boss_random() {      // Choosing random player to be a boss
-	if(msm_active == 0 || RoundCount > 5) {
+	if(msm_active == 0 && RoundCount > 5) {
 		static Players[32], Count, id_rand;
 		get_players(Players, Count, "ah");
 		id_rand = random_num(0, Count - 1);
@@ -264,7 +271,7 @@ public HudTick(){
                     show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_ZEUS", LANG_PLAYER,"HP", get_user_health(id));
                 }
                 case KNIGHT:{
-                    show_dhudmessage(id, "%L %L^n%L %L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_KNIGHT", LANG_PLAYER, "PASSIVE", LANG_PLAYER, "PASSIVE_KNIGHT_SHIELD", knight_shield[id], LANG_PLAYER, "HP", get_user_health(id));
+                    show_dhudmessage(id, "%L %L^n%L %L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_KNIGHT", LANG_PLAYER, "PASSIVE", LANG_PLAYER, "PASSIVE_KNIGHT_SHIELD", attribute[id][knight_shield], LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case BOSS:{
                     show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BOSS", LANG_PLAYER,"HP", get_user_health(id));
@@ -281,16 +288,44 @@ public OneTick(){
         if(is_user_connected(id) && is_user_connected(id) && is_user_alive(id)){
             if(hero[id] == UNDYING && attribute[id][undying_hpstolen_timed] > 0 && get_user_health(id) > 10){
                 attribute[id][undying_hpstolen_timed] -= 1;
-                set_user_health(id, get_user_health(id) - 5)
+                set_user_health(id, get_user_health(id) - 5);
             }
 
             // If victim is poisoned
             if(attribute[id][poisoned_from_undying] >= 1 && get_user_health(id) > 15){
-                set_user_health(id, get_user_health(id) - 15)
-                user_fade(id, 0, 230, 30, 50, 2, 1)
-                attribute[id][poisoned_from_undying] -= 1
-                emit_sound(id, CHAN_STATIC, "msm/undying_poison.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM)
+                set_user_health(id, get_user_health(id) - 15);
+                user_fade(id, 0, 230, 30, 50, 2, 1);
+                attribute[id][poisoned_from_undying] -= 1;
+                emit_sound(id, CHAN_STATIC, "msm/undying_poison.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
             }
+
+            if(is_ult_ready[id] == 0 && ult_counter[id] <= 0){
+                switch(msm_get_user_hero(id)){
+                    case NONE:{
+                        
+                    }
+                    case SL:{
+                        
+                    }
+                    case UNDYING:{
+                        
+                    }
+                    case BERSERK:{
+                        ult_counter[id] -= 1;
+                    }
+                    case ZEUS:{
+                        ult_counter[id] -= 1;
+                    }
+                    case KNIGHT:{
+                        
+                    }
+                    case BOSS:{
+                        
+                    }
+                }
+            }
+        } else {
+            is_ult_ready[id] = 1;
         }
     }
 }

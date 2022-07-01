@@ -58,11 +58,7 @@ public client_disconnect(id){
 	}
 
     // Reseting all attributes if player disconnects
-    attribute[id][sl_leashstack] = 0;
-    attribute[id][sl_selfstack] = 0;
-    attribute[id][undying_hpstack] = 0;
-    attribute[id][undying_hpstolen_timed] = 0;
-    attribute[id][poisoned_from_undying] = 0;
+    attribute[id][0] = 0;
     hero[id] = NONE;
 
     // Saving all of the info of user to the file

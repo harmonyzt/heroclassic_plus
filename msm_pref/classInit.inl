@@ -1,6 +1,6 @@
 enum _:attributes
 {
-    sl_leashstack, sl_selfstack, undying_hpstack, undying_hpstolen_timed, poisoned_from_undying
+    sl_leashstack, sl_selfstack, undying_hpstack, undying_hpstolen_timed, poisoned_from_undying, knight_shield
 };
 enum _:
 {
@@ -9,15 +9,14 @@ enum _:
 new attribute[256][attributes];
 new hero_hp[33];
 new hero[33];
-new knight_shield[33];
 //
 // Creating Menu
 //
 public class_change(id){
-    if(is_user_alive(id) && RoundCount < 3){
-        ColorChat(id, RED, "%L", LANG_PLAYER, "ALIVE");
-        return PLUGIN_HANDLED;
-    }
+    //if(is_user_alive(id) && RoundCount < 3){
+    //    ColorChat(id, RED, "%L", LANG_PLAYER, "PERMITTED_CHANGECLASS");
+    //    return PLUGIN_HANDLED;
+    //}
 
     new menu = menu_create( "\w[SVM BETA] \rChoose your class", "menu_handler" );
     menu_additem( menu, "\wDon't play as \yanyone", "", 0 );
@@ -74,7 +73,7 @@ public menu_handler(id, menu, item)
             hero[id] = UNDYING;
             hero_hp[id] = 380;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "UD_PLAY"); 
-            set_user_health(id, hero_hp[id])
+            set_user_health(id, hero_hp[id]);
             play_s_sound(id);
 
             return PLUGIN_HANDLED;
@@ -83,8 +82,9 @@ public menu_handler(id, menu, item)
         {
             hero[id] = BERSERK;
             hero_hp[id] = 450;
+            is_ult_ready[id] = 1;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "BERSERK_PLAY"); 
-            set_user_health(id, hero_hp[id])
+            set_user_health(id, hero_hp[id]);
             play_s_sound(id);
 
             return PLUGIN_HANDLED;
@@ -102,7 +102,7 @@ public menu_handler(id, menu, item)
         {
             hero[id] = KNIGHT;
             hero_hp[id] = 600;
-            knight_shield[id] = 15;
+            attribute[id][knight_shield] = 15;
             is_shield_broken[id] = false;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "KNIGHT_PLAY"); 
             set_user_health(id, hero_hp[id]);
