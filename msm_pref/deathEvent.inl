@@ -108,37 +108,37 @@ public player_death()
             {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "TRIPLE_KILL", killername);
-                emit_sound(victim,CHAN_STATIC,"msm/triplekill.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                emit_sound(0,CHAN_STATIC,"msm/triplekill.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
             }
             case 4:
             {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MULTI_KILL", killername);
-                emit_sound(victim,CHAN_STATIC,"msm/multikill.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                emit_sound(0,CHAN_STATIC,"msm/multikill.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
             }
             case 6:
             {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "KILLING_SPREE", killername);
-                emit_sound(victim,CHAN_STATIC,"msm/killingspreec.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                emit_sound(0,CHAN_STATIC,"msm/killingspreec.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
             }
             case 8:
             {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "UNSTOPPABLE", killername);
-                emit_sound(victim,CHAN_STATIC,"msm/unstoppable.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                emit_sound(0,CHAN_STATIC,"msm/unstoppable.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
             }
             case 10:
             {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MANIAC", killername);
-                emit_sound(victim,CHAN_STATIC,"msm/maniac.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                emit_sound(0,CHAN_STATIC,"msm/maniac.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
             }
             case 12:
             {
                 set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                 ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MASSACRE", killername);
-                emit_sound(victim,CHAN_STATIC,"msm/massacre.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                emit_sound(0,CHAN_STATIC,"msm/massacre.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
             }
         }
     }

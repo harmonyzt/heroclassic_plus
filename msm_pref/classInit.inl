@@ -1,6 +1,8 @@
 enum _:attributes
 {
-    sl_leashstack, sl_selfstack, undying_hpstack, undying_hpstolen_timed, poisoned_from_undying, knight_shield
+    sl_leashstack, sl_selfstack, undying_hpstack, 
+    undying_hpstolen_timed, poisoned_from_undying, 
+    knight_shield, ult_counter, is_ult_ready, berserk_ult_rage
 };
 enum _:
 {
@@ -30,6 +32,9 @@ public class_change(id){
     // Passive -  Shock at 4% shakes victims camera
     // Active - Has its cooldown (30 seconds), guaranted shocks an enemy for longer and disables the ability to change weapons for victim
     menu_additem( menu, "\wPlay as \yZeus", "", 0 );
+    menu_additem( menu, "\wPlay as \yKnight", "", 0 );
+    menu_additem( menu, "\wPlay as \yAssasin", "", 0 );
+    menu_additem( menu, "\wPlay as \yElemental", "", 0 );
     menu_additem( menu, "\wPlay as \yKnight", "", 0 );
     menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
     menu_display( id, menu, 0 );
@@ -82,7 +87,8 @@ public menu_handler(id, menu, item)
         {
             hero[id] = BERSERK;
             hero_hp[id] = 450;
-            is_ult_ready[id] = 1;
+            attribute[id][berserk_ult_rage] = 0;
+            attribute[id][is_ult_ready] = 0;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "BERSERK_PLAY"); 
             set_user_health(id, hero_hp[id]);
             play_s_sound(id);
@@ -93,6 +99,8 @@ public menu_handler(id, menu, item)
         {
             hero[id] = ZEUS;
             hero_hp[id] = 250;
+            attribute[id][ult_counter] = 30;
+            attribute[id][is_ult_ready] = 0;
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "ZEUS_PLAY"); 
             set_user_health(id, hero_hp[id]);
             play_s_sound(id);

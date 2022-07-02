@@ -19,6 +19,7 @@ enum _:InfoTable
     kills,
     headshots,
     score,
+    skill,
     hasVampiricHelmet,
     hasGloriousArmor
 };
@@ -33,8 +34,7 @@ new g_msgHideWeapon;                 // For hiding HUD.
 new msm_vault;                       // For NVault.
 new RoundCount = 0;                  // For counting rounds.
 
-new ult_counter[33] = 0;
-new is_ult_ready[33] = 0;
+
 
 public plugin_init()
 {
@@ -233,7 +233,6 @@ public msm_boss_random() {      // Choosing random player to be a boss
 
 public msm_set_user_boss(id) {
 	if(is_user_connected(id) && hero[msm_boss] == NONE) {
-		cs_set_user_model(id,"msm_pl_boss");
         client_cmd(id, "slot1; drop");
 		give_item(id,"weapon_m249");
 		cs_set_user_bpammo(id, CSW_M249, get_cvar_num("msm_boss_ammo"));
@@ -256,25 +255,25 @@ public HudTick(){
             set_dhudmessage(43, 211, 88, 0.02, 0.60, 0, 6.0, 1.1, 0.3, 0.3);
             switch(msm_get_user_hero(id)){
                 case NONE:{
-                    show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_NONE", LANG_PLAYER, "HP", get_user_health(id));
+                    show_dhudmessage(id, "%L %L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_NONE", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case SL:{
-                    show_dhudmessage(id, "%L %L^n%L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_SL", LANG_PLAYER, "HERO_SL_SELFSTACK", attribute[id][sl_selfstack], LANG_PLAYER, "HP", get_user_health(id));
+                    show_dhudmessage(id, "%L %L^n%L^n%L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_SL", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "HERO_SL_SELFSTACK", attribute[id][sl_selfstack], LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case UNDYING:{
-                    show_dhudmessage(id, "%L %L^n%L ^n%L ^n%L %L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_UD", LANG_PLAYER, "HERO_UD_HPSTACK", attribute[id][undying_hpstack], LANG_PLAYER, "HERO_UD_HPSTOLEN", attribute[id][undying_hpstolen_timed], LANG_PLAYER, "PASSIVE", LANG_PLAYER, "PASSIVE_POISON_TOUCH", LANG_PLAYER, "HP", get_user_health(id));
+                    show_dhudmessage(id, "%L %L^n%L^n%L^n%L^n%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_UD", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "HERO_UD_HPSTACK", attribute[id][undying_hpstack], LANG_PLAYER, "HERO_UD_HPSTOLEN", attribute[id][undying_hpstolen_timed], LANG_PLAYER, "PASSIVE", LANG_PLAYER, "PASSIVE_POISON_TOUCH", LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case BERSERK:{
-                    show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BERSERK", LANG_PLAYER,"HP", get_user_health(id));
+                    show_dhudmessage(id, "%L %L^n%L^n%L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BERSERK", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER,"HP", get_user_health(id), LANG_PLAYER, "BERSERK_ULT", attribute[id][berserk_ult_rage]);
                 }
                 case ZEUS:{
-                    show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_ZEUS", LANG_PLAYER,"HP", get_user_health(id));
+                    show_dhudmessage(id, "%L %L^n%L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_ZEUS", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER,"HP", get_user_health(id), LANG_PLAYER, "HERO_ULT", attribute[id][ult_counter]);
                 }
                 case KNIGHT:{
-                    show_dhudmessage(id, "%L %L^n%L %L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_KNIGHT", LANG_PLAYER, "PASSIVE", LANG_PLAYER, "PASSIVE_KNIGHT_SHIELD", attribute[id][knight_shield], LANG_PLAYER, "HP", get_user_health(id));
+                    show_dhudmessage(id, "%L %L^n%L^n%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_KNIGHT", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "PASSIVE", LANG_PLAYER, "PASSIVE_KNIGHT_SHIELD", attribute[id][knight_shield], LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case BOSS:{
-                    show_dhudmessage(id, "%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BOSS", LANG_PLAYER,"HP", get_user_health(id));
+                    show_dhudmessage(id, "%L %L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BOSS", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER,"HP", get_user_health(id));
                 }
             }
         }
@@ -282,7 +281,7 @@ public HudTick(){
     return PLUGIN_HANDLED;
 }
 
-// Ticking one second
+
 public OneTick(){
     for(new id = 1; id <= get_maxplayers(); id++){
         if(is_user_connected(id) && is_user_connected(id) && is_user_alive(id)){
@@ -299,7 +298,8 @@ public OneTick(){
                 emit_sound(id, CHAN_STATIC, "msm/undying_poison.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
             }
 
-            if(is_ult_ready[id] == 0 && ult_counter[id] <= 0){
+            // Cooldowns for ultimates (ONLY FOR SECOND COOLDOWNS)
+            if(attribute[id][is_ult_ready] == 0){
                 switch(msm_get_user_hero(id)){
                     case NONE:{
                         
@@ -311,10 +311,13 @@ public OneTick(){
                         
                     }
                     case BERSERK:{
-                        ult_counter[id] -= 1;
+                        
                     }
                     case ZEUS:{
-                        ult_counter[id] -= 1;
+                        attribute[id][ult_counter] -= 1;
+                        if(attribute[id][ult_counter] == 0 && is_user_alive(id) && is_user_connected(id)){
+                            set_ult_active(id);
+                        }
                     }
                     case KNIGHT:{
                         
@@ -324,8 +327,38 @@ public OneTick(){
                     }
                 }
             }
-        } else {
-            is_ult_ready[id] = 1;
+        }
+    }
+}
+
+// Set the ultimate on cooldown to count again
+public set_ult_active(id){
+    switch(msm_get_user_hero(id)){
+        case NONE:{
+        }
+        case SL:{
+                        
+        }
+        case UNDYING:{
+            
+        }
+        case BERSERK:{
+            emit_sound(id,CHAN_STATIC,"msm/ultimate_ready.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+            ColorChat(id, GREEN, "%L", LANG_PLAYER, "HERO_ULT_READY"); 
+            attribute[id][is_ult_ready] = 1;
+            attribute[id][ult_counter] = 0;
+        }
+        case ZEUS:{
+            emit_sound(id,CHAN_STATIC,"msm/ultimate_ready.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+            ColorChat(id, GREEN, "%L", LANG_PLAYER, "HERO_ULT_READY"); 
+            attribute[id][is_ult_ready] = 1;
+            attribute[id][ult_counter] = 0;
+        }
+        case KNIGHT:{
+            
+        }
+        case BOSS:{
+                        
         }
     }
 }
@@ -360,6 +393,7 @@ public plugin_precache(){
     precache_sound("msm/wp_bullet2.wav")
     precache_sound("msm/wp_bullet3.wav")
     precache_sound("msm/wp_bullet4.wav")
+    precache_sound("msm/ultimate_ready.wav")
     dmgTakenHUD = CreateHudSyncObj();
     dmgDealtHUD = CreateHudSyncObj();
     announcehud = CreateHudSyncObj();

@@ -35,10 +35,13 @@ HERO_BERSERK = Berserk
 HERO_KNIGHT = Knight
 HERO_BOSS = Boss
 
+SCORE_SKILL = Score: [ %d ] | Skill: [ %d ]
+
 HP = Health: [ %d ]
 
-HERO_ULT = Ultimate in - [ %d ]
-HERO_ULT_READY = Ultimate ready!
+HERO_ULT = Ultimate: [ %d ]
+BERSERK_ULT = Rage: [ %d ]
+HERO_ULT_READY = Ultimate ready! You can use it!
 
 HERO_SL_SELFSTACK = Leash Stack: [ %d ]
 
