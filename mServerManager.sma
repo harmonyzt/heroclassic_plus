@@ -90,16 +90,7 @@ public plugin_cfg()
 
 // Recording a demo when player joins.
 public welcomepl(id){
-    set_task(1.0,"record_demo", id);
     client_cmd(id,"spk msm/serverjoin");
-}
-
-// Recording a demo when player joins.
-public record_demo(id){
-    new mapname[32]; new randomnrd = random_num(1,9999);
-    get_mapname(mapname,31);
-    ColorChat(id, TEAM_COLOR, "%L", LANG_PLAYER, "DEMO_RECORDING", mapname, randomnrd);
-    client_cmd(id,"record fireplay_%s%d", mapname, randomnrd);
 }
 
 // Catching out/in-coming damage.
