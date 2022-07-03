@@ -40,7 +40,6 @@ SCORE_SKILL = Score: [ %d ] | Skill: [ %d ]
 HP = Health: [ %d ]
 
 HERO_ULT = Ultimate: [ %d ]
-BERSERK_ULT = Rage: [ %d ]
 HERO_ULT_READY = Ultimate ready! You can use it!
 
 HERO_SL_SELFSTACK = Leash Stack: [ %d ]
@@ -51,6 +50,9 @@ HERO_UD_HPSTOLEN = Temporary Health Stacks: [ %d ]
 PASSIVE = Passive:
 PASSIVE_POISON_TOUCH = Poison Touch
 PASSIVE_KNIGHT_SHIELD = Shield Durability: [ %d ]
+
+BERSERK_ULT = Rage: [ %d ]
+BERSERK_POWERGAIN: Deals damage from enemy's max HP
 
 SCORE = Score: [ %s ]
 

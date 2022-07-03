@@ -43,6 +43,7 @@ public plugin_init()
     register_cvar("msm_boss_health","1500");
     register_cvar("msm_boss_ammo","300");
     register_cvar("msm_boss_dmg_mult","1.3");
+    register_cvar("msm_enable_kill_announcer","1");
 
     register_event("DeathMsg","player_death","a");                      // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
@@ -59,15 +60,16 @@ public plugin_init()
     set_task(1.0, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
     set_task(1.0, "OneTick",_,_,_,"b");                                 // One second tick for plugin.
     set_task(random_float(15.0,70.0), "BotThink",_,_,_,"b");            // Bot thinking to pick a class.
+    RegisterHam(Ham_Item_PreFrame, "player", "OnPlayerResetMaxSpeed", 1) 
 }
 
 public plugin_cfg()
 {
-	new cfgDir[64], szFile[192];
+	new cfgDir[64], File[192];
 	get_configsdir(cfgDir, charsmax(cfgDir));
-	formatex(szFile,charsmax(szFile),"%s/server_manager.ini",cfgDir);
-	if(file_exists(szFile))
-		server_cmd("exec %s", szFile);
+	formatex(File,charsmax(File),"%s/server_manager.ini",cfgDir);
+	if(file_exists(File))
+		server_cmd("exec %s", File);
 }
 
 ////////////////    Plugin Functions   ////////////////////////////
@@ -100,16 +102,16 @@ public record_demo(id){
     client_cmd(id,"record fireplay_%s%d", mapname, randomnrd);
 }
 
-// Catching incoming damage.
+// Catching out/in-coming damage.
 public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
-    //   Checking if player is valid before doing anything.
+    // Checking if player is valid
 	if(!is_user_connected(attacker) | !is_user_connected(victim)) return;
 	if(victim == attacker || !victim) return;
     if(get_user_team (attacker) == get_user_team (victim)) return;
     
     // TODO: BOT SUPPORT ULTS
 
-    //  Multiplying damage for boss.
+    // Multiplying damage for boss.
     if(msm_boss == attacker){
 	    SetHamParamFloat( 4, damage * get_cvar_num("msm_boss_dmg_mult"));
     }
@@ -130,9 +132,10 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                 attribute[attacker][sl_selfstack] += 1;
                 if(attribute[victim][sl_leashstack] > 1){
                     maxspeedreduceformula[victim] = get_user_maxspeed(victim) - float(attribute[victim][sl_leashstack]);
-                    set_user_maxspeed(victim, maxspeedreduceformula[victim]);
-                    SetHamParamFloat(4, damage + (attribute[attacker][sl_selfstack] * 1.5));
+                    OnPlayerResetMaxSpeed(victim, maxspeedreduceformula[victim]);
+                    SetHamParamFloat(4, damage + (attribute[attacker][sl_selfstack] * 1.3));
                 }
+                
             }
             
 
@@ -146,14 +149,16 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                 attribute[victim][poisoned_from_undying] = 5;   // Setting poison damage on victim ( Go to OneTick() )
             }
             
-            // Multiplying damage if berserks health is lower 50%
+            // Multiplying damage if berserks health is lower 50% and dealing damage of enemy's max HP
             case BERSERK:
             {
+                attribute[attacker][berserk_ult_rage]++
                 new Float:berserk_damage = hero_hp[victim] * 0.10;
                 SetHamParamFloat(4, damage + berserk_damage);
 
-                if(get_user_health(attacker) < (hero_hp[attacker] * 0.35))
+                if(get_user_health(attacker) < (hero_hp[attacker] * 0.35)){
                     SetHamParamFloat(4, damage + (berserk_damage * 2));
+                }
             }
             
             case ZEUS:
@@ -264,7 +269,7 @@ public HudTick(){
                     show_dhudmessage(id, "%L %L^n%L^n%L^n%L^n%L %L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_UD", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "HERO_UD_HPSTACK", attribute[id][undying_hpstack], LANG_PLAYER, "HERO_UD_HPSTOLEN", attribute[id][undying_hpstolen_timed], LANG_PLAYER, "PASSIVE", LANG_PLAYER, "PASSIVE_POISON_TOUCH", LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case BERSERK:{
-                    show_dhudmessage(id, "%L %L^n%L^n%L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BERSERK", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER,"HP", get_user_health(id), LANG_PLAYER, "BERSERK_ULT", attribute[id][berserk_ult_rage]);
+                    show_dhudmessage(id, "%L %L^n%L^n%L %L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BERSERK", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "PASSIVE", LANG_PLAYER, "BERSERK_POWERGAIN", LANG_PLAYER, "HP", get_user_health(id), LANG_PLAYER, "BERSERK_ULT", attribute[id][berserk_ult_rage]);
                 }
                 case ZEUS:{
                     show_dhudmessage(id, "%L %L^n%L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_ZEUS", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER,"HP", get_user_health(id), LANG_PLAYER, "HERO_ULT", attribute[id][ult_counter]);
@@ -300,31 +305,9 @@ public OneTick(){
 
             // Cooldowns for ultimates (ONLY FOR SECOND COOLDOWNS)
             if(attribute[id][is_ult_ready] == 0){
-                switch(msm_get_user_hero(id)){
-                    case NONE:{
-                        
-                    }
-                    case SL:{
-                        
-                    }
-                    case UNDYING:{
-                        
-                    }
-                    case BERSERK:{
-                        
-                    }
-                    case ZEUS:{
-                        attribute[id][ult_counter] -= 1;
-                        if(attribute[id][ult_counter] == 0 && is_user_alive(id) && is_user_connected(id)){
-                            set_ult_active(id);
-                        }
-                    }
-                    case KNIGHT:{
-                        
-                    }
-                    case BOSS:{
-                        
-                    }
+                attribute[id][ult_counter] -= 1;
+                if(attribute[id][ult_counter] == 0 && is_user_alive(id) && is_user_connected(id)){
+                    set_ult_active(id);
                 }
             }
         }
@@ -343,9 +326,8 @@ public set_ult_active(id){
             
         }
         case BERSERK:{
-            emit_sound(id,CHAN_STATIC,"msm/ultimate_ready.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+            emit_sound(id,CHAN_STATIC,"msm/adrenaline_full.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "HERO_ULT_READY"); 
-            attribute[id][is_ult_ready] = 1;
             attribute[id][ult_counter] = 0;
         }
         case ZEUS:{
@@ -363,12 +345,20 @@ public set_ult_active(id){
     }
 }
 
+public OnPlayerResetMaxSpeed(id, Float:speed){
+    if(!is_user_alive(id) || speed < 0)
+	    return
+
+    set_user_maxspeed(id, get_user_maxspeed(id))
+}
+
 // Closing data storage when plugin finished it's work
 public plugin_end(){
 	nvault_close(msm_vault);
 }
 
 public plugin_precache(){
+    if(get_cvar_num("msm_enable_kill_announcer")){
     precache_sound("msm/firstblood.wav")
     precache_sound("msm/headshot.wav")
     precache_sound("msm/killingspree.wav")
@@ -378,6 +368,7 @@ public plugin_precache(){
     precache_sound("msm/serverjoin.wav")
     precache_sound("msm/triplekill.wav")
     precache_sound("msm/unstoppable.wav")
+    }
     precache_sound("msm/boss_defeated.wav")
     precache_sound("msm/boss_spawned.wav")
     precache_sound("msm/boss_death.wav")
