@@ -52,7 +52,7 @@ PASSIVE_POISON_TOUCH = Poison Touch
 PASSIVE_KNIGHT_SHIELD = Shield Durability: [ %d ]
 
 BERSERK_ULT = Rage: [ %d ]
-BERSERK_POWERGAIN: Deals damage from enemy's max HP
+BERSERK_POWERGAIN = Deals damage from enemy's max HP
 
 SCORE = Score: [ %s ]
 
