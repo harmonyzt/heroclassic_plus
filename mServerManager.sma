@@ -40,10 +40,16 @@ public plugin_init()
 {
     register_plugin(plug, ver, auth);
 
+    // Boss CVARs
     register_cvar("msm_boss_health","1500");
     register_cvar("msm_boss_ammo","300");
     register_cvar("msm_boss_dmg_mult","1.3");
     register_cvar("msm_enable_kill_announcer","1");
+
+    // Survivor CVARs
+    register_cvar("msm_hero_survivor_hp","300")
+    register_cvar("msm_hero_survivor_hp_vampire","5")
+    register_cvar("msm_hero_survivor_hpcap","400")
 
     register_event("DeathMsg","player_death","a");                      // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
@@ -76,9 +82,7 @@ public plugin_cfg()
 
 
 #include "msm_pref/classInit.inl"
-#include "msm_pref/ultimateEvent.inl"
-#include "msm_pref/deathEvent.inl"
-#include "msm_pref/playerRoundStart.inl"
+#include "msm_pref/playerEvents.inl"
 #include "msm_pref/pluginStocks.inl"
 //#include "msm_pref/nativeSupport.inl"     // Under development
 #include "msm_pref/botSupport.inl"
@@ -91,104 +95,6 @@ public plugin_cfg()
 // Recording a demo when player joins.
 public welcomepl(id){
     client_cmd(id,"spk msm/serverjoin");
-}
-
-// Catching out/in-coming damage.
-public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
-    // Checking if player is valid
-	if(!is_user_connected(attacker) | !is_user_connected(victim)) return;
-	if(victim == attacker || !victim) return;
-    if(get_user_team (attacker) == get_user_team (victim)) return;
-    
-    // TODO: BOT SUPPORT ULTS
-
-    // Multiplying damage for boss.
-    if(msm_boss == attacker){
-	    SetHamParamFloat( 4, damage * get_cvar_num("msm_boss_dmg_mult"));
-    }
-
-        // Gaining and stealing attributes for each class on damage
-        switch(msm_get_user_hero(attacker)){
-            // For survivors max hp gained from health steal is 700hp
-            case NONE:
-            {
-                if(get_user_health(attacker) < 700){
-                    set_user_health(attacker, get_user_health(attacker) + 3); 
-                }
-            }
-            // Slark stealing damage and slowing victim formula.
-            case SL:{
-                new Float:maxspeedreduceformula[33];
-                attribute[victim][sl_leashstack] += 1;
-                attribute[attacker][sl_selfstack] += 1;
-                if(attribute[victim][sl_leashstack] > 1){
-                    maxspeedreduceformula[victim] = get_user_maxspeed(victim) - float(attribute[victim][sl_leashstack]);
-                    OnPlayerResetMaxSpeed(victim, maxspeedreduceformula[victim]);
-                    SetHamParamFloat(4, damage + (attribute[attacker][sl_selfstack] * 1.3));
-                }
-                
-            }
-            
-
-            // Giving some attributes to undying upon hitting a victim
-            case UNDYING:
-            {
-                attribute[attacker][undying_hpstolen_timed] += 1;
-                if(attribute[attacker][undying_hpstolen_timed] > 1)
-                    undying_hp_gain(attacker);
-
-                attribute[victim][poisoned_from_undying] = 5;   // Setting poison damage on victim ( Go to OneTick() )
-            }
-            
-            // Multiplying damage if berserks health is lower 50% and dealing damage of enemy's max HP
-            case BERSERK:
-            {
-                attribute[attacker][berserk_ult_rage]++
-                new Float:berserk_damage = hero_hp[victim] * 0.10;
-                SetHamParamFloat(4, damage + berserk_damage);
-
-                if(get_user_health(attacker) < (hero_hp[attacker] * 0.35)){
-                    SetHamParamFloat(4, damage + (berserk_damage * 2));
-                }
-            }
-            
-            case ZEUS:
-            {
-                
-            }
- 
-        }
-        
-        //  Knight's shield ability
-        if(hero[victim] == KNIGHT){
-            if(attribute[victim][knight_shield] <= 0 && is_shield_broken[victim] == false){ 
-                set_task(20.0, "recover_knight_shield",victim,_,_,_,0);
-                is_shield_broken[victim] = true;
-            }else if(attacker && is_shield_broken[victim] == false){
-                attribute[victim][knight_shield] -= 1;
-                SetHamParamFloat(4, damage * 0);
-                switch (random_num(1,4)){
-                    case 1:{
-                        emit_sound(victim,CHAN_STATIC,"msm/wp_bullet1.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
-                    }
-                    case 2:{
-                        emit_sound(victim,CHAN_STATIC,"msm/wp_bullet2.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
-                    }
-                    case 3:{
-                        emit_sound(victim,CHAN_STATIC,"msm/wp_bullet3.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
-                    }
-                    case 4:{
-                        emit_sound(victim,CHAN_STATIC,"msm/wp_bullet4.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
-                    }
-                }
-            }
-        }
-} 
-
-public recover_knight_shield(id){
-    attribute[id][knight_shield] = 15;
-    is_shield_broken[id] = false;
-    emit_sound(id,CHAN_STATIC,"msm/knight_shield_ready.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
 }
 
 public damager(id){

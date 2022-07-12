@@ -53,7 +53,8 @@ public menu_handler(id, menu, item)
         case 0:
         {
             hero[id] = NONE;
-            hero_hp[id] = 500;
+            hero_hp[id] = get_cvar_num("msm_hero_survivor_hp");
+            ColorChat(id, GREEN, "%L", LANG_PLAYER, "NONE_PLAY");
             set_user_health(id, hero_hp[id])
             attribute[id][sl_leashstack] = 0;
             attribute[id][sl_selfstack] = 0;
@@ -125,33 +126,5 @@ public menu_handler(id, menu, item)
         }
     }
 	menu_destroy(menu);
-    return PLUGIN_HANDLED;
-}
-//
-// Playing respawn sounds for different heroes
-//
-public play_s_sound(id) {
-if(is_user_alive(id)){
-    switch(msm_get_user_hero(id)){
-        case NONE:{
-            emit_sound(id, CHAN_STATIC, "msm/none_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
-        }
-        case SL:{
-            emit_sound(id, CHAN_STATIC, "msm/sl_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
-        }
-        case UNDYING:{
-            emit_sound(id, CHAN_STATIC, "msm/undying_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
-        }
-        case ZEUS:{
-            emit_sound(id, CHAN_STATIC, "msm/zeus_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
-        }
-        case BERSERK:{
-            emit_sound(id, CHAN_STATIC, "msm/berserk_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
-        }
-        case KNIGHT:{
-            emit_sound(id, CHAN_STATIC, "msm/knight_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
-        }
-    }
-}
     return PLUGIN_HANDLED;
 }

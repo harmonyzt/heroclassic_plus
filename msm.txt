@@ -18,11 +18,12 @@ BOSS_NOPLAYERS = No boss have chosen.
 
 DEATH_INFO = You were killed by %s playing as %s
 
-SL_PLAY = You are playing as slark now.
-UD_PLAY = You are playing as undying now.
-BERSERK_PLAY = You are playing as berserk now.
-ZEUS_PLAY = You are playing as zeus now.
-KNIGHT_PLAY = You are playing as knight now.
+NONE_PLAY = You are playing as Survivor now.
+SL_PLAY = You are playing as Slark now.
+UD_PLAY = You are playing as Undying now.
+BERSERK_PLAY = You are playing as Berserk now.
+ZEUS_PLAY = You are playing as Zeus now.
+KNIGHT_PLAY = You are playing as Knight now.
 
 PERMITTED_CHANGECLASS = You can't change class right now.
 
