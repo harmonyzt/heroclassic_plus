@@ -14,7 +14,7 @@ public load_data(id){
 		get_user_name(id,Name,32);
 
 		static data[256], timestamp;
-		if(nvault_lookup(msm_vault, Name, data, sizeof(data) - 1, timestamp) )
+		if(nvault_lookup(hcp_vault, Name, data, sizeof(data) - 1, timestamp) )
 		{
 			next_load_data(id, data, sizeof(data) - 1);
 			return;
@@ -51,9 +51,9 @@ public register_player(id,data[]){
 // On disconnect
 public client_disconnect(id){
     new dcName[32]
-    if( msm_active == 1 && id == msm_boss ) {    //Checking if boss left or not and announcing next one.
-		msm_boss = 0;
-		msm_active = 0;
+    if( hcp_active == 1 && id == hcp_boss ) {    //Checking if boss left or not and announcing next one.
+		hcp_boss = 0;
+		hcp_active = 0;
 		ColorChat(0, RED, "%L", LANG_PLAYER, "BOSS_LEFT", get_user_name(id,dcName,31));
 	}
 
@@ -72,5 +72,5 @@ public save_user(id){
 
 	static data[256];
 	formatex(data, 255, "|%i|%i|%i|", info[id][score], info[id][hasVampiricHelmet], info[id][hasGloriousArmor]);
-	nvault_set(msm_vault, Name, data);
+	nvault_set(hcp_vault, Name, data);
 }

@@ -53,7 +53,7 @@ public menu_handler(id, menu, item)
         case 0:
         {
             hero[id] = NONE;
-            hero_hp[id] = get_cvar_num("msm_hero_survivor_hp");
+            hero_hp[id] = get_cvar_num("hcp_hero_survivor_hp");
             ColorChat(id, GREEN, "%L", LANG_PLAYER, "NONE_PLAY");
             set_user_health(id, hero_hp[id])
             attribute[id][sl_leashstack] = 0;
