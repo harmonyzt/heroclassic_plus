@@ -1,4 +1,4 @@
-// Hides Radar, Health & Armor, but adds Crosshair
+// Hides Radar, Health & Armor
 #define HUD_HIDE_RHA (1<<3)
 
 public onResetHUD(id)
