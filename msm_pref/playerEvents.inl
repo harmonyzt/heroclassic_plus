@@ -286,11 +286,11 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
             case BERSERK:
             {
                 attribute[attacker][berserk_ult_rage]++
-                new Float:berserk_damage = hero_hp[victim] * 0.10;
+                new Float:berserk_damage = hero_hp[victim] * get_cvar_num("msm_hero_berserk_proportionaldamage");
                 SetHamParamFloat(4, damage + berserk_damage);
 
                 if(get_user_health(attacker) < (hero_hp[attacker] * 0.35)){
-                    SetHamParamFloat(4, damage + (berserk_damage * 2));
+                    SetHamParamFloat(4, damage + (berserk_damage * get_cvar_num("msm_hero_berserk_lowhpdamage")));
                 }
             }
             
