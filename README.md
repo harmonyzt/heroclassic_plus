@@ -1,3 +1,2 @@
-# mservermanager
-Special plugin that includes everything I need for my own server. 
-Also will be merged with github.com/harmonyzt/dota-plus together since it failed to become a big mod.
+# Hero Classic Plus
+Little mod, which adds 7-8 classes to the game with special abilities, little gameplay change.
