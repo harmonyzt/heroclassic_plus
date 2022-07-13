@@ -47,9 +47,15 @@ public plugin_init()
     register_cvar("msm_enable_kill_announcer","1");
 
     // Survivor CVARs
-    register_cvar("msm_hero_survivor_hp","300")
-    register_cvar("msm_hero_survivor_hp_vampire","5")
-    register_cvar("msm_hero_survivor_hpcap","400")
+    register_cvar("msm_hero_survivor_hp","300");
+    register_cvar("msm_hero_survivor_hp_vampire","5");
+    register_cvar("msm_hero_survivor_hpcap","400");
+
+    // Berserk CVARs
+    register_cvar("msm_hero_berserk_hp","350");
+    register_cvar("msm_hero_berserk_rage","15");
+    register_cvar("msm_hero_berserk_proportionaldamage","0.10");
+    register_cvar("msm_hero_berserk_lowhpdamage","2")
 
     register_event("DeathMsg","player_death","a");                      // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
