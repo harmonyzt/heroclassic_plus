@@ -2,13 +2,17 @@
 public player_death() 
 {
     static killer, victim, hshot;
-    killer = read_data(1);
-    victim = read_data(2);
     if (!is_user_connected(killer) | !is_user_connected(victim)) // Server crash fix "Out of bounds"
         return PLUGIN_HANDLED;
     hshot = read_data(3);
+    killer = read_data(1);
+    victim = read_data(2);
+
     new killername[32]
     get_user_name(killer, killername, 31);
+
+    new weaponname[20]
+    read_data(4,weaponname,31)
 
     // Death of boss
     if(victim == hcp_boss)

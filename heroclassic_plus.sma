@@ -34,8 +34,6 @@ new g_msgHideWeapon;                 // For hiding HUD.
 new hcp_vault;                       // For NVault.
 new RoundCount = 0;                  // For counting rounds.
 
-
-
 public plugin_init()
 {
     register_plugin(plug, ver, auth);
@@ -54,7 +52,7 @@ public plugin_init()
     // Berserk CVARs
     register_cvar("hcp_hero_berserk_hp","350");
     register_cvar("hcp_hero_berserk_rage","15");
-    register_cvar("hcp_hero_berserk_lowhpdamage","2")
+    register_cvar("hcp_hero_berserk_lowhpdamage","1.2")
 
     register_event("DeathMsg","player_death","a");                      // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
@@ -168,7 +166,7 @@ public HudTick(){
                     show_dhudmessage(id, "%L %L^n%L^n%L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_SL", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "HERO_SL_SELFSTACK", attribute[id][sl_selfstack], LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case UNDYING:{
-                    show_dhudmessage(id, "%L %L^n%L %L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_UD", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "HERO_UD_HPSTACK", attribute[id][undying_hpstack], LANG_PLAYER, "HERO_UD_HPSTOLEN", attribute[id][undying_hpstolen_timed], LANG_PLAYER, "HP", get_user_health(id));
+                    show_dhudmessage(id, "%L %L^n%L^n%L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_UD", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "HERO_UD_HPSTACK", attribute[id][undying_hpstack], LANG_PLAYER, "HERO_UD_HPSTOLEN", attribute[id][undying_hpstolen_timed], LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case BERSERK:{
                     show_dhudmessage(id, "%L %L^n%L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BERSERK", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "HP", get_user_health(id), LANG_PLAYER, "BERSERK_ULT", attribute[id][berserk_ult_rage]);
