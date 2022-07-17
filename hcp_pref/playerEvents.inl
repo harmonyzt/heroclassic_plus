@@ -1,20 +1,19 @@
-// Triggers on any player death.
-public player_death() 
-{
+// Triggers on player death
+public player_death(){
     static killer, victim, hshot;
+    killer = read_data(1);
+    hshot = read_data(3);
+    victim = read_data(2);
+    
     if (!is_user_connected(killer) | !is_user_connected(victim)) // Server crash fix "Out of bounds"
         return PLUGIN_HANDLED;
-    hshot = read_data(3);
-    killer = read_data(1);
-    victim = read_data(2);
 
     new killername[32]
     get_user_name(killer, killername, 31);
 
-    new weaponname[20]
-    read_data(4,weaponname,31)
+    client_cmd(victim,"spk hcp/death");
 
-    // Death of boss
+    // Death of the boss
     if(victim == hcp_boss)
     {
 		hcp_boss = 0;
@@ -52,12 +51,11 @@ public player_death()
         {
             info[killer][headshots] +=1;
             info[killer][score] +=5;
-            emit_sound(victim,CHAN_STATIC,"hcp/headshot.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+            client_cmd(0,"spk hcp/headshot");
         }
 
         // Getting / Giving attributes for each classes on success kill
         switch(hcp_get_user_hero(killer)){
-
             case NONE:{
                 
             }
@@ -82,7 +80,6 @@ public player_death()
         // Reseting gained stats for each dead hero
         switch(hcp_get_user_hero(victim)){
             case NONE:{
-                
             }
             case SL:{
                 attribute[victim][sl_leashstack] = 0;
@@ -98,58 +95,53 @@ public player_death()
                 
             }
             case KNIGHT:{
-                remove_task(victim, 0)
+                remove_task(victim, 0);
             }
 
         }
-        // Giving the victim info about killer (oficially broken)
-        new herochat = hcp_get_user_hero(killer);
-        ColorChat(victim, RED, "%L", LANG_PLAYER, "DEATH_INFO", killername, herochat);
-
         // Simply Announcing killstreaks
-        if(get_cvar_num("hcp_enable_kill_announcer")){
-            switch(info[killer][kills])
-            { 
+        if(get_cvar_num("hcp_enable_kill_announcer") == 1){
+            switch(info[killer][kills]){ 
                 case 3:
                 {
                     set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                     ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "TRIPLE_KILL", killername);
-                    emit_sound(killer,CHAN_STATIC,"hcp/triplekill.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                    client_cmd(0,"spk hcp/triplekill");
                 }
                 case 4:
                 {
                     set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                     ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MULTI_KILL", killername);
-                    emit_sound(killer,CHAN_STATIC,"hcp/multikill.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                    client_cmd(0,"spk hcp/multikill");
                 }
                 case 6:
                 {
                     set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                     ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "KILLING_SPREE", killername);
-                    emit_sound(killer,CHAN_STATIC,"hcp/killingspreec.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                    client_cmd(0,"spk hcp/killingspree");
                 }
                 case 8:
                 {
                     set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                     ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "UNSTOPPABLE", killername);
-                    emit_sound(killer,CHAN_STATIC,"hcp/unstoppable.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                    client_cmd(0,"spk hcp/unstoppable");
                 }
                 case 10:
                 {
                     set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                     ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MANIAC", killername);
-                    emit_sound(killer,CHAN_STATIC,"hcp/maniac.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                    client_cmd(0,"spk hcp/maniac");
                 }
                 case 12:
                 {
                     set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
                     ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MASSACRE", killername);
-                    emit_sound(killer,CHAN_STATIC,"hcp/massacre.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                    client_cmd(0,"spk hcp/massacre");
                 }
             }
         }
     }
-    return PLUGIN_HANDLED
+    return PLUGIN_HANDLED;
 }
 
 // Function called when round starts
@@ -250,7 +242,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
 
     // Multiplying damage for boss.
     if(hcp_boss == attacker){
-	    SetHamParamFloat( 4, damage * get_cvar_num("hcp_boss_dmg_mult"));
+	    SetHamParamFloat( 4, damage * get_cvar_float("hcp_boss_dmg_mult"));
     }
 
         // Gaining and stealing attributes for each class on damage
@@ -274,7 +266,6 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                 }
                 
             }
-            
 
             // Giving some attributes to undying upon hitting a victim
             case UNDYING:
@@ -290,11 +281,11 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
             case BERSERK:
             {
                 attribute[attacker][berserk_ult_rage]++
-                new Float:berserk_damage = hero_hp[victim] * 0.5;
+                new Float:berserk_damage = hero_hp[victim] * 0.1;
                 SetHamParamFloat(4, damage + berserk_damage);
 
-                if(get_user_health(attacker) < (hero_hp[attacker] * 0.35)){
-                    SetHamParamFloat(4, damage + (berserk_damage * get_cvar_num("hcp_hero_berserk_lowhpdamage")));
+                if(get_user_health(attacker) < (hero_hp[attacker] * 0.50)){
+                    SetHamParamFloat(4, damage + (berserk_damage * get_cvar_float("hcp_hero_berserk_lowhpdamage")));
                 }
             }
             

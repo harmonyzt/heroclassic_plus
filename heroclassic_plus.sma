@@ -52,7 +52,7 @@ public plugin_init()
     // Berserk CVARs
     register_cvar("hcp_hero_berserk_hp","350");
     register_cvar("hcp_hero_berserk_rage","15");
-    register_cvar("hcp_hero_berserk_lowhpdamage","1.2")
+    register_cvar("hcp_hero_berserk_lowhpdamage","1.5")
 
     register_event("DeathMsg","player_death","a");                      // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
@@ -64,7 +64,7 @@ public plugin_init()
     RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
     register_clcmd("say /class","class_change");                        // Registering menu (or a command to call menu).
     register_clcmd("activate_ultimate","activate_ult");                 // Registering menu (or a command to call menu).
-    hcp_vault = nvault_open("mserver");                                 // Opening nvault storage.
+    hcp_vault = nvault_open("hcpstorage");                              // Opening nvault storage.
     set_task(60.0, "hcp_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
     set_task(1.0, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
     set_task(1.0, "OneTick",_,_,_,"b");                                 // One second tick for plugin.
@@ -76,7 +76,7 @@ public plugin_cfg()
 {
 	new cfgDir[64], File[192];
 	get_configsdir(cfgDir, charsmax(cfgDir));
-	formatex(File,charsmax(File),"%s/server_manager.ini",cfgDir);
+	formatex(File,charsmax(File),"%s/hcp_config.cfg",cfgDir);
 	if(file_exists(File))
 		server_cmd("exec %s", File);
 }
@@ -86,11 +86,11 @@ public plugin_cfg()
 
 #include "hcp_pref/classInit.inl"
 #include "hcp_pref/playerEvents.inl"
-#include "hcp_pref/pluginStocks.inl"
 //#include "hcp_pref/nativeSupport.inl"     // Under development
 #include "hcp_pref/botSupport.inl"
 #include "hcp_pref/hideHUD.inl"
 #include "hcp_pref/nVault.inl"
+#include "hcp_pref/pluginStocks.inl"
 
 ////////////////////////////////////////////////////////////////////
 
@@ -130,8 +130,8 @@ public hcp_boss_random() {      // Choosing random player to be a boss
             hcp_boss = 0;
             return PLUGIN_HANDLED;
         }
-		hcp_active = 1;
-        hcp_set_user_boss(hcp_boss);
+		    hcp_active = 1;
+            hcp_set_user_boss(hcp_boss);
 	}
         return PLUGIN_HANDLED;
 }
@@ -156,7 +156,7 @@ public hcp_set_user_boss(id) {
 
 public HudTick(){
     for(new id = 1; id <= get_maxplayers(); id++){
-        if(is_user_connected(id) && is_user_connected(id) && is_user_alive(id)){
+        if(is_user_connected(id) && is_user_connected(id) && is_user_alive(id) && !is_user_bot(id)){
             set_dhudmessage(43, 211, 88, 0.02, 0.60, 0, 6.0, 1.1, 0.3, 0.3);
             switch(hcp_get_user_hero(id)){
                 case NONE:{
@@ -259,7 +259,7 @@ public plugin_end(){
 }
 
 public plugin_precache(){
-    if(get_cvar_num("hcp_enable_kill_announcer")){
+    if(get_cvar_num("hcp_enable_kill_announcer") == 1){
     precache_sound("hcp/firstblood.wav")
     precache_sound("hcp/headshot.wav")
     precache_sound("hcp/killingspree.wav")
@@ -286,6 +286,7 @@ public plugin_precache(){
     precache_sound("hcp/wp_bullet3.wav")
     precache_sound("hcp/wp_bullet4.wav")
     precache_sound("hcp/ultimate_ready.wav")
+    precache_sound("hcp/death.wav")
     dmgTakenHUD = CreateHudSyncObj();
     dmgDealtHUD = CreateHudSyncObj();
     announcehud = CreateHudSyncObj();

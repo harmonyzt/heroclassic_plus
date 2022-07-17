@@ -9,8 +9,11 @@ public BotThink() {
 	id_rand = random_num(0, Count - 1);
     new ran_number = random_num(1,4);
 
+    // Bot will randomly pick a class, with a small chance of not picking anything
+    new botwill = random_num(10,30);
+    
     // If bot is not having any class and he's dead, assign random class
-    if (hero[id_rand] == NONE && !is_user_alive(id_rand)){
+    if (hero[id_rand] == NONE && !is_user_alive(id_rand) && botwill > 15){
         switch(ran_number){
             case 1:{
                 hero[id_rand] = BERSERK;
@@ -30,5 +33,8 @@ public BotThink() {
             }
         }
     }
+    
+    // If bot is dying too much, make him consider to change his class
+
     return PLUGIN_HANDLED;
 }

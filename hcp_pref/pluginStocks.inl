@@ -30,7 +30,7 @@ stock freeze_player(id, status) {
 	return true;
 }
 
-// Returning name of hero
+// Return name of the hero
 stock hcp_get_user_hero(id){
     return hero[id];
 }

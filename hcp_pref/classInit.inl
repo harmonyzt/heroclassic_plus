@@ -35,7 +35,6 @@ public class_change(id){
     menu_additem( menu, "\wPlay as \yKnight", "", 0 );
     menu_additem( menu, "\wPlay as \yAssasin", "", 0 );
     menu_additem( menu, "\wPlay as \yElemental", "", 0 );
-    menu_additem( menu, "\wPlay as \yKnight", "", 0 );
     menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
     menu_display( id, menu, 0 );
 
