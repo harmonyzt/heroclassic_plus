@@ -34,7 +34,7 @@ public BotThink() {
         }
     }
     
-    // If bot is dying too much, make him consider to change his class
+    // If bot is dying too much, make him consider to change his hero
     new thinkofswitch = random_num(1,10);
     if(hero[id_rand] == NONE && !is_user_alive(id_rand) && thinkofswitch >= 2 && get_user_frags(id_rand) <= get_user_deaths(id_rand)){
         switch(random_num(1,6)){

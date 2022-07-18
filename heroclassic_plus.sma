@@ -69,7 +69,6 @@ public plugin_init()
     set_task(1.0, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
     set_task(1.0, "OneTick",_,_,_,"b");                                 // One second tick for plugin.
     set_task(random_float(15.0,70.0), "BotThink",_,_,_,"b");            // Bot thinking to pick a class.
-    RegisterHam(Ham_Item_PreFrame, "player", "OnPlayerResetMaxSpeed", 1) 
 }
 
 public plugin_cfg()
@@ -218,6 +217,7 @@ public OneTick(){
 public set_ult_active(id){
     switch(hcp_get_user_hero(id)){
         case NONE:{
+
         }
         case SLARK:{
                         
@@ -244,13 +244,6 @@ public set_ult_active(id){
                         
         }
     }
-}
-
-public OnPlayerResetMaxSpeed(id, Float:speed){
-    if(!is_user_alive(id) || speed < 0)
-	    return
-
-    set_user_maxspeed(id, get_user_maxspeed(id))
 }
 
 // Closing data storage when plugin finished it's work

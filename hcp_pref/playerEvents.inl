@@ -233,12 +233,9 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
             }
             // Slark stealing damage and slowing victim formula.
             case SLARK:{
-                new Float:maxspeedreduceformula[33];
                 attribute[victim][sl_leashstack] += 1;
                 attribute[attacker][sl_selfstack] += 1;
                 if(attribute[victim][sl_leashstack] > 1){
-                    maxspeedreduceformula[victim] = get_user_maxspeed(victim) - float(attribute[victim][sl_leashstack]);
-                    OnPlayerResetMaxSpeed(victim, maxspeedreduceformula[victim]);
                     SetHamParamFloat(4, damage + (attribute[attacker][sl_selfstack] * 1.3));
                 }
                 
