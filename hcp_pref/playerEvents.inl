@@ -1,4 +1,4 @@
-// Triggers on player death
+// Triggers on players death
 public player_death(){
     static killer, victim, hshot;
     killer = read_data(1);
@@ -8,7 +8,7 @@ public player_death(){
     if (!is_user_connected(killer) | !is_user_connected(victim)) // Server crash fix "Out of bounds"
         return PLUGIN_HANDLED;
 
-    new killername[32]
+    new killername[32];
     get_user_name(killer, killername, 31);
 
     client_cmd(victim,"spk hcp/death");
@@ -27,7 +27,7 @@ public player_death(){
 
     if (killer != victim)
     {
-         // First Blood
+        // First Blood
         if (isFirstBlood == 0)
         {
             set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
@@ -38,19 +38,18 @@ public player_death(){
 
         // Giving a killer one kill and scores
         info[killer][score] += 10;
-        info[killer][kills] +=1;
+        info[killer][kills] += 1;
 
         // Reseting attributes and scores from victim
+        reset_all_attributes(victim)
         info[victim][kills] = 0;
-        info[victim][score] -=10;
-        attribute[victim][poisoned_from_undying] = 0;
-        attribute[victim][berserk_ult_rage] = 0;
+        info[victim][score] -= 10;
 
         // On headshot
         if (hshot)
         {
-            info[killer][headshots] +=1;
-            info[killer][score] +=5;
+            info[killer][headshots] += 1;
+            info[killer][score] += 10;
             client_cmd(0,"spk hcp/headshot");
         }
 
@@ -59,7 +58,7 @@ public player_death(){
             case NONE:{
                 
             }
-            case SL:{
+            case SLARK:{
 
             }
             case UNDYING:{
@@ -76,29 +75,7 @@ public player_death(){
 
             }
         }
-
-        // Reseting gained stats for each dead hero
-        switch(hcp_get_user_hero(victim)){
-            case NONE:{
-            }
-            case SL:{
-                attribute[victim][sl_leashstack] = 0;
-                attribute[victim][sl_selfstack] = 0;
-            }
-            case UNDYING:{
-                attribute[victim][undying_hpstolen_timed] = 0;
-            }
-            case BERSERK:{
-
-            }
-            case ZEUS:{
-                
-            }
-            case KNIGHT:{
-                remove_task(victim, 0);
-            }
-
-        }
+        
         // Simply Announcing killstreaks
         if(get_cvar_num("hcp_enable_kill_announcer") == 1){
             switch(info[killer][kills]){ 
@@ -156,7 +133,7 @@ public round_start(){
                 case NONE:{
                     
                 }
-                case SL:{
+                case SLARK:{
                 
                 }
                 case UNDYING:{
@@ -185,7 +162,7 @@ if(is_user_alive(id)){
         case NONE:{
             emit_sound(id, CHAN_STATIC, "hcp/none_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
         }
-        case SL:{
+        case SLARK:{
             emit_sound(id, CHAN_STATIC, "hcp/sl_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
         }
         case UNDYING:{
@@ -215,7 +192,7 @@ public activate_ult(id) {
         {
             
         }
-        case SL:{
+        case SLARK:{
             
         }
         case UNDYING:
@@ -255,7 +232,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                 }
             }
             // Slark stealing damage and slowing victim formula.
-            case SL:{
+            case SLARK:{
                 new Float:maxspeedreduceformula[33];
                 attribute[victim][sl_leashstack] += 1;
                 attribute[attacker][sl_selfstack] += 1;

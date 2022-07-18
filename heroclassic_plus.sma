@@ -162,7 +162,7 @@ public HudTick(){
                 case NONE:{
                     show_dhudmessage(id, "%L %L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_NONE", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "HP", get_user_health(id));
                 }
-                case SL:{
+                case SLARK:{
                     show_dhudmessage(id, "%L %L^n%L^n%L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_SL", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "HERO_SL_SELFSTACK", attribute[id][sl_selfstack], LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case UNDYING:{
@@ -203,7 +203,7 @@ public OneTick(){
                 emit_sound(id, CHAN_STATIC, "hcp/undying_poison.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
             }
 
-            // Cooldowns for ultimates (ONLY FOR SECOND COOLDOWNS)
+            // Cooldowns for ultimates (ONLY FOR TIMED COOLDOWNS)
             if(attribute[id][is_ult_ready] == 0){
                 attribute[id][ult_counter] -= 1;
                 if(attribute[id][ult_counter] == 0 && is_user_alive(id) && is_user_connected(id)){
@@ -219,7 +219,7 @@ public set_ult_active(id){
     switch(hcp_get_user_hero(id)){
         case NONE:{
         }
-        case SL:{
+        case SLARK:{
                         
         }
         case UNDYING:{

@@ -18,7 +18,7 @@ BOSS_NOPLAYERS = No boss have chosen
 DEATH_INFO = You were killed by %s playing as %s
 
 NONE_PLAY = You are playing as Survivor now
-SL_PLAY = You are playing as Slark now
+SLARK_PLAY = You are playing as Slark now
 UD_PLAY = You are playing as Undying now
 BERSERK_PLAY = You are playing as Berserk now
 ZEUS_PLAY = You are playing as Zeus now

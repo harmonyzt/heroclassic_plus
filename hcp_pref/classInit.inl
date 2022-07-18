@@ -2,11 +2,11 @@ enum _:attributes
 {
     sl_leashstack, sl_selfstack, undying_hpstack, 
     undying_hpstolen_timed, poisoned_from_undying, 
-    knight_shield, ult_counter, is_ult_ready, berserk_ult_rage
+    knight_shield, ult_counter, ultimate_cooldown, is_ult_ready, berserk_ult_rage
 };
 enum _:
 {
-    NONE, SL, UNDYING, ZEUS, BERSERK, BOSS, KNIGHT
+    NONE, SLARK, UNDYING, ZEUS, BERSERK, BOSS, KNIGHT
 };
 new attribute[256][attributes];
 new hero_hp[33];
@@ -53,22 +53,20 @@ public menu_handler(id, menu, item)
         {
             hero[id] = NONE;
             hero_hp[id] = get_cvar_num("hcp_hero_survivor_hp");
-            ColorChat(id, GREEN, "%L", LANG_PLAYER, "NONE_PLAY");
             set_user_health(id, hero_hp[id])
-            attribute[id][sl_leashstack] = 0;
-            attribute[id][sl_selfstack] = 0;
+            ColorChat(id, GREEN, "%L", LANG_PLAYER, "NONE_PLAY");
+            reset_all_attributes(id)
             play_s_sound(id);
 
             return PLUGIN_HANDLED;
         }
         case 1:
         {
-            hero[id] = SL;
+            hero[id] = SLARK;
             hero_hp[id] = 530;
-         	ColorChat(id, GREEN, "%L", LANG_PLAYER, "SL_PLAY");
             set_user_health(id, hero_hp[id]);
-            attribute[id][sl_leashstack] = 0;
-            attribute[id][sl_selfstack] = 0;
+            ColorChat(id, GREEN, "%L", LANG_PLAYER, "SLARK_PLAY");
+            reset_all_attributes(id)
             play_s_sound(id);
             
          	return PLUGIN_HANDLED;
@@ -77,8 +75,9 @@ public menu_handler(id, menu, item)
         {
             hero[id] = UNDYING;
             hero_hp[id] = 380;
-            ColorChat(id, GREEN, "%L", LANG_PLAYER, "UD_PLAY"); 
             set_user_health(id, hero_hp[id]);
+            ColorChat(id, GREEN, "%L", LANG_PLAYER, "UD_PLAY"); 
+            reset_all_attributes(id)
             play_s_sound(id);
 
             return PLUGIN_HANDLED;
@@ -87,10 +86,9 @@ public menu_handler(id, menu, item)
         {
             hero[id] = BERSERK;
             hero_hp[id] = 450;
-            attribute[id][berserk_ult_rage] = 0;
-            attribute[id][is_ult_ready] = 0;
-            ColorChat(id, GREEN, "%L", LANG_PLAYER, "BERSERK_PLAY"); 
             set_user_health(id, hero_hp[id]);
+            ColorChat(id, GREEN, "%L", LANG_PLAYER, "BERSERK_PLAY"); 
+            reset_all_attributes(id)
             play_s_sound(id);
 
             return PLUGIN_HANDLED;
@@ -100,9 +98,9 @@ public menu_handler(id, menu, item)
             hero[id] = ZEUS;
             hero_hp[id] = 250;
             attribute[id][ult_counter] = 30;
-            attribute[id][is_ult_ready] = 0;
-            ColorChat(id, GREEN, "%L", LANG_PLAYER, "ZEUS_PLAY"); 
             set_user_health(id, hero_hp[id]);
+            ColorChat(id, GREEN, "%L", LANG_PLAYER, "ZEUS_PLAY"); 
+            reset_all_attributes(id)
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }
@@ -110,10 +108,9 @@ public menu_handler(id, menu, item)
         {
             hero[id] = KNIGHT;
             hero_hp[id] = 600;
-            attribute[id][knight_shield] = 15;
-            is_shield_broken[id] = false;
-            ColorChat(id, GREEN, "%L", LANG_PLAYER, "KNIGHT_PLAY"); 
             set_user_health(id, hero_hp[id]);
+            ColorChat(id, GREEN, "%L", LANG_PLAYER, "KNIGHT_PLAY"); 
+            reset_all_attributes(id)
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }
@@ -126,4 +123,16 @@ public menu_handler(id, menu, item)
     }
 	menu_destroy(menu);
     return PLUGIN_HANDLED;
+}
+
+public reset_all_attributes(id){
+    attribute[id][is_ult_ready] = 0;
+    attribute[id][berserk_ult_rage] = 0;
+    is_shield_broken[id] = false;
+    attribute[id][knight_shield] = 15;
+    attribute[id][sl_leashstack] = 0;
+    attribute[id][sl_selfstack] = 0;
+    attribute[id][poisoned_from_undying] = 0;
+    attribute[id][undying_hpstolen_timed] = 0;
+    remove_task(id, 0);
 }
