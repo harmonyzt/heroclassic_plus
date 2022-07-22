@@ -296,7 +296,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
         }
 } 
 
-// Recover a knight's shield after cooldown passed
+// Recover a knight's shield after cooldown
 public recover_knight_shield(id){
     attribute[id][knight_shield] = 15;
     is_shield_broken[id] = false;

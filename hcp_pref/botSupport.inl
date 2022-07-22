@@ -17,19 +17,19 @@ public BotThink() {
         switch(ran_number){
             case 1:{
                 hero[id_rand] = BERSERK;
-                play_s_sound(id_rand);
+                reset_all_attributes(id_rand);
             }
             case 2:{
                 hero[id_rand] = SLARK;
-                play_s_sound(id_rand);
+                reset_all_attributes(id_rand);
             }
             case 3:{
                 hero[id_rand] = UNDYING;
-                play_s_sound(id_rand);
+                reset_all_attributes(id_rand);
             }
             case 4:{
                 hero[id_rand] = KNIGHT;
-                play_s_sound(id_rand);
+                reset_all_attributes(id_rand);
             }
         }
     }
