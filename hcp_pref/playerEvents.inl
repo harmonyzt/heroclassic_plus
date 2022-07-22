@@ -186,7 +186,7 @@ if(is_user_alive(id)){
 // Action to activate ultimate
 //
 public activate_ult(id) {
-    if(is_user_alive(id) && is_user_connected(id))
+    if(is_user_alive(id) && is_user_connected(id)){
     switch(hcp_get_user_hero(id)){
         case NONE:
         {
@@ -204,8 +204,10 @@ public activate_ult(id) {
         } 
         case ZEUS:
         {
+            
         }
     }
+}
 }
 
 // Catching out/in-coming damage.
@@ -241,13 +243,15 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                 
             }
 
-            // Giving some attributes to undying upon hitting a victim
+            // Giving HP to undying when hitting a victim
             case UNDYING:
             {
                 attribute[attacker][undying_hpstolen_timed] += 1;
-                if(attribute[attacker][undying_hpstolen_timed] > 1)
-                    undying_hp_gain(attacker);
-
+                // Gaining HP
+                if(attribute[attacker][undying_hpstolen_timed] > 1){
+                    new totalhealth = undying_hpstolen_timed + 9 + get_user_health(id);
+                    set_user_health(id, totalhealth);
+                }
                 attribute[victim][poisoned_from_undying] = 5;   // Setting poison damage on victim ( Go to OneTick() )
             }
             
@@ -301,4 +305,11 @@ public recover_knight_shield(id){
     attribute[id][knight_shield] = 15;
     is_shield_broken[id] = false;
     emit_sound(id,CHAN_STATIC,"hcp/knight_shield_ready.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+}
+
+// Undying gains HP on hit
+public undying_hp_gain(id)
+{
+    new totalhealth = undying_hpstolen_timed + 9 + get_user_health(id);
+    set_user_health(id, totalhealth);
 }

@@ -113,12 +113,6 @@ public damager(id){
     ShowSyncHudMsg(attacker, dmgDealtHUD, "%d", damage);
 }
 
-public undying_hp_gain(id)
-{
-    new totalhealth = undying_hpstolen_timed + 9 + get_user_health(id);
-    set_user_health(id, totalhealth);
-}
-
 public hcp_boss_random() {      // Choosing random player to be a boss
 	if(hcp_active == 0 && RoundCount > 5) {
 		static Players[32], Count, id_rand;
