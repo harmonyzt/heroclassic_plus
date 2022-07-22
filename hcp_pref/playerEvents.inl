@@ -12,6 +12,7 @@ public player_death(){
     get_user_name(killer, killername, 31);
 
     client_cmd(victim,"spk hcp/death");
+    isAllowedToChangeClass[victim] = 0;
 
     // Death of the boss
     if(victim == hcp_boss)
@@ -249,8 +250,8 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                 attribute[attacker][undying_hpstolen_timed] += 1;
                 // Gaining HP
                 if(attribute[attacker][undying_hpstolen_timed] > 1){
-                    new totalhealth = undying_hpstolen_timed + 9 + get_user_health(id);
-                    set_user_health(id, totalhealth);
+                    new totalhealth = undying_hpstolen_timed + 9 + get_user_health(attacker);
+                    set_user_health(attacker, totalhealth);
                 }
                 attribute[victim][poisoned_from_undying] = 5;   // Setting poison damage on victim ( Go to OneTick() )
             }
@@ -263,7 +264,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                 SetHamParamFloat(4, damage + berserk_damage);
 
                 if(get_user_health(attacker) < (hero_hp[attacker] * 0.50)){
-                    SetHamParamFloat(4, damage + (berserk_damage * get_cvar_float("hcp_hero_berserk_lowhpdamage")));
+                    SetHamParamFloat(4, damage + (berserk_damage * get_cvar_float("hcp_hero_berserk_ultdamage")));
                 }
             }
             
@@ -312,4 +313,21 @@ public undying_hp_gain(id)
 {
     new totalhealth = undying_hpstolen_timed + 9 + get_user_health(id);
     set_user_health(id, totalhealth);
+}
+
+// Player respawn
+public PlayerSpawn_Post(id) {
+    if(is_user_alive(id) && is_user_connected(id) && !is_user_bot(id)){
+        isAllowedToChangeClass[id] = 1;
+        client_cmd(id,"spk hcp/respawn");
+        ColorChat(id, GREY, "%L", LANG_PLAYER, "CHANGE_ALLOWED", get_cvar_float("hcp_playerherochange_allowed"));
+        set_task(get_cvar_float("hcp_playerherochange_allowed"), "ChangeClassAllowed",id+34532,_,_,_);
+    }
+}
+
+// Removing a task to disallow player from changing a class
+public ChangeClassAllowed(id){
+    id = id - 34532;
+    isAllowedToChangeClass[id] = 0;
+    remove_task(id);
 }

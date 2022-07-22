@@ -15,7 +15,7 @@ new hero[33];
 // Creating Menu
 //
 public class_change(id){
-    //if(is_user_alive(id) && RoundCount < 3){
+    //if(isAllowedToChangeClass[id] = 0 && RoundCount < 3){
     //    ColorChat(id, RED, "%L", LANG_PLAYER, "PERMITTED_CHANGECLASS");
     //    return PLUGIN_HANDLED;
     //}

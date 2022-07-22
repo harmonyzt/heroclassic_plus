@@ -7,7 +7,7 @@
 #include < hamsandwich >    //  For catching player's damage and increasing it.
 #include < fakemeta >       //  For custom player models.
 #include < float >          //  For calculations.
-#include < nvault >          //  For calculations.
+#include < nvault >         //  For information storage.
 
 #pragma tabsize 0
 #define plug    "Hero Classic+"
@@ -24,25 +24,29 @@ enum _:InfoTable
     hasGloriousArmor
 };
 
-new info[128][InfoTable];           // Info made for skill and such.
-new dmgTakenHUD, dmgDealtHUD;       // Custom damager.
-new isFirstBlood = 0;               // To check if there was a first blood or not.
-new announcehud;                    // HUD for kill announcer.
-new hcp_boss, hcp_active = 0;       // For boss, to check if there is one or not.
-new bool:is_shield_broken[33];      // To check if shield broken or not (KNIGHT).
-new g_msgHideWeapon;                 // For hiding HUD.
-new hcp_vault;                       // For NVault.
-new RoundCount = 0;                  // For counting rounds.
+new info[128][InfoTable];           // Information with table of stuff to store with nvault
+new dmgTakenHUD, dmgDealtHUD;       // Custom damager
+new isFirstBlood = 0;               // To check if there was a first blood or not
+new announcehud;                    // HUD for kill announcer
+new hcp_boss, hcp_active = 0;       // For boss, to check if there is one or not
+new bool:is_shield_broken[33];      // To check if shield broken or not (KNIGHT)
+new g_msgHideWeapon;                // For hiding HUD
+new hcp_vault;                      // For NVault
+new RoundCount = 0;                 // For counting rounds
+new isAllowedToChangeClass[32] = 0
 
 public plugin_init()
 {
     register_plugin(plug, ver, auth);
 
+    // Main CVARs
+    register_cvar("hcp_playerherochange_allowed","5");
+    register_cvar("hcp_enable_kill_announcer","1");
+
     // Boss CVARs
     register_cvar("hcp_boss_health","1500");
     register_cvar("hcp_boss_ammo","300");
     register_cvar("hcp_boss_dmg_mult","1.3");
-    register_cvar("hcp_enable_kill_announcer","1");
 
     // Survivor CVARs
     register_cvar("hcp_hero_survivor_hp","300");
@@ -52,7 +56,7 @@ public plugin_init()
     // Berserk CVARs
     register_cvar("hcp_hero_berserk_hp","350");
     register_cvar("hcp_hero_berserk_rage","15");
-    register_cvar("hcp_hero_berserk_lowhpdamage","1.5")
+    register_cvar("hcp_hero_berserk_ultdamage","1.5")
 
     register_event("DeathMsg","player_death","a");                      // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
@@ -62,13 +66,14 @@ public plugin_init()
 	register_message(g_msgHideWeapon, "msgHideWeapon");                 // Hiding default health and armor bar.
     register_dictionary("hcp.txt");                                     // Registering lang file.
     RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
+    RegisterHam(Ham_Spawn, "player", "PlayerSpawn_Post", 1);            // Catching player respawn.
     register_clcmd("say /class","class_change");                        // Registering menu (or a command to call menu).
     register_clcmd("activate_ultimate","activate_ult");                 // Registering menu (or a command to call menu).
     hcp_vault = nvault_open("hcpstorage");                              // Opening nvault storage.
     set_task(60.0, "hcp_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
     set_task(1.0, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
     set_task(1.0, "OneTick",_,_,_,"b");                                 // One second tick for plugin.
-    set_task(random_float(15.0,70.0), "BotThink",_,_,_,"b");            // Bot thinking to pick a class.
+    set_task(random_float(25.0,60.0), "BotThink",_,_,_,"b");            // Bot thinking to pick a class.
 }
 
 public plugin_cfg()
