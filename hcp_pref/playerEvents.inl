@@ -299,6 +299,9 @@ public undying_hp_gain(id)
 public PlayerSpawn_Post(id) {
     if(is_user_alive(id) && is_user_connected(id) && !is_user_bot(id)){
         isAllowedToChangeClass[id] = 1;
+        if(hcp_get_user_hero(id) == NONE){
+            class_change(id)
+        }
         client_cmd(id,"spk hcp/respawn");
         client_print_color(id, GREY, "%L", LANG_PLAYER, "CHANGE_ALLOWED", get_cvar_float("hcp_playerherochange_allowed"));
         set_task(get_cvar_float("hcp_playerherochange_allowed"), "ChangeClassAllowed",id+34532,_,_,_);
@@ -308,6 +311,8 @@ public PlayerSpawn_Post(id) {
 // Removing a task to disallow player from changing a class
 public ChangeClassAllowed(id){
     id = id - 34532;
+    client_print_color(id, RED, "%L", LANG_PLAYER, "TIMEISUP");
+    show_menu(id, 0, "^n", 1);
     isAllowedToChangeClass[id] = 0;
     remove_task(id);
 }

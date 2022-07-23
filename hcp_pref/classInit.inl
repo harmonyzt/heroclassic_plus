@@ -20,7 +20,7 @@ public class_change(id){
     //    return PLUGIN_HANDLED;
     //}
 
-    new menu = menu_create( "\w[SVM BETA] \rChoose your class", "menu_handler" );
+    new menu = menu_create( "\w[HCP] \rChoose your class", "menu_handler" );
     menu_additem( menu, "\wDon't play as \yanyone", "", 0 );
     menu_additem( menu, "\wPlay as \ySlark", "", 0 );
     menu_additem( menu, "\wPlay as \yUndying", "", 0 );
