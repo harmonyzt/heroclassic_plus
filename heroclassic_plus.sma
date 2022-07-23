@@ -61,12 +61,12 @@ public plugin_init()
     register_event("DeathMsg","player_death","a");                      // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
     register_event("Damage", "damager", "b", "2!0", "3=0", "4!0");      // Catching REAL damage.
+    RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
+    RegisterHam(Ham_Spawn, "player", "PlayerSpawn_Post", 1);            // Catching player respawn.
     g_msgHideWeapon = get_user_msgid("HideWeapon");                     // Hiding default health and armor bar.
 	register_event("ResetHUD", "onResetHUD", "b");                      // Hiding default health and armor bar.
 	register_message(g_msgHideWeapon, "msgHideWeapon");                 // Hiding default health and armor bar.
     register_dictionary("hcp.txt");                                     // Registering lang file.
-    RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
-    RegisterHam(Ham_Spawn, "player", "PlayerSpawn_Post", 1);            // Catching player respawn.
     register_clcmd("say /class","class_change");                        // Registering menu (or a command to call menu).
     register_clcmd("activate_ultimate","activate_ult");                 // Registering menu (or a command to call menu).
     hcp_vault = nvault_open("hcpstorage");                              // Opening nvault storage.
@@ -81,8 +81,11 @@ public plugin_cfg()
 	new cfgDir[64], File[192];
 	get_configsdir(cfgDir, charsmax(cfgDir));
 	formatex(File,charsmax(File),"%s/hcp_config.cfg",cfgDir);
-	if(file_exists(File))
+	if(file_exists(File)){
 		server_cmd("exec %s", File);
+    } else {
+        server_print("[HCP] Configuration file is missing!");
+    }
 }
 
 ////////////////    Plugin Functions   ////////////////////////////
