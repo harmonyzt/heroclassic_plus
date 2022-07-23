@@ -25,7 +25,7 @@ ZEUS_PLAY = You are playing as Zeus now
 KNIGHT_PLAY = You are playing as Knight now
 
 PERMITTED_CHANGECLASS = You can't change class right now.
-CHANGE_ALLOWED = You're allowed to change your class for %d seconds.
+CHANGE_ALLOWED = You're allowed to change your class for %f seconds.
 
 HERO_NAME = Hero:
 HERO_NONE = Survivor
@@ -48,7 +48,7 @@ HERO_SL_SELFSTACK = Leash Stack: [ %d ]
 HERO_UD_HPSTACK = Health Stacks: [ %d ]
 HERO_UD_HPSTOLEN = Temporary Health Stacks: [ %d ]
 
-c = Shield Durability: [ %d ]
+KNIGHT_SHIELD = Shield Durability: [ %d ]
 
 BERSERK_ULT = Rage: [ %d ]
 

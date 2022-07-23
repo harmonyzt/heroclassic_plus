@@ -154,7 +154,7 @@ public hcp_set_user_boss(id) {
 
 public HudTick(){
     for(new id = 1; id <= get_maxplayers(); id++){
-        if(is_user_connected(id) && is_user_connected(id) && is_user_alive(id) && !is_user_bot(id)){
+        if(is_user_connected(id) && is_user_alive(id) && !is_user_bot(id)){
             set_dhudmessage(43, 211, 88, 0.02, 0.60, 0, 6.0, 1.1, 0.3, 0.3);
             switch(hcp_get_user_hero(id)){
                 case NONE:{
