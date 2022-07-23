@@ -28,7 +28,7 @@ public load_data(id){
 public next_load_data(id,data[],len){
 	new Name[33];
 	get_user_name(id,Name,32);
-	replace_all(data,len,"|"," ");		
+	replace_all(data,len,"|"," ");	
 	new user_score[10], user_hasVampiricHelmet[10], user_hasGloriousArmor[10];
 	parse(data, user_score,9, user_hasVampiricHelmet,9, user_hasGloriousArmor,9);
 	info[id][score]= str_to_num(user_score);
