@@ -54,7 +54,7 @@ public client_disconnect(id){
     if( hcp_active == 1 && id == hcp_boss ) {    //Checking if boss left or not and announcing next one.
 		hcp_boss = 0;
 		hcp_active = 0;
-		ColorChat(0, RED, "%L", LANG_PLAYER, "BOSS_LEFT", get_user_name(id,dcName,31));
+		client_print_color(0, RED, "%L", LANG_PLAYER, "BOSS_LEFT", get_user_name(id,dcName,31));
 	}
 
     // Reseting all attributes if player disconnects

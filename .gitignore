@@ -1,4 +1,4 @@
-# Ignore compiled .sma plugin
+# Ignore compiled .sma plugins
 *.amxx
 
 # Ignore workspace files
@@ -9,3 +9,6 @@
 
 # Ignore .rar files
 *.rar
+
+# Ignore .git files
+*.git

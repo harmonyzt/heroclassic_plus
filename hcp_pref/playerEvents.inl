@@ -131,6 +131,11 @@ public round_start(){
         if(is_user_alive(id) && is_user_connected(id)){
             set_user_health(id, hero_hp[id]);
             switch(hcp_get_user_hero(id)){
+                case BOSS:{
+                    client_print_color(id, RED, "You were a boss last round, choose another class!");
+                    hero[id] = NONE;
+                    reset_all_attributes(id);
+                }
                 case NONE:{
                     
                 }
@@ -320,7 +325,7 @@ public PlayerSpawn_Post(id) {
     if(is_user_alive(id) && is_user_connected(id) && !is_user_bot(id)){
         isAllowedToChangeClass[id] = 1;
         client_cmd(id,"spk hcp/respawn");
-        ColorChat(id, GREY, "%L", LANG_PLAYER, "CHANGE_ALLOWED", get_cvar_float("hcp_playerherochange_allowed"));
+        client_print_color(id, GREY, "%L", LANG_PLAYER, "CHANGE_ALLOWED", get_cvar_float("hcp_playerherochange_allowed"));
         set_task(get_cvar_float("hcp_playerherochange_allowed"), "ChangeClassAllowed",id+34532,_,_,_);
     }
 }

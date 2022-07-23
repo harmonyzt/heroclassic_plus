@@ -2,7 +2,7 @@
 #include < amxmisc >        //  For an old menu.
 #include < fun >            //  For glow effect.
 #include < dhudmessage >    //  For new format of hud messages.
-#include < colorchat2 >     //  For colored simple chat.
+#include < colorchat >     //  For colored simple chat.
 #include < cstrike >        //  For catching player's team and giving ammo.
 #include < hamsandwich >    //  For catching player's damage and increasing it.
 #include < fakemeta >       //  For custom player models.
@@ -33,7 +33,7 @@ new bool:is_shield_broken[33];      // To check if shield broken or not (KNIGHT)
 new g_msgHideWeapon;                // For hiding HUD
 new hcp_vault;                      // For NVault
 new RoundCount = 0;                 // For counting rounds
-new isAllowedToChangeClass[32] = 0
+new isAllowedToChangeClass[32] = 0  // To set when the player is allowed to change a class
 
 public plugin_init()
 {
@@ -226,13 +226,13 @@ public set_ult_active(id){
         }
         case BERSERK:{
             emit_sound(id,CHAN_STATIC,"hcp/adrenaline_full.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
-            ColorChat(id, GREEN, "%L", LANG_PLAYER, "HERO_ULT_READY"); 
+            client_print_color(id, GREEN, "%L", LANG_PLAYER, "HERO_ULT_READY"); 
             attribute[id][is_ult_ready] = 1;
             attribute[id][ult_counter] = 0;
         }
         case ZEUS:{
             emit_sound(id,CHAN_STATIC,"hcp/ultimate_ready.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
-            ColorChat(id, GREEN, "%L", LANG_PLAYER, "HERO_ULT_READY"); 
+            client_print_color(id, GREEN, "%L", LANG_PLAYER, "HERO_ULT_READY"); 
             attribute[id][is_ult_ready] = 1;
             attribute[id][ult_counter] = 0;
         }
@@ -279,6 +279,7 @@ public plugin_precache(){
     precache_sound("hcp/wp_bullet4.wav")
     precache_sound("hcp/ultimate_ready.wav")
     precache_sound("hcp/death.wav")
+    precache_sound("hcp/spawn.wav")
     dmgTakenHUD = CreateHudSyncObj();
     dmgDealtHUD = CreateHudSyncObj();
     announcehud = CreateHudSyncObj();
