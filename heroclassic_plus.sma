@@ -215,39 +215,6 @@ public OneTick(){
     }
 }
 
-// Set the ultimate ready
-public set_ult_active(id){
-    switch(hcp_get_user_hero(id)){
-        case NONE:{
-
-        }
-        case SLARK:{
-                        
-        }
-        case UNDYING:{
-            
-        }
-        case BERSERK:{
-            emit_sound(id,CHAN_STATIC,"hcp/adrenaline_full.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
-            client_print_color(id, GREEN, "%L", LANG_PLAYER, "HERO_ULT_READY"); 
-            attribute[id][is_ult_ready] = 1;
-            attribute[id][ult_counter] = 0;
-        }
-        case ZEUS:{
-            emit_sound(id,CHAN_STATIC,"hcp/ultimate_ready.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
-            client_print_color(id, GREEN, "%L", LANG_PLAYER, "HERO_ULT_READY"); 
-            attribute[id][is_ult_ready] = 1;
-            attribute[id][ult_counter] = 0;
-        }
-        case KNIGHT:{
-            
-        }
-        case BOSS:{
-                        
-        }
-    }
-}
-
 // Closing data storage when plugin finished it's work
 public plugin_end(){
 	nvault_close(hcp_vault);

@@ -188,34 +188,6 @@ if(is_user_alive(id)){
     return PLUGIN_HANDLED;
 }
 
-//
-// Action to activate ultimate
-//
-public activate_ult(id) {
-    if(is_user_alive(id) && is_user_connected(id)){
-    switch(hcp_get_user_hero(id)){
-        case NONE:
-        {
-            
-        }
-        case SLARK:{
-            
-        }
-        case UNDYING:
-        {
-        }
-        case BERSERK:
-        {
-            
-        } 
-        case ZEUS:
-        {
-            
-        }
-    }
-}
-}
-
 // Catching out/in-coming damage.
 public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
     // Checking if player is valid
@@ -265,6 +237,9 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
             case BERSERK:
             {
                 attribute[attacker][berserk_ult_rage]++
+                if(attribute[attacker][berserk_ult_rage] >= 15){
+                    set_ult_active(attacker);
+                }
                 new Float:berserk_damage = hero_hp[victim] * 0.1;
                 SetHamParamFloat(4, damage + berserk_damage);
 
@@ -335,4 +310,66 @@ public ChangeClassAllowed(id){
     id = id - 34532;
     isAllowedToChangeClass[id] = 0;
     remove_task(id);
+}
+
+//
+// Action to activate ultimate
+//
+// Set the ultimate ready
+public set_ult_active(id){
+    switch(hcp_get_user_hero(id)){
+        case NONE:{
+
+        }
+        case SLARK:{
+                        
+        }
+        case UNDYING:{
+            
+        }
+        case BERSERK:{
+            emit_sound(id,CHAN_STATIC,"hcp/adrenaline_full.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+            client_print_color(id, GREEN, "%L", LANG_PLAYER, "HERO_ULT_READY"); 
+            attribute[id][is_ult_ready] = 1;
+            attribute[id][ult_counter] = 0;
+        }
+        case ZEUS:{
+            emit_sound(id,CHAN_STATIC,"hcp/ultimate_ready.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+            client_print_color(id, GREEN, "%L", LANG_PLAYER, "HERO_ULT_READY"); 
+            attribute[id][is_ult_ready] = 1;
+            attribute[id][ult_counter] = 0;
+        }
+        case KNIGHT:{
+            
+        }
+        case BOSS:{
+                        
+        }
+    }
+}
+
+public activate_ult(id) {
+    if(is_user_alive(id) && is_user_connected(id) && attribute[id][is_ult_ready] == 1){
+    switch(hcp_get_user_hero(id)){
+        case NONE:
+        {
+            
+        }
+        case SLARK:{
+            
+        }
+        case UNDYING:
+        {
+
+        }
+        case BERSERK:
+        {
+            set_task(0.05, "")
+        } 
+        case ZEUS:
+        {
+            
+        }
+    }
+}
 }
