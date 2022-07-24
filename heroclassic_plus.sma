@@ -250,6 +250,7 @@ public plugin_precache(){
     precache_sound("hcp/none_spawn.wav");
     precache_sound("hcp/undying_spawn.wav");
     precache_sound("hcp/berserk_spawn.wav");
+    precache_sound("hcp/adrenaline_full.wav");
     precache_sound("hcp/zeus_spawn.wav");
     precache_sound("hcp/undying_poison.wav");
     precache_sound("hcp/knight_shield_ready.wav");
