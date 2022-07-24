@@ -53,9 +53,9 @@ public menu_handler(id, menu, item)
         {
             hero[id] = NONE;
             hero_hp[id] = get_cvar_num("hcp_hero_survivor_hp");
-            set_user_health(id, hero_hp[id])
+            set_user_health(id, hero_hp[id]);
             client_print_color(id, GREEN, "%L", LANG_PLAYER, "NONE_PLAY");
-            reset_all_attributes(id)
+            reset_all_attributes(id);
             play_s_sound(id);
 
             return PLUGIN_HANDLED;
@@ -66,7 +66,7 @@ public menu_handler(id, menu, item)
             hero_hp[id] = 530;
             set_user_health(id, hero_hp[id]);
             client_print_color(id, GREEN, "%L", LANG_PLAYER, "SLARK_PLAY");
-            reset_all_attributes(id)
+            reset_all_attributes(id);
             play_s_sound(id);
             
          	return PLUGIN_HANDLED;
@@ -77,7 +77,7 @@ public menu_handler(id, menu, item)
             hero_hp[id] = 380;
             set_user_health(id, hero_hp[id]);
             client_print_color(id, GREEN, "%L", LANG_PLAYER, "UD_PLAY"); 
-            reset_all_attributes(id)
+            reset_all_attributes(id);
             play_s_sound(id);
 
             return PLUGIN_HANDLED;
@@ -88,7 +88,7 @@ public menu_handler(id, menu, item)
             hero_hp[id] = 450;
             set_user_health(id, hero_hp[id]);
             client_print_color(id, GREEN, "%L", LANG_PLAYER, "BERSERK_PLAY"); 
-            reset_all_attributes(id)
+            reset_all_attributes(id);
             play_s_sound(id);
 
             return PLUGIN_HANDLED;
@@ -100,7 +100,7 @@ public menu_handler(id, menu, item)
             attribute[id][ult_counter] = 30;
             set_user_health(id, hero_hp[id]);
             client_print_color(id, GREEN, "%L", LANG_PLAYER, "ZEUS_PLAY"); 
-            reset_all_attributes(id)
+            reset_all_attributes(id);
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }
@@ -110,7 +110,7 @@ public menu_handler(id, menu, item)
             hero_hp[id] = 600;
             set_user_health(id, hero_hp[id]);
             client_print_color(id, GREEN, "%L", LANG_PLAYER, "KNIGHT_PLAY"); 
-            reset_all_attributes(id)
+            reset_all_attributes(id);
             play_s_sound(id);
             return PLUGIN_HANDLED;
         }

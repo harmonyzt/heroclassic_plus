@@ -33,7 +33,7 @@ new bool:is_shield_broken[33];      // To check if shield broken or not (KNIGHT)
 new g_msgHideWeapon;                // For hiding HUD
 new hcp_vault;                      // For NVault
 new RoundCount = 0;                 // For counting rounds
-new isAllowedToChangeClass[32] = 0  // To set when the player is allowed to change a class
+new isAllowedToChangeClass[32] = 0; // To set when the player is allowed to change a class
 
 public plugin_init()
 {
@@ -60,7 +60,7 @@ public plugin_init()
     // Berserk CVARs
     register_cvar("hcp_hero_berserk_hp","350");
     register_cvar("hcp_hero_berserk_rage","15");
-    register_cvar("hcp_hero_berserk_ultdamage","1.5")
+    register_cvar("hcp_hero_berserk_ultdamage","1.5");
 
     register_event("DeathMsg","player_death","a");                              // Catching player's death.
     register_logevent("round_start", 2, "1=Round_Start");                       // Catching start of the round.
@@ -103,6 +103,7 @@ public plugin_cfg()
 #include "hcp_pref/hideHUD.inl"
 #include "hcp_pref/nVault.inl"
 #include "hcp_pref/pluginStocks.inl"
+#include "hcp_pref/itemShop.inl"
 
 
 ///////////////////////////////////////////////////////////
@@ -144,15 +145,21 @@ public hcp_boss_random() {      // Choosing random player to be a boss
 
 public hcp_set_user_boss(id) {
 	if(is_user_connected(id) && hero[hcp_boss] == NONE) {
+        hero[id] = BOSS;
+        hero_hp[id] = get_cvar_num("hcp_boss_health");
+        new nm[33];
+        get_user_name(id, nm, 32);
+
         client_cmd(id, "slot1; drop");
 		give_item(id,"weapon_m249");
 		cs_set_user_bpammo(id, CSW_M249, get_cvar_num("hcp_boss_ammo"));
+
 		set_user_health(id, get_cvar_num("hcp_boss_health"));
+
 		client_cmd(0,"spk hcp/boss_spawned");
-        new nm[33]; get_user_name(id, nm, 32);
         set_dhudmessage(99, 184, 255, -1.0, 0.65, 1, 6.0, 3.0, 1.5, 1.5);
         show_dhudmessage(0, "%L", LANG_PLAYER, "BOSS_SPAWNED", nm);
-        hero[id] = BOSS;
+
 		switch(cs_get_user_team(id)) {
 			case CS_TEAM_T: set_user_rendering(id, kRenderFxGlowShell, 255, 0, 0, kRenderNormal, 4);
 			case CS_TEAM_CT: set_user_rendering(id, kRenderFxGlowShell, 0, 0, 255, kRenderNormal, 4);
@@ -226,34 +233,34 @@ public plugin_end(){
 
 public plugin_precache(){
     if(get_cvar_num("hcp_enable_kill_announcer") == 1){
-    precache_sound("hcp/firstblood.wav")
-    precache_sound("hcp/headshot.wav")
-    precache_sound("hcp/killingspree.wav")
-    precache_sound("hcp/maniac.wav")
-    precache_sound("hcp/massacre.wav")
-    precache_sound("hcp/multikill.wav")
-    precache_sound("hcp/serverjoin.wav")
-    precache_sound("hcp/triplekill.wav")
-    precache_sound("hcp/unstoppable.wav")
+    precache_sound("hcp/firstblood.wav");
+    precache_sound("hcp/headshot.wav");
+    precache_sound("hcp/killingspree.wav");
+    precache_sound("hcp/maniac.wav");
+    precache_sound("hcp/massacre.wav");
+    precache_sound("hcp/multikill.wav");
+    precache_sound("hcp/serverjoin.wav");
+    precache_sound("hcp/triplekill.wav");
+    precache_sound("hcp/unstoppable.wav");
     }
-    precache_sound("hcp/boss_defeated.wav")
-    precache_sound("hcp/boss_spawned.wav")
-    precache_sound("hcp/boss_death.wav")
-    precache_sound("hcp/sl_spawn.wav")
-    precache_sound("hcp/none_spawn.wav")
-    precache_sound("hcp/undying_spawn.wav")
-    precache_sound("hcp/berserk_spawn.wav")
-    precache_sound("hcp/zeus_spawn.wav")
-    precache_sound("hcp/undying_poison.wav")
-    precache_sound("hcp/knight_shield_ready.wav")
-    precache_sound("hcp/knight_spawn.wav")
-    precache_sound("hcp/wp_bullet1.wav")
-    precache_sound("hcp/wp_bullet2.wav")
-    precache_sound("hcp/wp_bullet3.wav")
-    precache_sound("hcp/wp_bullet4.wav")
-    precache_sound("hcp/ultimate_ready.wav")
-    precache_sound("hcp/death.wav")
-    precache_sound("hcp/spawn.wav")
+    precache_sound("hcp/boss_defeated.wav");
+    precache_sound("hcp/boss_spawned.wav");
+    precache_sound("hcp/boss_death.wav");
+    precache_sound("hcp/sl_spawn.wav");
+    precache_sound("hcp/none_spawn.wav");
+    precache_sound("hcp/undying_spawn.wav");
+    precache_sound("hcp/berserk_spawn.wav");
+    precache_sound("hcp/zeus_spawn.wav");
+    precache_sound("hcp/undying_poison.wav");
+    precache_sound("hcp/knight_shield_ready.wav");
+    precache_sound("hcp/knight_spawn.wav");
+    precache_sound("hcp/wp_bullet1.wav");
+    precache_sound("hcp/wp_bullet2.wav");
+    precache_sound("hcp/wp_bullet3.wav");
+    precache_sound("hcp/wp_bullet4.wav");
+    precache_sound("hcp/ultimate_ready.wav");
+    precache_sound("hcp/death.wav");
+    precache_sound("hcp/spawn.wav");
     dmgTakenHUD = CreateHudSyncObj();
     dmgDealtHUD = CreateHudSyncObj();
     announcehud = CreateHudSyncObj();
