@@ -7,8 +7,8 @@ KILLING_SPREE = %s IS ON KILLING SPREE!
 UNSTOPPABLE = %s IS FUCKING UNSTOPPABLE!
 MANIAC = %s IS A MANIAC! SOMEONE STOP HIM!
 MASSACRE = %s JUST MADE MASSACRE! NO ONE CAN STOP HIM!
-HATTRICK_CT = CT WON THIS FLAWLESSLY
-HATTICK_TT = TT WON THIS FLAWLESSLY
+HATTRICK_CT = CT FLAWLESS VICTORY
+HATTRICK_TT = TT FLAWLESS VICTORY
 
 BOSS_LEFT = Boss %s just left the game... 
 BOSS_DEATH = %s Defeated the boss! 
@@ -17,15 +17,17 @@ BOSS_NOPLAYERS = No boss have chosen
 
 DEATH_INFO = You were killed by %s playing as %s
 
-NONE_PLAY = You are playing as Survivor now
-SLARK_PLAY = You are playing as Slark now
-UD_PLAY = You are playing as Undying now
-BERSERK_PLAY = You are playing as Berserk now
-ZEUS_PLAY = You are playing as Zeus now
-KNIGHT_PLAY = You are playing as Knight now
+NONE_PLAY = [HCP] You are playing as Survivor now
+SLARK_PLAY = [HCP] You are playing as Slark now
+UD_PLAY = [HCP] You are playing as Undying now
+BERSERK_PLAY = [HCP] You are playing as Berserk now
+ZEUS_PLAY = [HCP] You are playing as Zeus now
+KNIGHT_PLAY = [HCP] You are playing as Knight now
 
-PERMITTED_CHANGECLASS = You can't change class right now.
-CHANGE_ALLOWED = You're allowed to change your class for %.1f seconds.
+PERMITTED_CHANGECLASS = [HCP] You can't change class right now
+CHANGE_ALLOWED = [HCP] You're allowed to change your class for %f seconds
+PERMITTED_ITEMSHOP = [HCP] You can't open shop right now
+TIMEISUP = [HCP] Time is up! You can't change your hero while you're alive
 
 HERO_NAME = Hero:
 HERO_NONE = Survivor

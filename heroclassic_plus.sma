@@ -9,7 +9,7 @@
 #include < float >          //  For calculations.
 #include < nvault >         //  For information storage.
 
-#pragma tabsize 0
+
 #define plug    "Hero Classic+"
 #define ver     "1.6b"
 #define auth    "harmony & MuiX"
@@ -42,6 +42,10 @@ public plugin_init()
     // Main CVARs
     register_cvar("hcp_playerherochange_allowed","5");
     register_cvar("hcp_enable_kill_announcer","1");
+    register_cvar("hcp_boss_timer","60.0");
+    register_cvar("hcp_hud_tick","1.0");
+    register_cvar("hcp_bot_think_min","25.0");
+    register_cvar("hcp_bot_think_max","60.0");
 
     // Boss CVARs
     register_cvar("hcp_boss_health","1500");
@@ -58,22 +62,23 @@ public plugin_init()
     register_cvar("hcp_hero_berserk_rage","15");
     register_cvar("hcp_hero_berserk_ultdamage","1.5")
 
-    register_event("DeathMsg","player_death","a");                      // Catching player's death.
-    register_logevent("round_start", 2, "1=Round_Start");               // Catching start of the round.
-    register_event("Damage", "damager", "b", "2!0", "3=0", "4!0");      // Catching REAL damage.
-    g_msgHideWeapon = get_user_msgid("HideWeapon");                     // Hiding default health and armor bar.
-	register_event("ResetHUD", "onResetHUD", "b");                      // Hiding default health and armor bar.
-	register_message(g_msgHideWeapon, "msgHideWeapon");                 // Hiding default health and armor bar.
-    register_dictionary("hcp.txt");                                     // Registering lang file.
-    RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);        // Catching incoming damage.
-    RegisterHam(Ham_Spawn, "player", "PlayerSpawn_Post", 1);            // Catching player respawn.
-    register_clcmd("say /class","class_change");                        // Registering menu (or a command to call menu).
-    register_clcmd("activate_ultimate","activate_ult");                 // Registering menu (or a command to call menu).
-    hcp_vault = nvault_open("hcpstorage");                              // Opening nvault storage.
-    set_task(60.0, "hcp_boss_random",_,_,_,"b");                        // Finding a boss each 'n' seconds. TODO: cfg
-    set_task(1.0, "HudTick",_,_,_,"b");                                 // Displaying info for each player.
-    set_task(1.0, "OneTick",_,_,_,"b");                                 // One second tick for plugin.
-    set_task(random_float(25.0,60.0), "BotThink",_,_,_,"b");            // Bot thinking to pick a class.
+    register_event("DeathMsg","player_death","a");                              // Catching player's death.
+    register_logevent("round_start", 2, "1=Round_Start");                       // Catching start of the round.
+    register_event("Damage", "damager", "b", "2!0", "3=0", "4!0");              // Catching REAL damage.
+    RegisterHam(Ham_TakeDamage, "player", "fwd_Take_Damage", 0);                // Catching incoming damage.
+    RegisterHam(Ham_Spawn, "player", "PlayerSpawn_Post", 1);                    // Catching player respawn.
+    g_msgHideWeapon = get_user_msgid("HideWeapon");                             // Hiding default health and armor bar.
+	register_event("ResetHUD", "onResetHUD", "b");                              // Hiding default health and armor bar.
+	register_message(g_msgHideWeapon, "msgHideWeapon");                         // Hiding default health and armor bar.
+    register_dictionary("hcp.txt");                                             // Registering lang file.
+    register_clcmd("say /class","class_change");                                // Registering menu (or a command to call menu).
+    register_clcmd("say /itemshop", "itemshop");                                // Register Item Shop
+    register_clcmd("activate_ultimate","activate_ult");                         // Registering ultimate activation (or a command to call menu).
+    hcp_vault = nvault_open("hcpstorage");                                      // Opening nvault storage.
+    set_task(get_cvar_float("hcp_boss_timer"), "hcp_boss_random",_,_,_,"b");    // Finding a boss each 'n' seconds. TODO: cfg
+    set_task(get_cvar_float("hcp_hud_tick"), "HudTick",_,_,_,"b");              // Displaying info for each player.
+    set_task(1.0, "OneTick",_,_,_,"b");                                         // One second tick for plugin.
+    set_task(random_float(get_cvar_float("hcp_bot_think_min"),get_cvar_float("hcp_bot_think_max")), "BotThink",_,_,_,"b");      // Bot thinking to pick a class.
 }
 
 public plugin_cfg()
@@ -81,8 +86,11 @@ public plugin_cfg()
 	new cfgDir[64], File[192];
 	get_configsdir(cfgDir, charsmax(cfgDir));
 	formatex(File,charsmax(File),"%s/hcp_config.cfg",cfgDir);
-	if(file_exists(File))
+	if(file_exists(File)){
 		server_cmd("exec %s", File);
+    } else {
+        server_print("[HCP] Configuration file is missing!");
+    }
 }
 
 ////////////////    Plugin Functions   ////////////////////////////
@@ -214,39 +222,6 @@ public OneTick(){
                     set_ult_active(id);
                 }
             }
-        }
-    }
-}
-
-// Set the ultimate ready
-public set_ult_active(id){
-    switch(hcp_get_user_hero(id)){
-        case NONE:{
-
-        }
-        case SLARK:{
-                        
-        }
-        case UNDYING:{
-            
-        }
-        case BERSERK:{
-            emit_sound(id,CHAN_STATIC,"hcp/adrenaline_full.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
-            client_print_color(id, GREEN, "%L", LANG_PLAYER, "HERO_ULT_READY"); 
-            attribute[id][is_ult_ready] = 1;
-            attribute[id][ult_counter] = 0;
-        }
-        case ZEUS:{
-            emit_sound(id,CHAN_STATIC,"hcp/ultimate_ready.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
-            client_print_color(id, GREEN, "%L", LANG_PLAYER, "HERO_ULT_READY"); 
-            attribute[id][is_ult_ready] = 1;
-            attribute[id][ult_counter] = 0;
-        }
-        case KNIGHT:{
-            
-        }
-        case BOSS:{
-                        
         }
     }
 }

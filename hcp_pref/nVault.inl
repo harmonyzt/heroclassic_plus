@@ -28,9 +28,9 @@ public load_data(id){
 public next_load_data(id,data[],len){
 	new Name[33];
 	get_user_name(id,Name,32);
-	replace_all(data,len,"|"," ");		
+	replace_all(data,len,"|"," ");	
 	new user_score[10], user_hasVampiricHelmet[10], user_hasGloriousArmor[10];
-	parse(data, user_score,9, user_hasVampiricHelmet,9, user_hasGloriousArmor,9);
+	parse(data, user_score, 9, user_hasVampiricHelmet, 9, user_hasGloriousArmor,9);
 	info[id][score]= str_to_num(user_score);
 	info[id][hasVampiricHelmet]= str_to_num(user_hasVampiricHelmet);
 	info[id][hasGloriousArmor]= str_to_num(user_hasGloriousArmor);
@@ -50,7 +50,7 @@ public register_player(id,data[]){
 
 // On disconnect
 public client_disconnect(id){
-    new dcName[32]
+    new dcName[32];
     if( hcp_active == 1 && id == hcp_boss ) {    //Checking if boss left or not and announcing next one.
 		hcp_boss = 0;
 		hcp_active = 0;
@@ -58,11 +58,11 @@ public client_disconnect(id){
 	}
 
     // Reseting all attributes if player disconnects
-    attribute[id][0] = 0;
+    reset_all_attributes(id);
     hero[id] = NONE;
 
     // Saving all of the info of user to the file
-    save_user(id)
+    save_user(id);
     return PLUGIN_CONTINUE;
 }
 

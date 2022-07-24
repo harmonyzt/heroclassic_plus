@@ -37,28 +37,24 @@ public BotThink() {
     // If bot is dying too much, make him consider to change his hero
     new thinkofswitch = random_num(1,10);
     if(hero[id_rand] == NONE && !is_user_alive(id_rand) && thinkofswitch >= 2 && get_user_frags(id_rand) <= get_user_deaths(id_rand)){
-        switch(random_num(1,6)){
+        switch(random_num(1,5)){
             case 1:{
-                hero[id_rand] = NONE;
-                reset_all_attributes(id_rand);
-            }
-            case 2:{
                 hero[id_rand] = SLARK;
                 reset_all_attributes(id_rand);
             }
-            case 3:{
+            case 2:{
                 hero[id_rand] = UNDYING;
                 reset_all_attributes(id_rand);
             }
-            case 4:{
+            case 3:{
                 hero[id_rand] = BERSERK;
                 reset_all_attributes(id_rand);
             }
-            case 5:{
+            case 4:{
                 hero[id_rand] = ZEUS;
                 reset_all_attributes(id_rand);
             }
-            case 6:{
+            case 5:{
                 hero[id_rand] = KNIGHT;
                 reset_all_attributes(id_rand);
             }
