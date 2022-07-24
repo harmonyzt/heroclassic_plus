@@ -134,7 +134,7 @@ public round_start(){
                 case BOSS:{
                     hero[id] = NONE;
                     hero_hp[id] = get_cvar_num("hcp_hero_survivor_hp");
-                    set_user_health(id) = get_cvar_num("hcp_hero_survivor_hp");
+                    set_user_health(id, get_cvar_num("hcp_hero_survivor_hp"));
                     client_print_color(id, RED, "You were a boss last round, choose another class!");
                     reset_all_attributes(id);
                 }
