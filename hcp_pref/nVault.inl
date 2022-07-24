@@ -2,7 +2,7 @@
 public client_putinserver(id){
     set_task(2.5,"welcomepl",id);
     hero[id] = NONE;
-    hero_hp[id] = 600;
+    hero_hp[id] = get_cvar_num("hcp_hero_survivor_hp");
 
     // Start loading data from file
     load_data(id); 

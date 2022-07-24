@@ -42,7 +42,7 @@ public player_death(){
         info[killer][kills] += 1;
 
         // Reseting attributes and scores from victim
-        reset_all_attributes(victim)
+        reset_all_attributes(victim);
         info[victim][kills] = 0;
         info[victim][score] -= 10;
 
@@ -129,7 +129,9 @@ public round_start(){
 
     for(new id = 1; id <= get_maxplayers(); id++){
         if(is_user_alive(id) && is_user_connected(id)){
+
             set_user_health(id, hero_hp[id]);
+
             switch(hcp_get_user_hero(id)){
                 case BOSS:{
                     hero[id] = NONE;
@@ -154,7 +156,7 @@ public round_start(){
 
                 }
                 case KNIGHT:{
-                recover_knight_shield(id);
+                    recover_knight_shield(id);
                 }   
             }
         }
@@ -166,6 +168,7 @@ public round_start(){
 //
 public play_s_sound(id) {
 if(is_user_alive(id)){
+
     switch(hcp_get_user_hero(id)){
         case NONE:{
             emit_sound(id, CHAN_STATIC, "hcp/none_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
@@ -371,7 +374,7 @@ public activate_ult(id) {
         }
         case BERSERK:
         {
-            set_task(0.05, "")
+            set_task(0.01, "StopUltimate");
         } 
         case ZEUS:
         {
