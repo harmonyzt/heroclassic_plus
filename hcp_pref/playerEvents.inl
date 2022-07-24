@@ -245,7 +245,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
             case BERSERK:
             {
                 attribute[attacker][berserk_ult_rage]++
-                if(attribute[attacker][berserk_ult_rage] >= 15){
+                if(attribute[attacker][berserk_ult_rage] == 15){
                     set_ult_active(attacker);
                 }
                 new Float:berserk_damage = hero_hp[victim] * 0.1;
