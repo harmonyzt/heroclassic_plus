@@ -37,6 +37,9 @@ public player_death(){
             isFirstBlood = 1;
         }
 
+        // Print out info about killer to victim
+        client_print_color(victim, GREY, "%L", LANG_PLAYER, "DEATH_INFO", killername, hcp_get_user_hero(killer), info[killer][score]); 
+
         // Giving a killer one kill and scores
         info[killer][score] += 10;
         info[killer][kills] += 1;
