@@ -34,6 +34,7 @@ new g_msgHideWeapon;                // For hiding HUD
 new hcp_vault;                      // For NVault
 new RoundCount = 0;                 // For counting rounds
 new isAllowedToChangeClass[32] = 0; // To set when the player is allowed to change a class
+new skillformula[32];               // For skil calculations
 
 public plugin_init()
 {
