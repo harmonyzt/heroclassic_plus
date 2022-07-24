@@ -40,7 +40,7 @@ public plugin_init()
     register_plugin(plug, ver, auth);
 
     // Main CVARs
-    register_cvar("hcp_playerherochange_allowed","5");
+    register_cvar("hcp_playerherochange_allowed","7");
     register_cvar("hcp_enable_kill_announcer","1");
     register_cvar("hcp_boss_timer","60.0");
     register_cvar("hcp_hud_tick","1.0");
@@ -93,7 +93,7 @@ public plugin_cfg()
     }
 }
 
-////////////////    Plugin Functions   ////////////////////////////
+////////////////    Plugin Functions   ////////////////////
 
 
 #include "hcp_pref/classInit.inl"
@@ -104,8 +104,8 @@ public plugin_cfg()
 #include "hcp_pref/nVault.inl"
 #include "hcp_pref/pluginStocks.inl"
 
-////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////
 
 // Recording a demo when player joins.
 public welcomepl(id){
@@ -191,7 +191,6 @@ public HudTick(){
     }
     return PLUGIN_HANDLED;
 }
-
 
 public OneTick(){
     for(new id = 1; id <= get_maxplayers(); id++){

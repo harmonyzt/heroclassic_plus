@@ -25,7 +25,7 @@ ZEUS_PLAY = [HCP] You are playing as Zeus now
 KNIGHT_PLAY = [HCP] You are playing as Knight now
 
 PERMITTED_CHANGECLASS = [HCP] You can't change class right now
-CHANGE_ALLOWED = [HCP] You're allowed to change your class for %f seconds
+CHANGE_ALLOWED = [HCP] You're allowed to change your class for %.1f seconds
 PERMITTED_ITEMSHOP = [HCP] You can't open shop right now
 TIMEISUP = [HCP] Time is up! You can't change your hero while you're alive
 
