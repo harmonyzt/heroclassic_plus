@@ -25,7 +25,7 @@ ZEUS_PLAY = You are playing as Zeus now
 KNIGHT_PLAY = You are playing as Knight now
 
 PERMITTED_CHANGECLASS = You can't change class right now.
-CHANGE_ALLOWED = You're allowed to change your class for %f seconds.
+CHANGE_ALLOWED = You're allowed to change your class for %.1f seconds.
 
 HERO_NAME = Hero:
 HERO_NONE = Survivor

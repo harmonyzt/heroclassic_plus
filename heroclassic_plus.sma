@@ -136,15 +136,21 @@ public hcp_boss_random() {      // Choosing random player to be a boss
 
 public hcp_set_user_boss(id) {
 	if(is_user_connected(id) && hero[hcp_boss] == NONE) {
+        hero[id] = BOSS;
+        hero_hp[id] = get_cvar_num("hcp_boss_health");
+        new nm[33];
+        get_user_name(id, nm, 32);
+
         client_cmd(id, "slot1; drop");
 		give_item(id,"weapon_m249");
 		cs_set_user_bpammo(id, CSW_M249, get_cvar_num("hcp_boss_ammo"));
+
 		set_user_health(id, get_cvar_num("hcp_boss_health"));
+
 		client_cmd(0,"spk hcp/boss_spawned");
-        new nm[33]; get_user_name(id, nm, 32);
         set_dhudmessage(99, 184, 255, -1.0, 0.65, 1, 6.0, 3.0, 1.5, 1.5);
         show_dhudmessage(0, "%L", LANG_PLAYER, "BOSS_SPAWNED", nm);
-        hero[id] = BOSS;
+
 		switch(cs_get_user_team(id)) {
 			case CS_TEAM_T: set_user_rendering(id, kRenderFxGlowShell, 255, 0, 0, kRenderNormal, 4);
 			case CS_TEAM_CT: set_user_rendering(id, kRenderFxGlowShell, 0, 0, 255, kRenderNormal, 4);
