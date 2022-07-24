@@ -261,7 +261,7 @@ public plugin_precache(){
     precache_sound("hcp/wp_bullet4.wav");
     precache_sound("hcp/ultimate_ready.wav");
     precache_sound("hcp/death.wav");
-    precache_sound("hcp/spawn.wav");
+    precache_sound("hcp/respawn.wav");
     dmgTakenHUD = CreateHudSyncObj();
     dmgDealtHUD = CreateHudSyncObj();
     announcehud = CreateHudSyncObj();

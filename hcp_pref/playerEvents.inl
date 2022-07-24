@@ -38,7 +38,7 @@ public player_death(){
         }
 
         // Print out info about killer to victim
-        client_print_color(victim, GREY, "%L", LANG_PLAYER, "DEATH_INFO", killername, hcp_get_user_hero(killer), info[killer][score]); 
+        client_print_color(victim, GREY, "%L", LANG_PLAYER, "DEATH_INFO", killername, info[killer][score], info[killer][skill]); 
 
         // Giving a killer one kill and scores
         info[killer][score] += 10;

@@ -15,7 +15,7 @@ BOSS_DEATH = %s Defeated the boss!
 BOSS_SPAWNED = Aware!^n %s got some powers!
 BOSS_NOPLAYERS = No boss have chosen
 
-DEATH_INFO = You were killed by %s playing as %s with %d points
+DEATH_INFO = You were killed by %s // %d points // %d skill
 
 NONE_PLAY = [HCP] You are playing as Survivor now
 SLARK_PLAY = [HCP] You are playing as Slark now
