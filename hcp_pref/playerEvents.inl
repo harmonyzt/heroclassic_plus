@@ -129,6 +129,8 @@ public player_death(){
 public round_start(){
     RoundCount += 1;
     isFirstBlood = 0;
+    
+    set_task(get_cvar_float("hcp_boss_timer"), "hcp_boss_random",444333,_,_);
 
     for(new id = 1; id <= get_maxplayers(); id++){
         if(is_user_alive(id) && is_user_connected(id)){
@@ -245,8 +247,9 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
             case BERSERK:
             {
                 attribute[attacker][berserk_ult_rage]++
-                if(attribute[attacker][berserk_ult_rage] == 15){
+                if(attribute[attacker][berserk_ult_rage] == 15 && attribute[attacker][is_ult_ready] == 0){
                     set_ult_active(attacker);
+                    attribute[attacker][berserk_ult_rage] = 0;
                 }
                 new Float:berserk_damage = hero_hp[victim] * 0.1;
                 SetHamParamFloat(4, damage + berserk_damage);
@@ -328,6 +331,7 @@ public ChangeClassAllowed(id){
 //
 // Action to activate ultimate
 //
+
 // Set the ultimate ready
 public set_ult_active(id){
     switch(hcp_get_user_hero(id)){
@@ -377,7 +381,8 @@ public activate_ult(id) {
         }
         case BERSERK:
         {
-            set_task(0.01, "StopUltimate");
+            attribute[id][ult_in_progress] = 1;
+            set_task(15.0, "stop_ult", id+100,_,_);
         } 
         case ZEUS:
         {
@@ -385,4 +390,44 @@ public activate_ult(id) {
         }
     }
 }
+}
+
+public stop_ult(id){
+    id = id - 100;
+
+    switch(hcp_get_user_hero(id)){
+        case NONE:
+        {
+            attribute[id][ult_in_progress] = 0;
+            attribute[id][is_ult_ready] == 0;
+        }
+        case SLARK:{
+            attribute[id][ult_in_progress] = 0;
+            attribute[id][is_ult_ready] == 0;
+        }
+        case UNDYING:
+        {
+            attribute[id][ult_in_progress] = 0;
+            attribute[id][is_ult_ready] == 0;
+        }
+        case BERSERK:
+        {
+            attribute[id][ult_in_progress] = 0;
+            attribute[id][is_ult_ready] == 0;
+        } 
+        case ZEUS:
+        {
+            attribute[id][ult_in_progress] = 0;
+            attribute[id][is_ult_ready] == 0;
+        }
+    }
+}
+
+
+tt_win(){
+    remove_task(444333);
+}
+
+ct_win(){
+    remove_task(444333);
 }

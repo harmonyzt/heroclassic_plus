@@ -10,8 +10,8 @@ MASSACRE = %s JUST MADE MASSACRE! NO ONE CAN STOP HIM!
 HATTRICK_CT = CT FLAWLESS VICTORY
 HATTRICK_TT = TT FLAWLESS VICTORY
 
-BOSS_LEFT = Boss %s just left the game... 
-BOSS_DEATH = %s Defeated the boss! 
+BOSS_LEFT = Boss %s just left the game...
+BOSS_DEATH = %s Defeated the boss!
 BOSS_SPAWNED = Aware!^n %s got some powers!
 BOSS_NOPLAYERS = No boss have chosen
 
