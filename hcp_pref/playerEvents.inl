@@ -247,7 +247,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
             case BERSERK:
             {
                 attribute[attacker][berserk_ult_rage]++
-                if(attribute[attacker][berserk_ult_rage] == 15 && attribute[id][is_ult_ready] == 0){
+                if(attribute[attacker][berserk_ult_rage] == 15 && attribute[attacker][is_ult_ready] == 0){
                     set_ult_active(attacker);
                     attribute[attacker][berserk_ult_rage] = 0;
                 }
