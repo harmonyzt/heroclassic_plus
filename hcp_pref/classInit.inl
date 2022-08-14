@@ -2,7 +2,7 @@ enum _:attributes
 {
     sl_leashstack, sl_selfstack, undying_hpstack, 
     undying_hpstolen_timed, poisoned_from_undying, 
-    knight_shield, ult_counter, ultimate_cooldown, is_ult_ready, berserk_ult_rage
+    knight_shield, ult_counter, ultimate_cooldown, is_ult_ready, ult_in_progress, berserk_ult_rage
 };
 enum _:
 {
