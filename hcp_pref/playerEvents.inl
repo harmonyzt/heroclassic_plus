@@ -6,8 +6,8 @@ public player_death(){
     hshot = read_data(3);
     
     // Server crash fix "Out of bounds"
-    if (!is_user_connected(killer) | !is_user_connected(victim))
-        return PLUGIN_HANDLED;
+    if (!is_user_connected(killer) | !is_user_connected(victim)) return PLUGIN_HANDLED;
+    if (killer == victim) return PLUGIN_HANDLED;
 
     new killername[32];
     get_user_name(killer, killername, 31);
@@ -38,73 +38,62 @@ public player_death(){
         client_cmd(0,"spk hcp/boss_defeated");
         emit_sound(victim,CHAN_STATIC,"hcp/boss_death.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
 	}
+    
+    // First Blood
+    if (isFirstBlood == 0){
+        set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
+        ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "FIRST_BLOOD", killername);
+        client_cmd(0,"spk hcp/firstblood");
+        isFirstBlood = 1;
+    }
 
-    if (killer != victim)
-    {
-        // First Blood
-        if (isFirstBlood == 0)
-        {
-            set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
-            ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "FIRST_BLOOD", killername);
-            client_cmd(0,"spk hcp/firstblood");
-            isFirstBlood = 1;
-        }
+    // On headshot
+    if (hshot){
+        info[killer][headshots] += 1;
+        info[killer][score] += 10;
+        client_cmd(0,"spk hcp/headshot");
+    }
 
-        // On headshot
-        if (hshot)
-        {
-            info[killer][headshots] += 1;
-            info[killer][score] += 10;
-            client_cmd(0,"spk hcp/headshot");
+    // Getting / Giving attributes for each classes on success kill
+    switch(hcp_get_user_hero(killer)){
+        case UNDYING:{
+            attribute[killer][undying_hpstack] += 1;
+            hero_hp[killer] += 30;
         }
-
-        // Getting / Giving attributes for each classes on success kill
-        switch(hcp_get_user_hero(killer)){
-            case UNDYING:{
-                attribute[killer][undying_hpstack] += 1;
-                hero_hp[killer] += 30;
-            }
-        }
+    }
         
-        // Simply Announcing killstreaks
-        if(get_cvar_num("hcp_enable_kill_announcer") == 1){
-            switch(info[killer][kills]){ 
-                case 3:
-                {
-                    set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
-                    ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "TRIPLE_KILL", killername);
-                    client_cmd(0,"spk hcp/triplekill");
-                }
-                case 4:
-                {
-                    set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
-                    ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MULTI_KILL", killername);
-                    client_cmd(0,"spk hcp/multikill");
-                }
-                case 6:
-                {
-                    set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
-                    ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "KILLING_SPREE", killername);
-                    client_cmd(0,"spk hcp/killingspree");
-                }
-                case 8:
-                {
-                    set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
-                    ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "UNSTOPPABLE", killername);
-                    client_cmd(0,"spk hcp/unstoppable");
-                }
-                case 10:
-                {
-                    set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
-                    ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MANIAC", killername);
-                    client_cmd(0,"spk hcp/maniac");
-                }
-                case 12:
-                {
-                    set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
-                    ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MASSACRE", killername);
-                    client_cmd(0,"spk hcp/massacre");
-                }
+    // Simply Announcing killstreaks
+    if(get_cvar_num("hcp_enable_kill_announcer") == 1){
+        switch(info[killer][kills]){ 
+            case 3:{
+                set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
+                ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "TRIPLE_KILL", killername);
+                client_cmd(0,"spk hcp/triplekill");
+            }
+            case 4:{
+                set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
+                ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MULTI_KILL", killername);
+                client_cmd(0,"spk hcp/multikill");
+            }
+            case 6:{
+                set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
+                ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "KILLING_SPREE", killername);
+                client_cmd(0,"spk hcp/killingspree");
+            }
+            case 8:{
+                set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
+                ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "UNSTOPPABLE", killername);
+                client_cmd(0,"spk hcp/unstoppable");
+            }
+            case 10:{
+                set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
+                ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MANIAC", killername);
+                client_cmd(0,"spk hcp/maniac");
+            }
+            case 12:{
+                set_hudmessage(212, 255, 255, -1.0, 0.2, 1, 6.0, 3.0, 0.5);
+                ShowSyncHudMsg(0, announcehud, "%L", LANG_PLAYER, "MASSACRE", killername);
+                client_cmd(0,"spk hcp/massacre");
             }
         }
     }
