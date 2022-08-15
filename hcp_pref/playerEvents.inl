@@ -243,12 +243,6 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                     SetHamParamFloat(4, damage + (berserk_damage * get_cvar_float("hcp_hero_berserk_ultdamage")));
                 }
             }
-
-            case ZEUS:
-            {
-                
-            }
- 
         }
         
         //  Knight's shield ability
@@ -274,8 +268,8 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                         }
                     }
                 }
-            }
         }
+}
 
 
 // Recover a knight's shield after cooldown

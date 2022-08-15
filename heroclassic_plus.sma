@@ -99,13 +99,13 @@ public plugin_cfg()
 ////////////////    Plugin Functions   ////////////////////
 
 #include "hcp_pref/classInit.inl"
-#include "hcp_pref/pluginStocks.inl"
 #include "hcp_pref/playerEvents.inl"
 //#include "hcp_pref/nativeSupport.inl"     // Under development
 #include "hcp_pref/botSupport.inl"
 #include "hcp_pref/hideHUD.inl"
 #include "hcp_pref/nVault.inl"
 #include "hcp_pref/itemShop.inl"
+#include "hcp_pref/pluginStocks.inl"
 
 ///////////////////////////////////////////////////////////
 
