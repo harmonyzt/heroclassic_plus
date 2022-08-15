@@ -11,14 +11,15 @@ enum _:
 new attribute[256][attributes];
 new hero_hp[33];
 new hero[33];
+
 //
 // Creating Menu
 //
 public class_change(id){
-    //if(isAllowedToChangeClass[id] = 0 && RoundCount < 3){
-    //    client_print_color(id, RED, "%L", LANG_PLAYER, "PERMITTED_CHANGECLASS");
-    //    return PLUGIN_HANDLED;
-    //}
+    if(isAllowedToChangeClass[id] == 0 && RoundCount < 3){
+        client_print_color(id, RED, "%L", LANG_PLAYER, "PERMITTED_CHANGECLASS");
+        return PLUGIN_HANDLED;
+    }
 
     new menu = menu_create( "\w[HCP] \rChoose your class", "menu_handler" );
     menu_additem( menu, "\wDon't play as \yanyone", "", 0 );
@@ -39,12 +40,11 @@ public class_change(id){
     menu_display( id, menu, 0 );
 
     return PLUGIN_CONTINUE
- }
+}
 
 //
 // Main Menu Function
 //
-
 public menu_handler(id, menu, item)
  {
     switch(item)

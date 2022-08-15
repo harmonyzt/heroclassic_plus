@@ -2,10 +2,11 @@
 public player_death(){
     static killer, victim, hshot;
     killer = read_data(1);
-    hshot = read_data(3);
     victim = read_data(2);
+    hshot = read_data(3);
     
-    if (!is_user_connected(killer) | !is_user_connected(victim)) // Server crash fix "Out of bounds"
+    // Server crash fix "Out of bounds"
+    if (!is_user_connected(killer) | !is_user_connected(victim))
         return PLUGIN_HANDLED;
 
     new killername[32];
@@ -13,6 +14,18 @@ public player_death(){
 
     client_cmd(victim,"spk hcp/death");
     isAllowedToChangeClass[victim] = 0;
+
+    // Print out info about killer to victim
+    client_print_color(victim, GREY, "%L", LANG_PLAYER, "DEATH_INFO", killername, info[killer][score], info[killer][skill]); 
+
+    // Giving a killer one kill and scores
+    info[killer][score] += 10;
+    info[killer][kills] += 1;
+
+    // Reseting attributes and scores from victim
+    reset_all_attributes(victim);
+    info[victim][kills] = 0;
+    info[victim][score] -= 10;
 
     // Death of the boss
     if(victim == hcp_boss)
@@ -37,18 +50,6 @@ public player_death(){
             isFirstBlood = 1;
         }
 
-        // Print out info about killer to victim
-        client_print_color(victim, GREY, "%L", LANG_PLAYER, "DEATH_INFO", killername, info[killer][score], info[killer][skill]); 
-
-        // Giving a killer one kill and scores
-        info[killer][score] += 10;
-        info[killer][kills] += 1;
-
-        // Reseting attributes and scores from victim
-        reset_all_attributes(victim);
-        info[victim][kills] = 0;
-        info[victim][score] -= 10;
-
         // On headshot
         if (hshot)
         {
@@ -59,24 +60,9 @@ public player_death(){
 
         // Getting / Giving attributes for each classes on success kill
         switch(hcp_get_user_hero(killer)){
-            case NONE:{
-                
-            }
-            case SLARK:{
-
-            }
             case UNDYING:{
                 attribute[killer][undying_hpstack] += 1;
                 hero_hp[killer] += 30;
-            }
-            case BERSERK:{
-
-            }
-            case ZEUS:{
-            
-            }
-            case KNIGHT:{
-
             }
         }
         
@@ -127,9 +113,9 @@ public player_death(){
 
 // Function called when round starts
 public round_start(){
+
     RoundCount += 1;
     isFirstBlood = 0;
-    
     set_task(get_cvar_float("hcp_boss_timer"), "hcp_boss_random",444333,_,_);
 
     for(new id = 1; id <= get_maxplayers(); id++){
@@ -172,29 +158,28 @@ public round_start(){
 // Playing sounds when choosing a hero
 //
 public play_s_sound(id) {
-if(is_user_alive(id)){
-
-    switch(hcp_get_user_hero(id)){
-        case NONE:{
-            emit_sound(id, CHAN_STATIC, "hcp/none_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
-        }
-        case SLARK:{
-            emit_sound(id, CHAN_STATIC, "hcp/sl_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
-        }
-        case UNDYING:{
-            emit_sound(id, CHAN_STATIC, "hcp/undying_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
-        }
-        case ZEUS:{
-            emit_sound(id, CHAN_STATIC, "hcp/zeus_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
-        }
-        case BERSERK:{
-            emit_sound(id, CHAN_STATIC, "hcp/berserk_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
-        }
-        case KNIGHT:{
-            emit_sound(id, CHAN_STATIC, "hcp/knight_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
+    if(is_user_alive(id)){
+        switch(hcp_get_user_hero(id)){
+            case NONE:{
+                emit_sound(id, CHAN_STATIC, "hcp/none_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
+            }
+            case SLARK:{
+                emit_sound(id, CHAN_STATIC, "hcp/sl_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
+            }
+            case UNDYING:{
+                emit_sound(id, CHAN_STATIC, "hcp/undying_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
+            }
+            case ZEUS:{
+                emit_sound(id, CHAN_STATIC, "hcp/zeus_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
+            }
+            case BERSERK:{
+                emit_sound(id, CHAN_STATIC, "hcp/berserk_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
+            }
+            case KNIGHT:{
+                emit_sound(id, CHAN_STATIC, "hcp/knight_spawn.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
+            }
         }
     }
-}
     return PLUGIN_HANDLED;
 }
 
@@ -258,7 +243,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
                     SetHamParamFloat(4, damage + (berserk_damage * get_cvar_float("hcp_hero_berserk_ultdamage")));
                 }
             }
-            
+
             case ZEUS:
             {
                 
@@ -268,29 +253,30 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
         
         //  Knight's shield ability
         if(hero[victim] == KNIGHT){
-            if(attribute[victim][knight_shield] <= 0 && is_shield_broken[victim] == false){ 
-                set_task(20.0, "recover_knight_shield",victim,_,_,_,0);
-                is_shield_broken[victim] = true;
-            }else if(attacker && is_shield_broken[victim] == false){
+                if(attribute[victim][knight_shield] <= 0 && is_shield_broken[victim] == false){ 
+                    set_task(20.0, "recover_knight_shield",victim,_,_,_,0);
+                    is_shield_broken[victim] = true;
+                }else if(attacker && is_shield_broken[victim] == false){
                 attribute[victim][knight_shield] -= 1;
                 SetHamParamFloat(4, damage * 0);
-                switch (random_num(1,4)){
-                    case 1:{
-                        emit_sound(victim,CHAN_STATIC,"hcp/wp_bullet1.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
-                    }
-                    case 2:{
-                        emit_sound(victim,CHAN_STATIC,"hcp/wp_bullet2.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
-                    }
-                    case 3:{
-                        emit_sound(victim,CHAN_STATIC,"hcp/wp_bullet3.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
-                    }
-                    case 4:{
-                        emit_sound(victim,CHAN_STATIC,"hcp/wp_bullet4.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                    switch (random_num(1,4)){
+                        case 1:{
+                            emit_sound(victim,CHAN_STATIC,"hcp/wp_bullet1.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                        }
+                        case 2:{
+                            emit_sound(victim,CHAN_STATIC,"hcp/wp_bullet2.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                        }
+                        case 3:{
+                            emit_sound(victim,CHAN_STATIC,"hcp/wp_bullet3.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                        }
+                        case 4:{
+                            emit_sound(victim,CHAN_STATIC,"hcp/wp_bullet4.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
+                        }
                     }
                 }
             }
         }
-} 
+
 
 // Recover a knight's shield after cooldown
 public recover_knight_shield(id){
@@ -399,35 +385,35 @@ public stop_ult(id){
         case NONE:
         {
             attribute[id][ult_in_progress] = 0;
-            attribute[id][is_ult_ready] == 0;
+            attribute[id][is_ult_ready] = 0;
         }
         case SLARK:{
             attribute[id][ult_in_progress] = 0;
-            attribute[id][is_ult_ready] == 0;
+            attribute[id][is_ult_ready] = 0;
         }
         case UNDYING:
         {
             attribute[id][ult_in_progress] = 0;
-            attribute[id][is_ult_ready] == 0;
+            attribute[id][is_ult_ready] = 0;
         }
         case BERSERK:
         {
             attribute[id][ult_in_progress] = 0;
-            attribute[id][is_ult_ready] == 0;
+            attribute[id][is_ult_ready] = 0;
         } 
         case ZEUS:
         {
             attribute[id][ult_in_progress] = 0;
-            attribute[id][is_ult_ready] == 0;
+            attribute[id][is_ult_ready] = 0;
         }
     }
 }
 
 
-tt_win(){
+public tt_win(){
     remove_task(444333);
 }
 
-ct_win(){
+public ct_win(){
     remove_task(444333);
 }
