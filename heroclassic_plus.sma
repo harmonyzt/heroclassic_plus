@@ -2,7 +2,7 @@
 #include < amxmisc >        //  For an old menu.
 #include < fun >            //  For glow effect.
 #include < dhudmessage >    //  For new format of hud messages.
-#include < colorchat >     //  For colored simple chat.
+#include < colorchat >      //  For colored simple chat.
 #include < cstrike >        //  For catching player's team and giving ammo.
 #include < hamsandwich >    //  For catching player's damage and increasing it.
 #include < fakemeta >       //  For custom player models.
@@ -34,7 +34,11 @@ new g_msgHideWeapon;                // For hiding HUD
 new hcp_vault;                      // For NVault
 new RoundCount = 0;                 // For counting rounds
 new isAllowedToChangeClass[32] = 0; // To set when the player is allowed to change a class
+<<<<<<< HEAD
 new skillformula[32];               // For skill calculations
+=======
+new Float:skillformula[32];         // For skil calculations
+>>>>>>> b5bc9659872f344c74307fa150d671f31a87ae64
 
 public plugin_init()
 {
@@ -97,16 +101,14 @@ public plugin_cfg(){
 
 ////////////////    Plugin Functions   ////////////////////
 
-
 #include "hcp_pref/classInit.inl"
 #include "hcp_pref/playerEvents.inl"
 //#include "hcp_pref/nativeSupport.inl"     // Under development
 #include "hcp_pref/botSupport.inl"
 #include "hcp_pref/hideHUD.inl"
 #include "hcp_pref/nVault.inl"
-#include "hcp_pref/pluginStocks.inl"
 #include "hcp_pref/itemShop.inl"
-
+#include "hcp_pref/pluginStocks.inl"
 
 ///////////////////////////////////////////////////////////
 
@@ -129,7 +131,8 @@ public damager(id){
     ShowSyncHudMsg(attacker, dmgDealtHUD, "%d", damage);
 }
 
-public hcp_boss_random() {      // Choosing random player to be a boss
+// Choosing random player to be a boss
+public hcp_boss_random() {
 	if(hcp_active == 0 && RoundCount > 5) {
 		static Players[32], Count, id_rand;
 		get_players(Players, Count, "ah");

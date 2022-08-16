@@ -51,13 +51,15 @@ public register_player(id,data[]){
 // On disconnect
 public client_disconnect(id){
     new dcName[32];
-    if( hcp_active == 1 && id == hcp_boss ) {    //Checking if boss left or not and announcing next one.
+	
+	//Checking if boss left or not and announcing next one.
+    if( hcp_active == 1 && id == hcp_boss ) {
 		hcp_boss = 0;
 		hcp_active = 0;
 		client_print_color(0, RED, "%L", LANG_PLAYER, "BOSS_LEFT", get_user_name(id,dcName,31));
 	}
 
-    // Reseting all attributes if player disconnects
+    // Reset all attributes if player disconnects
     reset_all_attributes(id);
     hero[id] = NONE;
 
