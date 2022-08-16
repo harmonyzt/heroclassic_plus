@@ -34,8 +34,7 @@ new g_msgHideWeapon;                // For hiding HUD
 new hcp_vault;                      // For NVault
 new RoundCount = 0;                 // For counting rounds
 new isAllowedToChangeClass[32] = 0; // To set when the player is allowed to change a class
-new skillformula[32];               // For skill calculations
-new Float:skillformula[32];         // For skil calculations
+new Float:skillformula[32];         // For skill calculations
 
 public plugin_init(){
     register_plugin(plug, ver, auth);
@@ -251,6 +250,7 @@ public plugin_precache(){
     precache_sound("hcp/none_spawn.wav");
     precache_sound("hcp/undying_spawn.wav");
     precache_sound("hcp/berserk_spawn.wav");
+    precache_sound("hcp/berserk_ult_hit.wav");
     precache_sound("hcp/adrenaline_full.wav");
     precache_sound("hcp/zeus_spawn.wav");
     precache_sound("hcp/undying_poison.wav");

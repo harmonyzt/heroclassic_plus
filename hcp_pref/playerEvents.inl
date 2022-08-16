@@ -221,16 +221,19 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
             case BERSERK:
             {
                 attribute[attacker][berserk_ult_rage]++
+                new Float:berserk_damage = hero_hp[victim] * 0.1;
+
                 if(attribute[attacker][berserk_ult_rage] == 15 && attribute[attacker][is_ult_ready] == 0){
                     set_ult_active(attacker);
                     attribute[attacker][berserk_ult_rage] = 0;
                 }
-                new Float:berserk_damage = hero_hp[victim] * 0.1;
-                SetHamParamFloat(4, damage + berserk_damage);
-
-                if(get_user_health(attacker) < (hero_hp[attacker] * 0.50)){
+                
+                if(attribute[attacker][ult_in_progress] == 1){
+                    emit_sound(victim, CHAN_STATIC, "hcp/berserk_ult_hit.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
                     SetHamParamFloat(4, damage + (berserk_damage * get_cvar_float("hcp_hero_berserk_ultdamage")));
                 }
+                
+                SetHamParamFloat(4, damage + berserk_damage);
             }
         }
         
@@ -351,7 +354,8 @@ public activate_ult(id) {
         case BERSERK:
         {
             attribute[id][ult_in_progress] = 1;
-            set_task(15.0, "stop_ult", id+100,_,_);
+            id = id+100;
+            set_task(15.0, "stop_ult", id,_,_,_,_);
         } 
         case ZEUS:
         {
