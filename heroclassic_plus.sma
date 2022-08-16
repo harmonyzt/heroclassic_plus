@@ -34,7 +34,7 @@ new g_msgHideWeapon;                // For hiding HUD
 new hcp_vault;                      // For NVault
 new RoundCount = 0;                 // For counting rounds
 new isAllowedToChangeClass[32] = 0; // To set when the player is allowed to change a class
-new skillformula[32];               // For skil calculations
+new skillformula[32];               // For skill calculations
 
 public plugin_init()
 {
@@ -83,8 +83,7 @@ public plugin_init()
     set_task(random_float(get_cvar_float("hcp_bot_think_min"),get_cvar_float("hcp_bot_think_max")), "BotThink",_,_,_,"b");      // Bot thinking to pick a class.
 }
 
-public plugin_cfg()
-{
+public plugin_cfg(){
 	new cfgDir[64], File[192];
 	get_configsdir(cfgDir, charsmax(cfgDir));
 	formatex(File,charsmax(File),"%s/hcp_config.cfg",cfgDir);
