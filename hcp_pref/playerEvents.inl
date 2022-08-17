@@ -206,8 +206,7 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
             }
 
             // Giving HP to undying when hitting a victim
-            case UNDYING:
-            {
+            case UNDYING:{
                 attribute[attacker][undying_hpstolen_timed] += 1;
                 // Gaining HP
                 if(attribute[attacker][undying_hpstolen_timed] > 1){
@@ -218,22 +217,18 @@ public fwd_Take_Damage(victim, inflicator, attacker, Float:damage) {
             }
             
             // Multiplying damage if berserks health is lower 50% and dealing damage of enemy's max HP
-            case BERSERK:
-            {
+            case BERSERK:{
                 attribute[attacker][berserk_ult_rage]++
                 new Float:berserk_damage = hero_hp[victim] * 0.1;
 
                 if(attribute[attacker][berserk_ult_rage] == 15 && attribute[attacker][is_ult_ready] == 0){
                     set_ult_active(attacker);
-                    attribute[attacker][berserk_ult_rage] = 0;
                 }
                 
                 if(attribute[attacker][ult_in_progress] == 1){
                     emit_sound(victim, CHAN_STATIC, "hcp/berserk_ult_hit.wav", VOL_NORM,ATTN_NORM, 0, PITCH_NORM);
                     SetHamParamFloat(4, damage + (berserk_damage * get_cvar_float("hcp_hero_berserk_ultdamage")));
                 }
-                
-                SetHamParamFloat(4, damage + berserk_damage);
             }
         }
         
@@ -319,6 +314,7 @@ public set_ult_active(id){
         case BERSERK:{
             emit_sound(id,CHAN_STATIC,"hcp/adrenaline_full.wav",VOL_NORM,ATTN_NORM,0,PITCH_NORM);
             client_print_color(id, GREEN, "%L", LANG_PLAYER, "HERO_ULT_READY"); 
+            attribute[id][berserk_ult_rage] = 0;
             attribute[id][is_ult_ready] = 1;
             attribute[id][ult_counter] = 0;
         }
