@@ -354,8 +354,7 @@ public activate_ult(id) {
         case BERSERK:
         {
             attribute[id][ult_in_progress] = 1;
-            id = id+100;
-            set_task(15.0, "stop_ult", id,_,_,_,_);
+            set_task(15.0, "stop_ult", id+100,_,_,_,_);
         } 
         case ZEUS:
         {

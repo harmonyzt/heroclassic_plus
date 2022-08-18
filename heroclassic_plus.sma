@@ -170,27 +170,33 @@ public hcp_set_user_boss(id) {
 public HudTick(){
     for(new id = 1; id <= get_maxplayers(); id++){
         if(is_user_connected(id) && is_user_alive(id) && !is_user_bot(id)){
-            set_dhudmessage(43, 211, 88, 0.02, 0.60, 0, 6.0, 1.1, 0.3, 0.3);
             switch(hcp_get_user_hero(id)){
                 case NONE:{
+                    set_dhudmessage(43, 211, 88, 0.02, 0.60, 0, 6.0, 1.1, 0.3, 0.3);
                     show_dhudmessage(id, "%L %L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_NONE", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case SLARK:{
+                    set_dhudmessage(43, 211, 88, 0.02, 0.60, 0, 6.0, 1.1, 0.3, 0.3);
                     show_dhudmessage(id, "%L %L^n%L^n%L ^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_SL", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "HERO_SL_SELFSTACK", attribute[id][sl_selfstack], LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case UNDYING:{
+                    set_dhudmessage(43, 211, 88, 0.02, 0.60, 0, 6.0, 1.1, 0.3, 0.3);
                     show_dhudmessage(id, "%L %L^n%L^n%L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_UD", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "HERO_UD_HPSTACK", attribute[id][undying_hpstack], LANG_PLAYER, "HERO_UD_HPSTOLEN", attribute[id][undying_hpstolen_timed], LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case BERSERK:{
+                    set_dhudmessage(43, 211, 88, 0.02, 0.60, 0, 6.0, 1.1, 0.3, 0.3);
                     show_dhudmessage(id, "%L %L^n%L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BERSERK", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER, "HP", get_user_health(id), LANG_PLAYER, "BERSERK_ULT", attribute[id][berserk_ult_rage]);
                 }
                 case ZEUS:{
+                    set_dhudmessage(43, 211, 88, 0.02, 0.60, 0, 6.0, 1.1, 0.3, 0.3);
                     show_dhudmessage(id, "%L %L^n%L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_ZEUS", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER,"HP", get_user_health(id), LANG_PLAYER, "HERO_ULT", attribute[id][ult_counter]);
                 }
                 case KNIGHT:{
+                    set_dhudmessage(43, 211, 88, 0.02, 0.60, 0, 6.0, 1.1, 0.3, 0.3);
                     show_dhudmessage(id, "%L %L^n%L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_KNIGHT", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill],LANG_PLAYER, "KNIGHT_SHIELD", attribute[id][knight_shield], LANG_PLAYER, "HP", get_user_health(id));
                 }
                 case BOSS:{
+                    set_dhudmessage(43, 211, 88, 0.02, 0.60, 0, 6.0, 1.1, 0.3, 0.3);
                     show_dhudmessage(id, "%L %L^n%L^n%L", LANG_PLAYER, "HERO_NAME", LANG_PLAYER, "HERO_BOSS", LANG_PLAYER, "SCORE_SKILL", info[id][score], info[id][skill], LANG_PLAYER,"HP", get_user_health(id));
                 }
             }
