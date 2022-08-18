@@ -77,7 +77,7 @@ public plugin_init(){
     register_clcmd("say /itemshop", "itemshop");                                // Register Item Shop
     register_clcmd("activate_ultimate","activate_ult");                         // Registering ultimate activation (or a command to call menu).
     hcp_vault = nvault_open("hcpstorage");                                      // Opening nvault storage.
-    set_task(get_cvar_float("hcp_hud_tick"), "HudTick",_,_,_,"b");              // Displaying info for each player.
+    set_task(1.0, "HudTick",_,_,_,"b");              // Displaying info for each player.
     set_task(1.0, "OneTick",_,_,_,"b");                                         // One second tick for plugin.
     set_task(random_float(get_cvar_float("hcp_bot_think_min"),get_cvar_float("hcp_bot_think_max")), "BotThink",_,_,_,"b");      // Bot thinking to pick a class.
 }
